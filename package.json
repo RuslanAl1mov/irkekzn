@@ -2,7 +2,8 @@
   "scripts": {
     "dev:marketplace": "npm --prefix marketplace start",
     "dev:backend": "./start-backend.sh",
-    "dev": "concurrently \"npm run dev:marketplace\" \"npm run dev:backend\""
+    "dev:admin": "PORT=3001 npm --prefix administration start",
+    "dev": "concurrently \"npm run dev:marketplace\" \"npm run dev:backend\" \"npm run dev:admin\""
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
