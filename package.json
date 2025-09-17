@@ -1,8 +1,8 @@
 {
   "scripts": {
-    "dev:frontend": "npm --prefix frontend start",
+    "dev:marketplace": "npm --prefix marketplace start",
     "dev:backend": "./start-backend.sh",
-    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\""
+    "dev": "concurrently \"npm run dev:marketplace\" \"npm run dev:backend\""
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
