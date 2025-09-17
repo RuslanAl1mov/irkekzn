@@ -1,0 +1,128 @@
+.banerVideoSection {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+
+    min-height: calc(100vh - var(--header-height)) !important;
+    max-height: calc(100vh - var(--header-height)) !important;
+    overflow: hidden;
+}
+
+.banerVideoSectionBlock {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    position: relative;
+}
+
+.videoBlock {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    position: relative;
+}
+
+.videoBlock video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.videoBlock img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.vssVideoBlackHover {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.vssVideoSectionText {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: end;
+    justify-content: center;
+
+    padding: 40px 0;
+    box-sizing: border-box;
+}
+
+.vssVideoSectionTextContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    color: var(--white);
+    text-align: center;
+}
+
+.vssVideoSectionTextContent h2 {
+    font-family: "Prata", serif;
+    font-size: calc(var(--default-font-size) + 32px);
+    font-weight: 100;
+    letter-spacing: 4px;
+    color: var(--white);
+    text-transform: uppercase;
+}
+
+.banerButtonLink {
+    padding: 13px 35px 12px 35px;
+    border: 0.5px solid var(--white);
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: 2px;
+    font-weight: 300;
+    text-transform: uppercase;
+    font-size: var(--default-font-size);
+}
+
+.banerButtonLink:hover {
+    
+}
+
+/* Стили Swiper */
+
+/* Стрелки */
+:global(.swiper-button-next) svg,
+:global(.swiper-button-prev) svg {
+    display: none;
+}
+
+:global(.swiper-button-next)::after,
+:global(.swiper-button-prev)::after {
+    content: "";
+    border: solid var(--white);
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 9px;
+    opacity: 0.7;
+}
+
+:global(.swiper-button-next)::after {
+    transform: rotate(-45deg);
+}
+
+:global(.swiper-button-prev)::after {
+    transform: rotate(135deg);
+}
+
+/* Точки навигации */
+:global(.swiper-pagination-bullet) {
+    background-color: var(--white);
+    /* белые точки */
+    opacity: 0.6;
+    /* слегка прозрачные */
+    border-radius: 2px;
+}
+
+:global(.swiper-pagination-bullet-active) {
+    background-color: var(--white);
+    opacity: 1;
+}

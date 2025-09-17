@@ -1,0 +1,23 @@
+.advBannerBox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.advBannerLink {
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+        overflow: hidden;
+
+}
+
+
+.advBannerImg {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+}
