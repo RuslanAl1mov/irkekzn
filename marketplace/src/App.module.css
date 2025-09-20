@@ -138,6 +138,139 @@
 }
 
 
+
+/* ######################################## */
+
+/* Thin (100) */
+@font-face {
+  font-family: 'Avenir Next W1G';
+  src: url('./assets/fonts/avenir-next-w1g/avenir-next-w1g-thin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Avenir Next W1G';
+  src: url('./assets/fonts/avenir-next-w1g/avenir-next-w1g-thin-italic.ttf') format('truetype');
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* UltraLight (200) */
+@font-face {
+  font-family: 'Avenir Next W1G';
+  src: url('./assets/fonts/avenir-next-w1g/avenir-next-w1g-ultralight.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Avenir Next W1G';
+  src: url('./assets/fonts/avenir-next-w1g/avenir-next-w1g-ultralight-italic.ttf') format('truetype');
+  font-weight: 200;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Light (300) */
+@font-face {
+  font-family: 'Avenir Next W1G';
+  src: url('./assets/fonts/avenir-next-w1g/avenir-next-w1g-light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Avenir Next W1G';
+  src: url('./assets/fonts/avenir-next-w1g/avenir-next-w1g-light-italic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Regular (400) */
+@font-face {
+  font-family: 'Avenir Next W1G';
+  src: url('./assets/fonts/avenir-next-w1g/avenir-next-w1g-regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Avenir Next W1G';
+  src: url('./assets/fonts/avenir-next-w1g/avenir-next-w1g-italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Medium (500) */
+@font-face {
+  font-family: 'Avenir Next W1G';
+  src: url('./assets/fonts/avenir-next-w1g/avenir-next-w1g-medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Avenir Next W1G';
+  src: url('./assets/fonts/avenir-next-w1g/avenir-next-w1g-medium-italic.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Demi (600) */
+@font-face {
+  font-family: 'Avenir Next W1G';
+  src: url('./assets/fonts/avenir-next-w1g/avenir-next-w1g-demi.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Avenir Next W1G';
+  src: url('./assets/fonts/avenir-next-w1g/avenir-next-w1g-demi-italic.ttf') format('truetype');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Bold (700) */
+@font-face {
+  font-family: 'Avenir Next W1G';
+  src: url('./assets/fonts/avenir-next-w1g/avenir-next-w1g-bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Avenir Next W1G';
+  src: url('./assets/fonts/avenir-next-w1g/avenir-next-w1g-bold-italic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Heavy (800) */
+@font-face {
+  font-family: 'Avenir Next W1G';
+  src: url('./assets/fonts/avenir-next-w1g/avenir-next-w1g-heavy.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Avenir Next W1G';
+  src: url('./assets/fonts/avenir-next-w1g/avenir-next-w1g-heavy-italic.ttf') format('truetype');
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+
+
 /* Переменные */
 :root {
     /* Цвета */
@@ -218,8 +351,9 @@
 * {
     padding: 0;
     margin: 0;
-
-    font-family: "Helvetica Neue Custom", "Montserrat", sans-serif;
+    /* Helvetica Neue Custom */
+    /* Avenir Next W1G */
+    font-family: "Avenir Next W1G", "Montserrat", sans-serif;
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
