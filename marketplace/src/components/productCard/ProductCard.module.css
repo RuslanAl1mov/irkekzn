@@ -1,6 +1,4 @@
-/* ProductCard.module.css */
 .card {
-    max-width: 350px;
     display: flex;
     flex-direction: column;
     gap: 13px;
@@ -88,3 +86,6 @@
     border-radius: 100%;
     border: 1px solid var(--light-gray-1);
 }
+
+
+

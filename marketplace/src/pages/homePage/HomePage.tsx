@@ -136,11 +136,14 @@ const HomePage: React.FC = () => {
         </HomePageSection>
 
         <HomePageSection>
-          <AdvBannerImg photo={advBanner} height="600px" />
+          <AdvBannerImg photo={advBanner} />
         </HomePageSection>
 
         <HomePageSection title="Категории">
-          <CardsCarusel data={categories} card={CategoryCard} />
+          <CardsCarusel data={categories} card={CategoryCard} breakpoints={{
+            0: { slidesPerView: 2, spaceBetween: 30 },
+            951: { slidesPerView: 5, spaceBetween: 35 }
+          }} />
           <CorneredButton text="Перейти в каталог" />
         </HomePageSection>
 

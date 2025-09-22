@@ -14,20 +14,35 @@ interface CardBase {
   id: string | number;
 }
 
+type Breakpoints = Record<
+  number,
+  {
+    slidesPerView: number | "auto";
+    spaceBetween: number;
+  }
+>;
+
 interface CardsCaruselProps<T extends CardBase> {
   data: T[];
   card: React.ComponentType<T>;
+  breakpoints?: Breakpoints;
 }
+
+const defaultBreakpoints: Breakpoints = {
+  0: { slidesPerView: 3, spaceBetween: 30 },
+  951: { slidesPerView: 5, spaceBetween: 30 },
+};
 
 const CardsCarusel = <T extends CardBase>({
   data: cardsList,
   card: Card,
+  breakpoints = defaultBreakpoints, // дефолтное значение
 }: CardsCaruselProps<T>) => {
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
-  const [current, setCurrent] = useState(0);
+  const [navState, setNavState] = useState({ isBeginning: true, isEnd: false });
 
-  const isPrevDisabled = current === 0;
-  const isNextDisabled = swiper !== null && current >= cardsList.length - 5;
+  const isPrevDisabled = !swiper || navState.isBeginning;
+  const isNextDisabled = !swiper || navState.isEnd;
 
   return (
     <div className={style.carouselWrapper}>
@@ -49,11 +64,17 @@ const CardsCarusel = <T extends CardBase>({
       </div>
 
       <Swiper
-        onSwiper={setSwiper}
-        onSlideChange={(s) => setCurrent(s.activeIndex)}
         modules={[Navigation]}
-        slidesPerView="auto"
         spaceBetween={30}
+        slidesPerView={5}
+        breakpoints={breakpoints}
+        onSwiper={(s) => {
+          setSwiper(s);
+          setNavState({ isBeginning: s.isBeginning, isEnd: s.isEnd });
+        }}
+        onSlideChange={(s) =>
+          setNavState({ isBeginning: s.isBeginning, isEnd: s.isEnd })
+        }
       >
         {cardsList.map((p) => (
           <SwiperSlide key={p.id} className={style.slide}>

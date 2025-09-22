@@ -8,7 +8,7 @@ interface AdvBannerImgProps {
 
 const AdvBannerImg: React.FC<AdvBannerImgProps> = ({
   photo = null,
-  height = "auto",
+  height = "fit-content",
   width = "100%",
 }) => {
   return (

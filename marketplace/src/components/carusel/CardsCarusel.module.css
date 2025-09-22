@@ -1,4 +1,5 @@
 .carouselWrapper {
+  width: 100%;
   position: relative;
 }
 
@@ -35,6 +36,3 @@
   opacity: 0.3;
 }
 
-.slide {
-  flex: 0 0 calc((100% - (35px * 4)) / 5); /* ровно 5 карточек + 4 gap */
-}

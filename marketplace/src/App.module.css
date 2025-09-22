@@ -466,3 +466,16 @@ body.--noscroll,
   }
 
 }
+
+
+@media screen and (max-width: 800px) {
+
+  :root {
+      --default-font-size: 11px;
+  }
+
+  .mainBlock {
+    row-gap: 50px;
+  }
+
+}

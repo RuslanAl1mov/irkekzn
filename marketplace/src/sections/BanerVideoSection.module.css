@@ -83,9 +83,7 @@
     font-size: var(--default-font-size);
 }
 
-.banerButtonLink:hover {
-    
-}
+.banerButtonLink:hover {}
 
 /* Стили Swiper */
 
@@ -125,4 +123,14 @@
 :global(.swiper-pagination-bullet-active) {
     background-color: var(--white);
     opacity: 1;
+}
+
+
+
+@media screen and (max-width: 850px) {
+
+    .banerButtonLink {
+        padding: 13px 35px 12px 35px; 
+    }
+
 }
