@@ -1,4 +1,4 @@
-import cl from "classnames";
+import cn from "classnames";
 import { useEffect, useRef, useState } from "react";
 import style from "./Header.module.css";
 import centerHorizontally from "utils/centerHorizontally";
@@ -83,7 +83,7 @@ const Header: React.FC = () => {
                 </div>
 
                 {/* content */}
-                <div className={cl(style.headerContentBlock, isMenuOpen && style.headerContentBlock__ShowSmall)}>
+                <div className={cn(style.headerContentBlock, isMenuOpen && style.headerContentBlock__ShowSmall)}>
                     <nav className={style.headerContentNav}>
                         <ul className={style.headerContentList}>
 
@@ -93,7 +93,7 @@ const Header: React.FC = () => {
                                 <div className={style.contentContainer} onMouseEnter={() => handleMouseEnter(0)}>
                                     <div className={style.contentLabelBlock} onClick={() => toggleTab("collection")}>
                                         <p className={style.contentLabel}>Коллекция</p>
-                                        <Box className={cl(style.contentLableIconBlock, isOpen("collection") && style.contentLableIconBlock__Active)}>
+                                        <Box className={cn(style.contentLableIconBlock, isOpen("collection") && style.contentLableIconBlock__Active)}>
                                             <ArrowDownIcon className={style.contentLableIcon} />
                                         </Box>
                                     </div>
@@ -101,7 +101,7 @@ const Header: React.FC = () => {
                                     {/* Мелкий список для бокового меню */}
                                     {/* добавить popupHeaderMenuSmallOpen для открытия */}
                                     {isSmall && (
-                                        <div className={cl(style.popupHeaderMenuSmall, isOpen("collection") && style.popupHeaderMenuSmallOpen)}>
+                                        <div className={cn(style.popupHeaderMenuSmall, isOpen("collection") && style.popupHeaderMenuSmallOpen)}>
                                             <div className={style.popupHeaderMenuBlockSmall}>
                                                 <div className={style.menuCatalogBlock}>
                                                     <ul className={style.menuCatalogList}>
@@ -190,14 +190,14 @@ const Header: React.FC = () => {
                                 <div className={style.contentContainer} onMouseEnter={() => handleMouseEnter(1)}>
                                     <div className={style.contentLabelBlock} onClick={() => toggleTab("accessuar")}>
                                         <p className={style.contentLabel}>Аксессуары</p>
-                                        <Box className={cl(style.contentLableIconBlock, isOpen("accessuar") && style.contentLableIconBlock__Active)}>
+                                        <Box className={cn(style.contentLableIconBlock, isOpen("accessuar") && style.contentLableIconBlock__Active)}>
                                             <ArrowDownIcon className={style.contentLableIcon} />
                                         </Box>
                                     </div>
 
                                     {/* Мелкий список для бокового меню */}
                                     {isSmall && (
-                                        <div className={cl(style.popupHeaderMenuSmall, isOpen("accessuar") && style.popupHeaderMenuSmallOpen)}>
+                                        <div className={cn(style.popupHeaderMenuSmall, isOpen("accessuar") && style.popupHeaderMenuSmallOpen)}>
                                             <div className={style.popupHeaderMenuBlockSmall}>
                                                 <div className={style.menuCatalogBlock}>
                                                     <ul className={style.menuCatalogList}>
@@ -270,14 +270,14 @@ const Header: React.FC = () => {
                                 <div className={style.contentContainer} onMouseEnter={() => handleMouseEnter(2)}>
                                     <div className={style.contentLabelBlock} onClick={() => toggleTab("sale")}>
                                         <p className={style.contentLabel}>Sale</p>
-                                        <Box className={cl(style.contentLableIconBlock, isOpen("sale") && style.contentLableIconBlock__Active)}>
+                                        <Box className={cn(style.contentLableIconBlock, isOpen("sale") && style.contentLableIconBlock__Active)}>
                                             <ArrowDownIcon className={style.contentLableIcon} />
                                         </Box>
                                     </div>
 
                                     {/* Мелкий список для бокового меню */}
                                     {isSmall && (
-                                        <div className={cl(style.popupHeaderMenuSmall, isOpen("sale") && style.popupHeaderMenuSmallOpen)}>
+                                        <div className={cn(style.popupHeaderMenuSmall, isOpen("sale") && style.popupHeaderMenuSmallOpen)}>
                                             <div className={style.popupHeaderMenuBlockSmall}>
                                                 <div className={style.menuCatalogBlock}>
                                                     <ul className={style.menuCatalogList}>
@@ -358,12 +358,12 @@ const Header: React.FC = () => {
                                 <div className={style.contentContainer}>
                                     <div className={style.contentLabelBlock} onClick={() => toggleTab("customer")}>
                                         <p className={style.contentLabel}>Покупателю</p>
-                                        <Box className={cl(style.contentLableIconBlock, isSmall && isOpen("customer") && style.contentLableIconBlock__Active)}>
+                                        <Box className={cn(style.contentLableIconBlock, isSmall && isOpen("customer") && style.contentLableIconBlock__Active)}>
                                             <ArrowDownIcon className={style.contentLableIcon} />
                                         </Box>
                                     </div>
 
-                                    <div className={cl(style.popupHeaderMenuSmall, isSmall && isOpen("customer") && style.popupHeaderMenuSmallOpen)}>
+                                    <div className={cn(style.popupHeaderMenuSmall, isSmall && isOpen("customer") && style.popupHeaderMenuSmallOpen)}>
                                         <div className={style.popupHeaderMenuBlockSmall}>
                                             <div className={style.menuCatalogBlock}>
                                                 {/* Первый столбец */}
@@ -394,12 +394,12 @@ const Header: React.FC = () => {
                     </div>
 
                     {/* Instagram */}
-                    <div className={style.functionalBlock}>
+                    <div className={cn(style.functionalBlock, style.hideInPhoneMode)}>
                         <InstagramIcon className={style.functionalIcon} />
                     </div>
 
                     {/* WhatsApp */}
-                    <div className={style.functionalBlock}>
+                    <div className={cn(style.functionalBlock, style.hideInPhoneMode)}>
                         <WhatsAppIcon className={style.functionalIcon} />
                     </div>
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
+import type { Swiper as SwiperType } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
-import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
 
@@ -29,7 +29,8 @@ interface CardsCaruselProps<T extends CardBase> {
 }
 
 const defaultBreakpoints: Breakpoints = {
-  0: { slidesPerView: 3, spaceBetween: 30 },
+  0: { slidesPerView: 3, spaceBetween: 10 },
+  600: { slidesPerView: 3, spaceBetween: 25 },
   951: { slidesPerView: 5, spaceBetween: 30 },
 };
 
@@ -68,11 +69,11 @@ const CardsCarusel = <T extends CardBase>({
         spaceBetween={30}
         slidesPerView={5}
         breakpoints={breakpoints}
-        onSwiper={(s) => {
+        onSwiper={(s: SwiperType) => {
           setSwiper(s);
           setNavState({ isBeginning: s.isBeginning, isEnd: s.isEnd });
         }}
-        onSlideChange={(s) =>
+        onSlideChange={(s: SwiperType) =>
           setNavState({ isBeginning: s.isBeginning, isEnd: s.isEnd })
         }
       >

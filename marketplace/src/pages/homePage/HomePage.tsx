@@ -141,7 +141,8 @@ const HomePage: React.FC = () => {
 
         <HomePageSection title="Категории">
           <CardsCarusel data={categories} card={CategoryCard} breakpoints={{
-            0: { slidesPerView: 2, spaceBetween: 30 },
+            0: { slidesPerView: 2, spaceBetween: 10 },
+            600: { slidesPerView: 2, spaceBetween: 25 },
             951: { slidesPerView: 5, spaceBetween: 35 }
           }} />
           <CorneredButton text="Перейти в каталог" />
