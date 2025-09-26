@@ -59,6 +59,14 @@
     justify-content: left;
 }
 
+.headerLogoLink {
+    height: 100%;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
 .headerLogo {
     height: 100%;
     max-height: 100%;
@@ -114,6 +122,7 @@
     white-space: nowrap;
     letter-spacing: 2px;
     text-transform: uppercase;
+    text-decoration: none;
     display: flex;
     align-items: center;
     padding-top: 5px;
@@ -223,6 +232,9 @@
 }
 
 .menuCatalogLink {
+    display: flex;
+    align-items: center;
+    padding-top: 5px;
     font-size: var(--default-font-size);
     color: var(--black-light-1);
     letter-spacing: 2px;
@@ -235,7 +247,7 @@
 .menuCatalogLink::after {
     content: "";
     position: absolute;
-    bottom: -2px;
+    bottom: -1px;
     left: 0;
     height: 1px;
     width: 0%;

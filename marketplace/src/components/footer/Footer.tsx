@@ -69,7 +69,7 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Колонка 4 */}
-        <div className={cn(style.footerContainer)}>
+        <div className={cn(style.footerContainer)} id="mail_follow">
           <ul className={style.list}>
             <li className={style.listComp}>
               <a href="/" className={style.listLink}>Подписка на новости</a>

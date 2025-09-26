@@ -1,0 +1,83 @@
+.box {
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 30px rgba(0, 0, 0, .07);
+}
+
+.list {
+    width: 100%;
+    height: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    padding: 5px 0;
+}
+
+.listItem {
+    padding: 8px 9px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.listItemLined {
+    border-bottom: 1px solid var(--light-gray-1);
+}
+
+.listItem__NoPadding {
+    padding: 0;
+}
+
+.titleBlock {
+    padding: 12px 9px 8px 9px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--light-gray-1);
+}
+
+.titleBlock svg {
+    stroke: var(--white) !important;
+    fill: var(--gray) !important;
+    stroke-width: 0.5px !important;
+}
+
+.title {
+    font-size: var(--default-font-size);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: default;
+}
+
+.itemLink {
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    font-size: var(--default-font-size);
+    line-height: 21px;
+    text-decoration: none;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+
+.itemLink_Full {
+    width: 100%;
+    height: 100%;
+    padding: 8px 9px;
+    box-sizing: border-box;
+}
+
+.itemText {
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    font-size: var(--default-font-size);
+    line-height: 21px;
+    letter-spacing: 1px;
+    cursor: default;
+}

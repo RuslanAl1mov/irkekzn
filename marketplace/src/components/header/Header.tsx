@@ -26,6 +26,7 @@ import img4 from "media/images/content/img4.png";
 
 import img21 from "media/images/content/img21.webp";
 import img22 from "media/images/content/img22.jpg";
+import { Link } from "react-router-dom";
 
 
 const Header: React.FC = () => {
@@ -79,7 +80,9 @@ const Header: React.FC = () => {
 
                 {/* logo */}
                 <div className={style.headerLogoBlock}>
-                    <img className={style.headerLogo} alt="header-logo" src={logoDark} />
+                    <Link className={style.headerLogoLink} to="/">
+                        <img className={style.headerLogo} alt="header-logo" src={logoDark} />
+                    </Link>
                 </div>
 
                 {/* content */}
@@ -349,7 +352,9 @@ const Header: React.FC = () => {
                             {/* О нас */}
                             <li className={style.headerContentListItem}>
                                 <div className={style.contentContainer}>
-                                    <p className={style.contentLabel}>О нас</p>
+                                    <div className={style.contentLabelBlock}>
+                                        <Link className={style.contentLabel} to="/about" onClick={() => setIsMenuOpen(false)}>О нас</Link>
+                                    </div>
                                 </div>
                             </li>
 
