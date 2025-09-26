@@ -7,6 +7,7 @@
 
 .advBannerLink {
     width: 100%;
+    height: auto;
     text-decoration: none;
     display: flex;
     justify-content: center;
@@ -16,7 +17,7 @@
 
 .advBannerImg {
     width: 100%;
-    height: fit-content;
+    height: auto;
     background-size: cover;
     background-position: center;
 }
