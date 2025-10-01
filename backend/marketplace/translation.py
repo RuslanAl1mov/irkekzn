@@ -2,9 +2,7 @@ from modeltranslation.translator import register, TranslationOptions
 from .models import (
     ProductCategory,
     ProductTag,
-    Product,
-    MeasurementType,
-    MeasurementUnit,
+    Product
 )
 
 @register(ProductCategory)
@@ -43,22 +41,4 @@ class ProductTranslationOptions(TranslationOptions):
         'description_short',
     )
 
-@register(MeasurementType)
-class MeasurementTypeTranslationOptions(TranslationOptions):
-    """
-    Переводимые поля для типа измерения:
-    - name: название параметра
-    """
-    fields = (
-        'name',
-    )
 
-@register(MeasurementUnit)
-class MeasurementUnitTranslationOptions(TranslationOptions):
-    """
-    Переводимые поля для единицы измерения:
-    - name: обозначение единицы (мм, см и т.д.)
-    """
-    fields = (
-        'name',
-    )

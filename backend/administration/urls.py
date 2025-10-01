@@ -22,9 +22,6 @@ from .views import (
     ProductCreateView,
     ProductUpdateView,
     ProductDeleteView,
-    
-    MeasurementTypeListView,
-    MeasurementUnitListView
 )
 
 
@@ -49,8 +46,6 @@ urlpatterns = [
     path("products/<int:pk>/update/", ProductUpdateView.as_view(), name="product-update"),
     path("products/<int:pk>/delete/", ProductDeleteView.as_view(), name="product-delete"),
     
-    path("measurement-types/", MeasurementTypeListView.as_view(), name="measurement-type-list"),
-    path("measurement-units/", MeasurementUnitListView.as_view(), name="measurement-unit-list")
 ]
 
 

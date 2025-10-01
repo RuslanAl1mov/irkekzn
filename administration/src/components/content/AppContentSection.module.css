@@ -1,0 +1,46 @@
+/* Определяем ключевые кадры для анимации появления и исчезновения */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(40px); /* Слегка сдвигаем вниз */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-40px); /* Слегка сдвигаем вверх */
+    }
+}
+
+.ContentSection {
+    position: absolute;
+    overflow-y: auto;
+
+    top: var(--header-height);
+    left: var(--aside-min-width);
+    right: 0;
+    bottom: 0;
+
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.4s ease, transform 0.4s ease, left 0.5s;
+    z-index: 1;
+}
+
+.ContentSection__Small {
+    left: var(--aside-max-width);
+}
+
+.ContentSection__Hide {
+    opacity: 0;
+    transform: translateY(-40px);
+}

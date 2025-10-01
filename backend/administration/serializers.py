@@ -6,9 +6,6 @@ from core.mixin.dynamic_fields_mixin import DynamicFieldsModelSerializer
 from marketplace.models import (
     ProductCategory,
     ProductTag,
-    MeasurementType,
-    MeasurementUnit,
-    ProductParameter,
     Product,
     ProductPhoto,
 )
@@ -16,7 +13,6 @@ from marketplace.models import (
 from core.utils.fields import (
     CSVListField,
     NullableFloatField,
-    ProductParameterInputSerializer,
 )
 
 class ProductCategorySerializer(DynamicFieldsModelSerializer):
@@ -155,34 +151,6 @@ class ProductPhotoSerializer(DynamicFieldsModelSerializer):
         fields = "__all__"
 
 
-class MeasurementTypeSerializer(DynamicFieldsModelSerializer):
-    class Meta:
-        model = MeasurementType
-        fields = "__all__"
-        
-        
-class MeasurementUnitSerializer(DynamicFieldsModelSerializer):
-    class Meta:
-        model = MeasurementUnit
-        fields = "__all__"
-
-
-class ProductParameterSerializer(DynamicFieldsModelSerializer):
-    """
-    Полный сериализатор характеристики товара (ProductParameter).
-
-    Включает все поля модели, кроме `is_actual`, чтобы не
-    отдавать служебный флаг актуальности на клиент.
-    """
-    
-    measurement_type = MeasurementTypeSerializer()
-    measurement_unit = MeasurementUnitSerializer()
-    
-    class Meta:
-        model = ProductParameter
-        fields = "__all__"
-
-
 class ProductSerializer(DynamicFieldsModelSerializer):
     """
     Сериализатор для модели Product с упорядочиванием фотографий по order_number
@@ -191,7 +159,6 @@ class ProductSerializer(DynamicFieldsModelSerializer):
     """
 
     photo = serializers.SerializerMethodField()
-    parameters = serializers.SerializerMethodField()
     categories = ProductCategorySerializer(many=True, read_only=True)
     tags = ProductTagSerializer(many=True, read_only=True)
 
@@ -202,11 +169,7 @@ class ProductSerializer(DynamicFieldsModelSerializer):
     def get_photo(self, obj):
         qs = obj.productphoto_set.order_by("order_number")
         return ProductPhotoSerializer(qs, many=True, context=self.context).data
-
-    def get_parameters(self, obj):
-        qs = obj.productparameter_set.all()
-        return ProductParameterSerializer(qs, many=True, context=self.context).data
-
+    
 
 class ProductCreateSerializer(serializers.ModelSerializer):
     # языковые поля
@@ -224,8 +187,6 @@ class ProductCreateSerializer(serializers.ModelSerializer):
     # файлы
     photos = serializers.ListField(child=serializers.ImageField(), write_only=True, required=False, allow_empty=True, default=list)
 
-    # параметры
-    parameters = serializers.JSONField(write_only=True, required=False, default=list)
 
     class Meta:
         model  = Product
@@ -234,7 +195,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
             "name_ru", "name_en",
             "description_short_ru", "description_short_en",
             "description_ru", "description_en",
-            "category_ids", "tag_ids", "photos", "parameters",
+            "category_ids", "tag_ids", "photos",
         ]
         
     def validate_sku(self, value):
@@ -265,17 +226,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         category_ids = validated_data.pop("category_ids")
         tag_ids = validated_data.pop("tag_ids", [])
         photos = validated_data.pop("photos", [])
-        parameters_raw = validated_data.pop("parameters", [])
 
-        if isinstance(parameters_raw, str):
-            try:
-                parameters_raw = json.loads(parameters_raw)
-            except ValueError:
-                raise ValidationError({"parameters": "Некорректный JSON"})
-
-        param_ser = ProductParameterInputSerializer(data=parameters_raw, many=True)
-        param_ser.is_valid(raise_exception=True)
-        parameters = param_ser.validated_data
 
         # перенос RU/EN-полей
         validated_data["name"] = validated_data.pop("name_ru")
@@ -295,10 +246,6 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         # фото
         for order, img in enumerate(photos, 1):
             ProductPhoto.objects.create(product=product, photo=img, order_number=order)
-
-        # параметры
-        for p in parameters:
-            ProductParameter.objects.create(product=product, **p)
 
         return product
 
@@ -329,8 +276,6 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
     deleted_photo_ids = CSVListField(child=serializers.IntegerField(min_value=1),
                                      required=False, allow_empty=True, default=list)
 
-    # параметры
-    parameters = serializers.JSONField(required=False)
 
     class Meta:
         model  = Product
@@ -341,7 +286,6 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
             "description_ru", "description_en",
             "category_ids", "tag_ids",
             "photos", "deleted_photo_ids",
-            "parameters",
         )
         
     def validate_sku(self, value):
@@ -375,7 +319,6 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
         tag_ids = validated_data.pop("tag_ids", None)
         new_photos = validated_data.pop("photos", [])
         deleted_photo_ids = validated_data.pop("deleted_photo_ids", [])
-        parameters_raw = validated_data.pop("parameters", None)
 
         # price / sale_price
         if "price" in validated_data:
@@ -423,27 +366,5 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
                     photo=img,
                     order_number=start_order + shift,
                 )
-
-        # параметры
-        if parameters_raw is not None:
-            if isinstance(parameters_raw, str):
-                try:
-                    parameters_raw = json.loads(parameters_raw)
-                except ValueError:
-                    raise ValidationError({"parameters": "Некорректный JSON"})
-
-            ser = ProductParameterInputSerializer(data=parameters_raw, many=True)
-            ser.is_valid(raise_exception=True)
-            parameters = ser.validated_data
-
-            ids_in_request = [p.get("id") for p in parameters if p.get("id")]
-            instance.productparameter_set.exclude(id__in=ids_in_request).delete()
-
-            for p in parameters:
-                pid = p.pop("id", None)
-                if pid:
-                    ProductParameter.objects.filter(id=pid, product=instance).update(**p)
-                else:
-                    ProductParameter.objects.create(product=instance, **p)
 
         return instance

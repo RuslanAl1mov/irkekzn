@@ -1,0 +1,33 @@
+.ppl-param-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ppl-param-item {
+  display: flex;
+  align-items: end;
+  gap: 8px;
+}
+
+.ppl-param-remove-btn {
+  font-size: var(--default-font-size);
+  border: 1px solid var(--red);
+  border-radius: 5px;
+  padding: 10px 7px;
+  cursor: pointer;
+  color: var(--white);
+  background-color: var(--red);
+
+  transition: background-color 0.4s;
+}
+
+.ppl-param-remove-btn:hover {
+  background-color: var(--red-dark);
+}
+
+.ppl-param-add-btn {
+  align-self: flex-start;
+  padding: 6px 12px;
+}

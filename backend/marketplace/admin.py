@@ -5,10 +5,7 @@ from .models import (
     ProductCategory, 
     ProductTag,
     Product, 
-    ProductPhoto, 
-    MeasurementType,
-    MeasurementUnit,
-    ProductParameter
+    ProductPhoto,
 )
 
 @admin.register(ProductCategory)
@@ -51,30 +48,3 @@ class ProductPhotoAdmin(admin.ModelAdmin):
         return "-"
     photo_thumbnail.short_description = "Фото товара"
     
-
-@admin.register(MeasurementType)
-class MeasurementTypeAdmin(admin.ModelAdmin):
-    list_display = ("id", "name")
-    search_fields = ("name",)
-    list_display_links = ("id", "name")  # чтобы можно было переходить по клику на ID или имя
-
-
-@admin.register(MeasurementUnit)
-class MeasurementUnitAdmin(admin.ModelAdmin):
-    list_display = ("id", "name")
-    search_fields = ("name",)
-    list_display_links = ("id", "name")
-
-
-@admin.register(ProductParameter)
-class ProductParameterAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "product",
-        "measurement_type",
-        "value",
-        "measurement_unit",
-        "is_actual",
-    )
-    list_filter = ("product", "measurement_type", "measurement_unit", "is_actual")
-    search_fields = ("product__name",)

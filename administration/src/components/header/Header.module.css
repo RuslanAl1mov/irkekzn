@@ -1,0 +1,142 @@
+.header {
+    position: absolute;
+    right: 0;
+    left: 0;
+    height: var(--header-height);
+    background-color: var(--white);
+    z-index: 90;
+    display: flex;
+}
+
+.container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 17px 18px;
+    box-sizing: border-box;
+}
+
+/* Логотип */
+.left {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.logoBlock {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo {
+    height: 100%;
+}
+
+.logoText {
+    font-size: calc(var(--default-font-size) + 7px);
+    font-weight: 600;
+}
+
+/* Правая часть */
+.right {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.funcList {
+    height: 100%;
+    display: flex;
+    list-style: none;
+    column-gap: 40px;
+}
+
+.funcItem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Кнопки-иконки */
+.iconButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.iconLink {
+    box-sizing: border-box;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.iconLink:hover {
+    background-color: var(--gray-gray-1);
+}
+
+.icon svg {
+    height: 20px;
+    fill: var(--gray-gray-3);
+    transition: fill 0.3s;
+}
+
+.iconLink:hover svg {
+    fill: var(--blue);
+}
+
+/* Пользователь */
+.userMenu {
+    height: 100%;
+    border-radius: 100%;
+    cursor: pointer;
+}
+
+.userAvatar {
+    height: 100%;
+    border-radius: 100%;
+}
+
+/* Дропдаун пользователя */
+.userDropdown {
+    position: absolute;
+    top: 120%;
+    right: -10px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.userMenu:hover .userDropdown {
+    opacity: 1;
+    visibility: visible;
+}
+
+.userDropdownContent {
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: var(--card-box-shadow--active);
+    border: 0.5px solid var(--light-gray-2);
+    overflow: hidden;
+}
+
+.userDropdownList {
+    list-style: none;
+}
+
+.userDropdownLink {
+    display: block;
+    padding: 10px 25px;
+    text-decoration: none;
+    color: var(--gray-gray-3);
+    font-size: var(--default-font-size);
+    transition: color 0.3s, background-color 0.3s;
+}
+
+.userDropdownLink:hover {
+    background-color: var(--light-blue-2);
+    color: var(--blue);
+}

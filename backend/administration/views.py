@@ -12,9 +12,8 @@ from services.models import CallRequest
 from marketplace.models import (
     ProductCategory,
     ProductTag, 
-    Product, 
-    MeasurementType,
-    MeasurementUnit)
+    Product,
+    )
 
 from .serializers import (
     ProductCategorySerializer,
@@ -26,8 +25,6 @@ from .serializers import (
     ProductSerializer,
     ProductCreateSerializer,
     ProductUpdateSerializer,
-    MeasurementTypeSerializer,
-    MeasurementUnitSerializer
 )
 
 from .pagination import (
@@ -428,32 +425,3 @@ class ProductDeleteView(generics.DestroyAPIView):
     permission_classes = [IsAuthenticated, FullDjangoModelPermissions]
     lookup_field = "pk"
     
-
-class MeasurementTypeListView(generics.ListAPIView):
-    """
-    GET /api/v1/administration/measurement-types/
-    Возвращает список всех типов измерений.
-    Поддерживается поиск по id и name, и сортировка.
-    """
-    queryset = MeasurementType.objects.all()
-    serializer_class = MeasurementTypeSerializer
-    permission_classes = [IsAuthenticated]
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ["id", "name"]
-    ordering_fields = ["id", "name"]
-    ordering = ["-id"]
-
-
-class MeasurementUnitListView(generics.ListAPIView):
-    """
-    GET /api/v1/administration/measurement-units/
-    Возвращает список всех единиц измерения.
-    Поддерживается поиск по id и name, и сортировка.
-    """
-    queryset = MeasurementUnit.objects.all()
-    serializer_class = MeasurementUnitSerializer
-    permission_classes = [IsAuthenticated]
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ["id", "name"]
-    ordering_fields = ["id", "name"]
-    ordering = ["-id"]

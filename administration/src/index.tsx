@@ -1,14 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from 'App';
+import { BrowserRouter } from 'react-router-dom';
+import { AuthProvider } from 'context/AuthContext';
+import { FiltersProvider } from 'context/FiltersContext';
+import { AsideProvider } from 'context/AsideContext';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+const queryClient = new QueryClient();
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
 root.render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+    <BrowserRouter>
+      <AuthProvider>
+        <AsideProvider>
+          <FiltersProvider>
+            <App />
+          </FiltersProvider>
+        </AsideProvider>
+      </AuthProvider>
+    </BrowserRouter>
+    </QueryClientProvider>
+  </React.StrictMode >
 );
 

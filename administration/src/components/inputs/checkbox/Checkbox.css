@@ -1,0 +1,37 @@
+
+
+/* Общие стили для блока чекбокса */
+.dti-checkbox-block {
+    display: flex;
+    gap: 5px;
+}
+
+.dti-checkbox {
+    cursor: pointer;
+    display: flex;
+    width: 13px;
+    height: 13px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    border: 1px solid var(--Brand-Blue-Main, #2A32ED);
+}
+
+.dti-checkbox-icon {
+    display: none;   
+    width: 9px;
+    height: 11px;
+}
+
+.dti-checkbox--checked {
+    background: var(--blue);
+}
+
+.dti-checkbox--checked .dti-checkbox-icon {
+    display: block;
+}
+
+.dti-checkbox-label {
+    cursor: pointer;
+    font-size: calc(var(--default-font-size) - 1px);
+}

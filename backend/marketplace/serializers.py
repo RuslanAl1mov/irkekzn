@@ -2,12 +2,8 @@ from rest_framework import serializers
 from .models import (
     ProductCategory,
     ProductTag,
-    MeasurementType,
-    MeasurementUnit,
-    ProductParameter,
     Product,
     ProductPhoto,
-    ProductParameter
 )
 
 
@@ -39,34 +35,6 @@ class ProductPhotoSerializer(serializers.ModelSerializer):
         exclude = ['is_actual']
 
 
-class MeasurementTypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = MeasurementType
-        fields = "__all__"
-        
-        
-class MeasurementUnitSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = MeasurementUnit
-        fields = "__all__"
-
-
-class ProductParameterSerializer(serializers.ModelSerializer):
-    """
-    Полный сериализатор характеристики товара (ProductParameter).
-
-    Включает все поля модели, кроме `is_actual`, чтобы не
-    отдавать служебный флаг актуальности на клиент.
-    """
-    
-    measurement_type = MeasurementTypeSerializer()
-    measurement_unit = MeasurementUnitSerializer()
-    
-    class Meta:
-        model = ProductParameter
-        fields = "__all__"
-
-
 class ProductSerializer(serializers.ModelSerializer):
     """
     Сериализатор для модели Product с упорядочиванием фотографий по order_number
@@ -75,7 +43,6 @@ class ProductSerializer(serializers.ModelSerializer):
     """
 
     photo = serializers.SerializerMethodField()
-    parameters = serializers.SerializerMethodField()
     categories = ProductCategorySerializer(many=True, read_only=True)
     tags = ProductTagSerializer(many=True, read_only=True)
 
@@ -87,7 +54,4 @@ class ProductSerializer(serializers.ModelSerializer):
         qs = obj.productphoto_set.order_by("order_number")
         return ProductPhotoSerializer(qs, many=True, context=self.context).data
 
-    def get_parameters(self, obj):
-        qs = obj.productparameter_set.all()
-        return ProductParameterSerializer(qs, many=True, context=self.context).data
 

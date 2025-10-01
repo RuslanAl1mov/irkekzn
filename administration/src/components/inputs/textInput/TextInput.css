@@ -1,0 +1,63 @@
+/* Общие стили для блока ввода текста */
+.ti-text-input-block {
+    display: flex;
+    flex-direction: column;
+    width: 100%
+}
+
+/* Стили для метки (label) */
+.ti-text-input-block label {
+    margin-bottom: 8px;
+    font-size: var(--default-font-size);
+    color: var(--black);
+    font-weight: 500;
+}
+
+/* Стили для поля ввода */
+.ti-text-input-block .ti-text-input {
+    padding: 11.8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    font-size: var(--default-font-size);
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Стили для поля ввода при фокусе */
+.ti-text-input-block .ti-text-input:focus {
+    border-color: var(--blue-light-3);
+    box-shadow: 0 0 10px var(--blue-light-1);
+    outline: none;
+}
+
+/* Стили для placeholder */
+.ti-text-input-block .ti-text-input::placeholder {
+    color: #aaa;
+    font-style: italic;
+    font-size: calc(var(--default-font-size) - 1px);
+}
+
+/* Дополнительные стили для улучшения визуального восприятия */
+.ti-text-input-block .ti-text-input:disabled {
+    background-color: #f5f5f5;
+    border-color: #ddd;
+    cursor: not-allowed;
+    border-radius: 10px;
+}
+
+.ti-text-input-block .ti-text-input.error {
+    border-color: var(--red);
+    box-shadow: 0 0 2px var(--red);
+}
+
+/* Сообщения об ошибках */
+.ti-error-message {
+    color: var(--red);
+    font-size: var(--error-message-font-size);
+    margin-top: 5px;
+}
+
+/* Звездочка для обязательных полей */
+.ti-required {
+    color: var(--red);
+    margin-left: 4px;
+}

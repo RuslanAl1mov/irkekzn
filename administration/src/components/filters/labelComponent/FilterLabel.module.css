@@ -1,0 +1,31 @@
+.box {
+    background-color: var(--white);
+    border-radius: 10px;
+    box-shadow: 0px 97px 27px 0px rgba(163, 159, 193, 0.00), 0px 62px 25px 0px rgba(163, 159, 193, 0.01), 0px 35px 21px 0px rgba(163, 159, 193, 0.03), 0px 16px 16px 0px rgba(163, 159, 193, 0.06), 0px 4px 9px 0px rgba(163, 159, 193, 0.07);
+    border: 1px solid #FFF;
+    position: relative;
+    transition: width 0.4s ;
+    z-index: 95;
+}
+
+
+.contentBlock {
+    padding: 13px 8px 13px 12px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    align-items: center;
+    box-sizing: border-box;
+    gap: 12px;
+
+    transition: background-color 0.4s, color 0.4s;
+}
+
+.content {
+    font-size: var(--default-font-size);
+    font-weight: 550;
+    color: var(--gray-gray-3);
+    user-select: none;
+    transition: color 0.4s;
+}

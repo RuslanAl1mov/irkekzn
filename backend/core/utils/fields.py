@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from marketplace.models import MeasurementType, MeasurementUnit
 
 
 class CSVListField(serializers.ListField):
@@ -51,12 +50,3 @@ class FlexiblePKRelatedField(serializers.PrimaryKeyRelatedField):
         if isinstance(data, dict):
             data = data.get("id")
         return super().to_internal_value(data)
-    
-
-class ProductParameterInputSerializer(serializers.Serializer):
-    id = serializers.IntegerField(required=False, allow_null=True)
-    measurement_type = FlexiblePKRelatedField(queryset=MeasurementType.objects.all())
-    measurement_unit = FlexiblePKRelatedField(queryset=MeasurementUnit.objects.all())
-    value = serializers.CharField(max_length=250)
-
-

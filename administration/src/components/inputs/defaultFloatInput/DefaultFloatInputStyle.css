@@ -1,0 +1,91 @@
+/* src/components/inputs/DefaultFloatInputStyle.css */
+
+/* Общие стили для блока */
+.dtfi-float-input-block {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  /* Стили для label */
+  .dtfi-float-input-block label {
+    margin-bottom: 8px;
+    font-size: var(--default-font-size);
+    color: var(--black);
+    font-weight: 500;
+  }
+  
+  /* 
+    Обёртка для самого поля и суффикса.
+    Flex, чтобы размещать input и суффикс в одной строке
+  */
+  .dtfi-float-input-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative; /* на всякий случай, если захотите что-то позиционировать */
+  }
+  
+  /* Стили для самого input */
+  .dtfi-float-input-wrapper .dtfi-float-input {
+    flex: 1; /* растягиваем на всю доступную ширину */
+    padding: 11.8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    font-size: var(--default-font-size);
+    transition: border-color 0.3s, box-shadow 0.3s;
+    /* при желании можно добавить отступ справа, чтобы не налезало на суффикс */
+  }
+  
+  /* Стили при фокусе */
+  .dtfi-float-input-wrapper .dtfi-float-input:focus {
+    border-color: var(--beige);
+    box-shadow: 0 0 10px var(--light-beige-1);
+    outline: none;
+  }
+  
+  /* Placeholder */
+  .dtfi-float-input-wrapper .dtfi-float-input::placeholder {
+    color: #aaa;
+    font-style: italic;
+    font-size: calc(var(--default-font-size) - 1px);
+  }
+  
+  /* Отключённое поле */
+  .dtfi-float-input-wrapper .dtfi-float-input:disabled {
+    background-color: #f5f5f5;
+    border-color: #ddd;
+    cursor: not-allowed;
+  }
+  
+  /* Ошибка */
+  .dtfi-float-input-wrapper .dtfi-float-input.error {
+    border-color: var(--red);
+    box-shadow: 0 0 2px var(--red);
+  }
+  
+  /* Стили для суффикса (%, ед. изм., и т.д.) */
+  .dtfi-float-input-suffix {
+  
+    color: var(--black);
+    font-size: var(--default-font-size);
+  
+    /* Можно задать любой желаемый стиль, например:
+    background: #eee;
+    padding: 5px;
+    border-radius: 4px;
+    */
+  }
+  
+  /* Сообщения об ошибках */
+  .dtfi-error-message {
+    color: var(--red);
+    font-size: var(--error-message-font-size);
+    margin-top: 5px;
+  }
+  
+  /* Звездочка для обязательных полей */
+  .dtfi-required {
+    color: var(--red);
+    margin-left: 4px;
+  }
+  

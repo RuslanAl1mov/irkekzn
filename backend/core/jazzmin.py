@@ -69,9 +69,6 @@ JAZZMIN_SETTINGS = {
         "marketplace.ProductTag": "fas fa-tags",               # для модели ProductTag
         "marketplace.Product": "fas fa-boxes-stacked",         # для модели Product
         "marketplace.ProductPhoto": "fas fa-images",           # для модели ProductPhoto
-        "marketplace.ProductParameter": "fas fa-ruler",         # для модели ProductParameter
-        "marketplace.MeasurementType": "fas fa-sort-numeric-up",   # новая иконка для MeasurementType
-        "marketplace.MeasurementUnit": "fas fa-balance-scale",     # иконка для MeasurementUni
     },
     "order_with_respect_to": [
         "company",
@@ -86,15 +83,12 @@ JAZZMIN_SETTINGS = {
         "marketplace.ProductTag",
         "marketplace.Product",
         "marketplace.ProductPhoto",
-        "marketplace.ProductParameter",
         
         "users.User",
         "users.Employee",
         "users.Client"
         
         "products",
-        "products.MeasurementType",
-        "products.MeasurementUnit",
     ],
     "show_sidebar": True,
     "navigation_expanded": True,
