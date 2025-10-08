@@ -1,0 +1,14 @@
+.git
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.env.*
+venv/
+.envrc
+.mypy_cache/
+pytest_cache/
+static/
+media/
+.wheels/

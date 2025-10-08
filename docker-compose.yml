@@ -1,0 +1,87 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
+    env_file:
+      - ./backend/.env.docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - django_static:/app/staticfiles
+      - django_media:/app/media
+
+  administration:
+    build:
+      context: ./administration
+    volumes:
+      - react_admin:/var/www/react/administration
+    command:
+      - sh
+      - -lc
+      - |
+        set -e
+        test -f /app/build/index.html || { echo "❌ /app/build/index.html not found"; exit 1; }
+        mkdir -p /var/www/react/administration
+        rm -rf /var/www/react/administration/* || true
+        cp -r /app/build/. /var/www/react/administration/
+        find /var/www/react/administration -type d -exec chmod 755 {} \;
+        find /var/www/react/administration -type f -exec chmod 644 {} \;
+    restart: "no"
+
+  marketplace:
+    build:
+      context: ./marketplace
+    volumes:
+      - react_market:/var/www/react/marketplace
+    command:
+      - sh
+      - -lc
+      - |
+        set -e
+        test -f /app/build/index.html || { echo "❌ /app/build/index.html not found"; exit 1; }
+        mkdir -p /var/www/react/marketplace
+        rm -rf /var/www/react/marketplace/* || true
+        cp -r /app/build/. /var/www/react/marketplace/
+        find /var/www/react/marketplace -type d -exec chmod 755 {} \;
+        find /var/www/react/marketplace -type f -exec chmod 644 {} \;
+    restart: "no"
+
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx-setup.conf:/etc/nginx/conf.d/default.conf:ro
+      - react_market:/var/www/react/marketplace:ro
+      - react_admin:/var/www/react/administration:ro
+      - django_static:/var/www/django/static:ro
+      - django_media:/var/www/django/media:ro 
+    depends_on:
+      backend:
+        condition: service_started
+      administration:
+        condition: service_completed_successfully
+      marketplace:
+        condition: service_completed_successfully
+
+  postgres:
+    image: postgres:17-alpine
+    env_file:
+      - ./backend/.env.docker
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB -h 127.0.0.1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  react_market:
+  react_admin:
+  django_static:
+  django_media:
+  pgdata:
