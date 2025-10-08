@@ -204,15 +204,6 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR.parent, "media")
 
 
-FORCE_SCRIPT_NAME = "/core"
-
-# Если за nginx будет HTTPS, пригодится:
-# SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
-# Чтобы Django доверял хосту/прокси
-USE_X_FORWARDED_HOST = True
-
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 

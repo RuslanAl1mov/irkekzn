@@ -13,7 +13,7 @@ const queryClient = new QueryClient();
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-    <BrowserRouter basename="/administration">
+    <BrowserRouter>
       <AuthProvider>
         <AsideProvider>
           <FiltersProvider>
