@@ -1,0 +1,47 @@
+.inputCont {
+	border: 1px solid var(--gray-3);
+}
+
+.inputCont.withIcon {
+	display: grid;
+	grid-template-columns: 24px 1fr;
+	gap: 8px;
+	padding: 10px 15px;
+	border-radius: 2px;
+	align-items: center;
+}
+
+.withIcon svg {
+	fill: var(--gray-3) !important;
+	stroke-width: 0.6px;
+	stroke: var(--white);
+}
+
+.input.password {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: 8px;
+	align-items: center;
+	align-content: center;
+}
+
+.eyeBtn {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+}
+
+.input input::placeholder {
+	color: var(--gray-3);
+}
+
+.input input {
+	font: var(--body1);
+	width: 100%;
+}
+
+
+.inputCont:has(input:focus) {
+	border-color: var(--blue);
+}

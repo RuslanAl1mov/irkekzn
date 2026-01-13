@@ -142,7 +142,7 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
-    "REFRESH_TOKEN_LIFETIME": timedelta(hours=2),
+    "REFRESH_TOKEN_LIFETIME": timedelta(hours=12),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
 }
@@ -154,26 +154,25 @@ REST_AUTH = {
     
     "JWT_AUTH_COOKIE": "access",
     "JWT_AUTH_REFRESH_COOKIE": "refresh",
-    "JWT_AUTH_HTTPONLY": True,
-    "JWT_AUTH_SECURE": True if os.getenv("JWT_AUTH_COOKIE_SECURE") == "True" else False,
-    "JWT_AUTH_SAMESITE": os.getenv("JWT_AUTH_COOKIE_SAMESITE"),
+    "JWT_AUTH_HTTPONLY": True if os.getenv("JWT_AUTH_HTTPONLY") == "True" else False,
+    "JWT_AUTH_SECURE": True if os.getenv("JWT_AUTH_SECURE") == "True" else False,
+    "JWT_AUTH_SAMESITE": os.getenv("JWT_AUTH_SAMESITE"),
     
     "SESSION_LOGIN": False,
     "OLD_PASSWORD_FIELD_ENABLED": False
 }
 
-
 # Настройки CORS headers
-CORS_ALLOW_CREDENTIALS = bool(os.getenv("CORS_ALLOW_CREDENTIALS"))
-CORS_ORIGIN_ALLOW_ALL = bool(os.getenv("CORS_ORIGIN_ALLOW_ALL"))
+CORS_ALLOW_CREDENTIALS = True if os.getenv("CORS_ALLOW_CREDENTIALS") == "True" else False
+CORS_ORIGIN_ALLOW_ALL = True if os.getenv("CORS_ORIGIN_ALLOW_ALL") == "True" else False
 CORS_ALLOWED_ORIGINS = str(os.getenv("CORS_ALLOWED_ORIGINS")).split(",")
 
 # Настройка CSRF куки
-CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_HTTPONLY = True if os.getenv("CSRF_COOKIE_HTTPONLY") == "True" else False
 CSRF_COOKIE_SECURE = True if os.getenv("CSRF_COOKIE_SECURE") == "True" else False
 CSRF_COOKIE_SAMESITE = os.getenv("CSRF_COOKIE_SAMESITE")
-CSRF_TRUSTED_ORIGINS = str(os.getenv("CSRF_TRUSTED_ORIGINS")).split(",")
-CSRF_COOKIE_DOMAIN = os.getenv("CSRF_COOKIE_DOMAIN")
+CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS").split(",")
+# CSRF_COOKIE_DOMAIN = os.getenv("CSRF_COOKIE_DOMAIN")
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
@@ -201,7 +200,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATIC_ROOT = os.path.join(BASE_DIR.parent, "staticfiles")
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR.parent, "media")
+MEDIA_ROOT = os.path.join(BASE_DIR.parent, "")
 
 
 # Default primary key field type

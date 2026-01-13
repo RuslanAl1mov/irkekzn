@@ -26,15 +26,15 @@ urlpatterns = [
 
     path("api/v1/auth/employee/login/", EmployeeLoginView.as_view(), name="employee-login"),
     path("api/v1/auth/client/login/", ClientLoginView.as_view(),   name="client-login"),    
-    path('api/v1/auth/me/', MeView.as_view(), name='me'),
+    path("api/v1/auth/me/", MeView.as_view(), name="me"),
     path("api/v1/auth/logout/", LogoutView.as_view(), name="logout"),
     path("api/v1/auth/token/refresh/", get_refresh_view().as_view(), name="token_refresh"),
-    path('api/v1/auth/csrf-cookie/', csrf_cookie_view, name='csrf-cookie'),
+    path("api/v1/auth/csrf-cookie/", csrf_cookie_view, name="csrf-cookie"),
     
-    path('api/v1/company/', include('company.urls')),  # Компания
-    path('api/v1/services/', include('services.urls')),  # Сервисы
-    path('api/v1/marketplace/', include('marketplace.urls')),  # Магазин/Вебсайт
-    path('api/v1/administration/', include('administration.urls')),  # Кабинет администратора
+    path("api/v1/company/", include("company.urls")),  # Компания
+    path("api/v1/services/", include("services.urls")),  # Сервисы
+    path("api/v1/marketplace/", include("marketplace.urls")),  # Магазин/Вебсайт
+    path("api/v1/administration/", include("administration.urls")),  # Кабинет администратора
     
     # Индекс-карта: /sitemap.xml → укажет на /sitemap-products.xml, /sitemap-categories.xml (с пагинацией)
     path("sitemap.xml", cache_page(600)(index), {"sitemaps": sitemaps, "sitemap_url_name": "sitemaps"}),
@@ -42,7 +42,7 @@ urlpatterns = [
 
 ]
 
-urlpatterns += i18n.i18n_patterns(path('admin/', admin.site.urls))
+urlpatterns += i18n.i18n_patterns(path("admin/", admin.site.urls))
 
 
 if settings.DEBUG:

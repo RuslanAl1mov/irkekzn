@@ -1,11 +1,15 @@
 {
   "scripts": {
-    "dev:marketplace": "npm --prefix marketplace start",
+    "dev:marketplace": "npm --prefix marketplace run dev",
     "dev:backend": "./start-backend.sh",
-    "dev:admin": "PORT=3001 npm --prefix administration start",
-    "dev": "concurrently \"npm run dev:marketplace\" \"npm run dev:backend\" \"npm run dev:admin\"" 
+    "dev:admin": "npm --prefix administration run dev",
+    "dev": "concurrently \"npm run dev:marketplace\" \"npm run dev:backend\" \"npm run dev:admin\""
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.90.16",
+    "react-router-dom": "^7.12.0"
   }
 }

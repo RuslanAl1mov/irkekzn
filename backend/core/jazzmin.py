@@ -36,9 +36,9 @@ JAZZMIN_SETTINGS = {
     "site_title": "IRKE Admin",
     "site_header": "IRKE Admin",
     "site_brand": "IRKE Admin",
-    "site_logo": "media/images/project/favicon-32x32.png",
-    "login_logo": "media/images/project/apple-touch-icon.png",
-    "site_icon": "media/images/project/favicon.ico",
+    "site_logo": "/images/project/favicon-32x32.png",
+    "login_logo": "/images/project/apple-touch-icon.png",
+    "site_icon": "/images/project/favicon.ico",
     "welcome_sign": "Добро пожаловать в IRKE",
     "copyright": "IRKE",
     "topmenu_links": [

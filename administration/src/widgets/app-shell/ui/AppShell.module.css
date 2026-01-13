@@ -1,0 +1,14 @@
+.mainLayout {
+	width: 100%;
+}
+
+.allContent {
+	padding: var(--page-padding);
+	padding-top: calc(var(--header-height) + var(--page-padding));
+	padding-left: calc(var(--aside-min-width) + var(--page-padding));
+	transition: padding 0.4s;
+}
+
+.wideSidbar {
+	padding-left: calc(var(--aside-max-width) + var(--page-padding));
+}

@@ -1,0 +1,125 @@
+.wrapper {
+  height: 130px;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: var(--white);
+  box-shadow: 0px 97px 27px 0px rgba(163, 159, 193, 0),
+    0px 62px 25px 0px rgba(163, 159, 193, 0.01),
+    0px 35px 21px 0px rgba(163, 159, 193, 0.03),
+    0px 16px 16px 0px rgba(163, 159, 193, 0.06),
+    0px 4px 9px 0px rgba(163, 159, 193, 0.07);
+  border-radius: 15px;
+  flex: 1 5;
+  align-self: stretch;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border: 1px solid var(--white);
+}
+
+.wrapper:hover {
+  background-color: var(--gray);
+}
+
+.wrapperColored {
+  background-color: var(--blue);
+}
+
+.wrapperColored:hover {
+  background-color: var(--blue-4);
+}
+
+.inner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.row {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.title {
+  font: var(--body2);
+  line-height: normal;
+}
+
+.titleColored {
+  color: var(--white);
+}
+
+.value {
+  font: var(--body2);
+  color: var(--blue);
+  height: 100%;
+  display: flex;
+  align-items: end;
+}
+
+.valueColored {
+  color: var(--white);
+}
+
+.link {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.link svg {
+  stroke: var(--gray-4);
+  stroke-width: 1px;
+}
+
+.linkColored svg {
+  stroke: var(--white);
+}
+
+.percentageBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.percentageIconText {
+  font: var(--body2);
+  display: flex;
+  gap: 2px;
+  color: var(--green);
+  justify-content: right;
+}
+
+.percentageIconText svg {
+  stroke: var(--green);
+  height: 18px;
+  width: 18px;
+}
+
+.percentageIconTextDecrease {
+  color: var(--red);
+}
+
+.percentageIconTextDecrease svg {
+  stroke: var(--red);
+  transform: scale(1, -1);
+}
+
+.percentageValue {
+  display: flex;
+  align-items: center;
+  font: var(--body1);
+  font-weight: 500;
+  color: var(--green);
+}
+
+.percentageValueDecrease {
+  color: var(--red);
+}
+
+.dateRange {
+  font-size: calc(var(--default-font-size) - 4px);
+  font-weight: 400;
+  text-align: right;
+  color: var(--gray-gray-3);
+}
+

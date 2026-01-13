@@ -41,6 +41,8 @@ class AuthFinalizeResponse:
             httponly=settings.REST_AUTH["JWT_AUTH_HTTPONLY"],
             secure=settings.REST_AUTH["JWT_AUTH_SECURE"],
             samesite=settings.REST_AUTH["JWT_AUTH_SAMESITE"],
+            max_age=settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"],
+
         )
         response.set_cookie(
             key=settings.REST_AUTH["JWT_AUTH_REFRESH_COOKIE"],
@@ -48,6 +50,7 @@ class AuthFinalizeResponse:
             httponly=settings.REST_AUTH["JWT_AUTH_HTTPONLY"],
             secure=settings.REST_AUTH["JWT_AUTH_SECURE"],
             samesite=settings.REST_AUTH["JWT_AUTH_SAMESITE"],
+            max_age=settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"],
         )
 
         # удаляем поля из JSON, они уже в куках

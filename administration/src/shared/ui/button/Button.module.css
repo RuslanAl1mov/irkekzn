@@ -1,0 +1,25 @@
+.btn {
+	font: var(--button);
+	font-weight: 500;
+	color: var(--white);
+	padding: 20px 20px;
+	border-radius: 2px;
+	background: var(--blue);
+	transition: background 0.3s;
+}
+
+.btn:hover {
+	background: var(--blue-4);
+}
+
+.btn.full {
+	width: 100%;
+}
+
+.withLoading {
+	display: grid;
+	grid-template-columns: auto auto;
+	justify-content: center;
+	align-items: center;
+	gap: 8px;
+}

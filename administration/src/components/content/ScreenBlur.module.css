@@ -1,8 +1,0 @@
-.BlurBox {
-    position: fixed;
-    inset: 0;
-    backdrop-filter: blur(4px);
-    z-index: 90;
-    /* pointer-events: none; */
-  }
-  

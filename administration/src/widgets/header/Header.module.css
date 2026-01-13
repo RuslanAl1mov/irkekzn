@@ -1,0 +1,153 @@
+.header {
+    position: absolute;
+    right: 0;
+    left: 0;
+    height: var(--header-height);
+    background-color: var(--white);
+    z-index: 90;
+    display: flex;
+}
+
+.container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 17px 18px;
+    box-sizing: border-box;
+}
+
+/* Логотип */
+.left {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.logoBlock {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo {
+    height: 100%;
+}
+
+.logoText {
+    font-size: calc(var(--default-font-size) + 7px);
+    font-weight: 600;
+}
+
+/* Правая часть */
+.right {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.funcList {
+    height: 100%;
+    display: flex;
+    list-style: none;
+    column-gap: 30px;
+}
+
+.funcItem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Кнопки-иконки */
+.iconButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.iconLink {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border-radius: 8px;
+    padding: 3px;
+    transition: background-color 0.3s;
+}
+
+.iconLink:hover {
+    background-color: var(--gray);
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon svg {
+    height: 22px;
+    fill: var(--gray-3);
+    transition: fill 0.3s;
+}
+
+.iconLink:hover svg {
+    fill: var(--blue);
+}
+
+/* Пользователь */
+.userMenu {
+    height: 100%;
+    border-radius: 100%;
+    cursor: pointer;
+}
+
+.userAvatar {
+    height: 100%;
+    border-radius: 100%;
+}
+
+/* Дропдаун пользователя */
+.userDropdown {
+    position: absolute;
+    top: 120%;
+    right: -10px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.userMenu:hover .userDropdown {
+    opacity: 1;
+    visibility: visible;
+}
+
+.userDropdownContent {
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: 44px 221px 63px 0px rgba(172, 176, 200, 0.00), 28px 141px 58px 0px rgba(172, 176, 200, 0.01), 16px 79px 49px 0px rgba(172, 176, 200, 0.05), 7px 35px 36px 0px rgba(172, 176, 200, 0.09), 2px 9px 20px 0px rgba(172, 176, 200, 0.10);    background-color: var(--white);
+    border: 0.5px solid var(--gray-2);
+    overflow: hidden;
+}
+
+.userDropdownList {
+    list-style: none;
+}
+
+.userDropdownLink {
+    width: 100%;
+    display: block;
+    padding: 10px 25px;
+    text-decoration: none;
+    color: var(--gray-3);
+    font: var(--body1);
+    transition: color 0.3s, background-color 0.3s;
+}
+
+.userDropdownLink:hover {
+    background-color: var(--blue-2);
+    color: var(--blue);
+}
