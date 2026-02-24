@@ -24,7 +24,7 @@ export const LoginForm = () => {
 	const { mutate, isPending } = useLogin({
 		onSuccess: () => {
 			setError("");
-			void navigate("/main", { replace: true });
+			// void navigate("/main", { replace: true });
 		},
 		onError: () => {
 			setError(t("auth.errors.invalidCredentials"));

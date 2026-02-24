@@ -31,6 +31,11 @@ class CookieTokenRefreshSerializer(TokenRefreshSerializer):
     def validate(self, attrs):
         attrs['refresh'] = self.extract_refresh_token()
         return super().validate(attrs)
+
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
     
 
 class EmployeeSerializer(DynamicFieldsModelSerializer):
@@ -38,5 +43,13 @@ class EmployeeSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = User
         fields = "__all__"
+    
+
+class ClientSerializer(DynamicFieldsModelSerializer):
+        
+    class Meta:
+        model = User        
+        fields = ["email", "username", "first_name", "last_name", "phone_number", "photo", "language"]
+
 
 

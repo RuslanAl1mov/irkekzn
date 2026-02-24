@@ -13,7 +13,7 @@ from rest_framework_simplejwt.settings import api_settings as jwt_settings
 from core.config.auth_service import SetCookieService
 
 from users.models import User
-from users.serializers import CookieTokenRefreshSerializer, EmployeeSerializer
+from users.serializers import CookieTokenRefreshSerializer, EmployeeSerializer, ClientSerializer
 
 
 class RefreshJWTView(TokenRefreshView):
@@ -49,7 +49,7 @@ class MeView(APIView):
 
         Возвращает информацию о текущем аутентифицированном пользователе.
         """
-
+        
         if request.user.is_staff == True:
             employee = get_object_or_404(User, email=request.user.email, is_staff=True)
             serialized_data = EmployeeSerializer(
@@ -57,8 +57,11 @@ class MeView(APIView):
             serialized_data["permissions"] = request.user.get_all_permissions()
             return Response(serialized_data, status=status.HTTP_200_OK)
 
-        elif not request.user.is_staff == False:
-            return Response({"data": "I AM CLIENT"}, status=status.HTTP_200_OK)
+        elif request.user.is_staff == False:
+            client = get_object_or_404(User, email=request.user.email, is_staff=False)
+            serialized_data = ClientSerializer(
+                client, context={"request": request}).data
+            return Response(serialized_data, status=status.HTTP_200_OK)
 
         else:
             raise NotFound("Profile not found for your role.")

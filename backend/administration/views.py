@@ -7,7 +7,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from core.config.auth_service import SetCookieService
 
 from users.models import User
-from users.serializers import EmployeeSerializer
+from users.serializers import LoginSerializer
 
 
 class EmployeeLoginView(APIView):
@@ -31,7 +31,7 @@ class EmployeeLoginView(APIView):
         return user if is_correct_pass else None
 
     def post(self, request, *args, **kwargs):
-        serializer = EmployeeSerializer(data=request.data)
+        serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         user = self._authenticate_client(
