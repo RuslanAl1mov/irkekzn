@@ -7,7 +7,7 @@ export const login = (
   password: string
 ): Promise<AxiosResponse<IUser>> => {
   return axios.post<IUser>(
-    `${import.meta.env.VITE_API_URL}/auth/employee/login/`,
+    `${import.meta.env.VITE_API_URL}/administration/auth/login/`,
     { email, password },
     { withCredentials: true }
   );

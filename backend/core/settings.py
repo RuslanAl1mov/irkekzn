@@ -33,22 +33,15 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    
     "django.contrib.sitemaps",
-        
     "django_filters",
     "modeltranslation",
     "phonenumber_field",
-    
     "rest_framework",
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
-    "dj_rest_auth",
     "corsheaders",
-    
     "users",
-    "company",
-    "services",
     "marketplace",
     "administration",
 ]
@@ -91,7 +84,7 @@ WSGI_APPLICATION = "core.wsgi.application"
 # Конфигурация базы данных
 DATABASES = {
     "default": {
-        'ENGINE': 'django.db.backends.postgresql',
+        "ENGINE": "django.db.backends.postgresql",
         "NAME": os.getenv("POSTGRES_DB"),
         "USER": os.getenv("POSTGRES_USER"),
         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
@@ -122,16 +115,16 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTHENTICATION_BACKENDS = [
-    "core.config.auth_backend.EmailOrPhoneBackend",
     "django.contrib.auth.backends.ModelBackend",
 ]
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "dj_rest_auth.jwt_auth.JWTCookieAuthentication",
-    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "core.config.auth_backend.AuthBackend",
+    ),
     "DEFAULT_RENDERER_CLASSES": [
-        "marketplace.renderers.WrappedJSONRenderer",
+        "core.config.renderers.WrappedJSONRenderer",
         "rest_framework.renderers.BrowsableAPIRenderer",
     ],
     "DEFAULT_FILTER_BACKENDS": [
@@ -151,19 +144,22 @@ REST_AUTH = {
     "USE_JWT": True,
     "TOKEN_MODEL": None,
     "TOKEN_SERIALIZER": None,
-    
     "JWT_AUTH_COOKIE": "access",
     "JWT_AUTH_REFRESH_COOKIE": "refresh",
     "JWT_AUTH_HTTPONLY": True if os.getenv("JWT_AUTH_HTTPONLY") == "True" else False,
     "JWT_AUTH_SECURE": True if os.getenv("JWT_AUTH_SECURE") == "True" else False,
     "JWT_AUTH_SAMESITE": os.getenv("JWT_AUTH_SAMESITE"),
-    
     "SESSION_LOGIN": False,
-    "OLD_PASSWORD_FIELD_ENABLED": False
+    "OLD_PASSWORD_FIELD_ENABLED": False,
+    "JWT_AUTH_COOKIE_USE_CSRF": (
+        True if os.getenv("JWT_AUTH_COOKIE_USE_CSRF") == "True" else False
+    ),
 }
 
 # Настройки CORS headers
-CORS_ALLOW_CREDENTIALS = True if os.getenv("CORS_ALLOW_CREDENTIALS") == "True" else False
+CORS_ALLOW_CREDENTIALS = (
+    True if os.getenv("CORS_ALLOW_CREDENTIALS") == "True" else False
+)
 CORS_ORIGIN_ALLOW_ALL = True if os.getenv("CORS_ORIGIN_ALLOW_ALL") == "True" else False
 CORS_ALLOWED_ORIGINS = str(os.getenv("CORS_ALLOWED_ORIGINS")).split(",")
 
@@ -207,3 +203,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR.parent, "")
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Игнорируем ошибки
+SILENCED_SYSTEM_CHECKS = ["auth.E003"]

@@ -1,7 +1,12 @@
-from rest_framework.permissions import DjangoModelPermissions
+from rest_framework import permissions
 
 
-class FullDjangoModelPermissions(DjangoModelPermissions):
+class IsEmployee(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user and request.user.is_staff
+    
+
+class FullDjangoModelPermissions(permissions.DjangoModelPermissions):
     """
     Класс переопределяющий список прав для метода GET для ПРОСМОТРА модели
 
@@ -12,12 +17,12 @@ class FullDjangoModelPermissions(DjangoModelPermissions):
     """
 
     perms_map = {
-        **DjangoModelPermissions.perms_map,
+        **permissions.DjangoModelPermissions.perms_map,
         "GET": ["%(app_label)s.view_%(model_name)s"],
     }
 
 
-class DjangoListModelPermissions(DjangoModelPermissions):
+class DjangoListModelPermissions(permissions.DjangoModelPermissions):
     """
     Класс переопределяющий список прав для метода GET ДЛЯ списков данных
 
@@ -28,6 +33,6 @@ class DjangoListModelPermissions(DjangoModelPermissions):
     """
 
     perms_map = {
-        **DjangoModelPermissions.perms_map,
+        **permissions.DjangoModelPermissions.perms_map,
         "GET": ["%(app_label)s.view_%(model_name)s_list"],
     }

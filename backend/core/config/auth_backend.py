@@ -1,28 +1,40 @@
-import re
-from django.contrib.auth.backends import ModelBackend
-from django.contrib.auth import get_user_model
+from django.conf import settings
+from django.utils.translation import gettext_lazy as _
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.authentication import CSRFCheck
+from rest_framework import exceptions
 
-User = get_user_model()
-PHONE_RE = re.compile(r"^\+?\d{9,15}$")
 
+class AuthBackend(JWTAuthentication):
 
-class EmailOrPhoneBackend(ModelBackend):
-    """
-    • e-mail  → сотрудник
-    • телефон → клиент
-    """
+    def enforce_csrf(self, request):
+        """
+        Enforce CSRF validation for session based authentication.
+        """
+        def dummy_get_response(request):  # pragma: no cover
+            return None
+        check = CSRFCheck(dummy_get_response)
+        check.process_request(request)
+        reason = check.process_view(request, None, (), {})
+        if reason:
+            # CSRF failed, bail with explicit error message
+            raise exceptions.PermissionDenied(f'CSRF Failed: {reason}')
 
-    def authenticate(self, request, phone=None, email=None, password=None, **kwargs):
-        try:
-            if phone and PHONE_RE.match(phone or ""):
-                user = User.objects.get(phone=phone, role=User.UserType.CLIENT)
-            elif email:
-                user = User.objects.get(email=email, role=User.UserType.EMPLOYEE)
+    def authenticate(self, request):
+        cookie_name = settings.REST_AUTH.get('JWT_AUTH_COOKIE')
+        header = self.get_header(request)
+        if header is None:
+            if cookie_name:
+                raw_token = request.COOKIES.get(cookie_name)
+                if raw_token is not None and settings.REST_AUTH.get("JWT_AUTH_COOKIE_USE_CSRF"):
+                    self.enforce_csrf(request)
             else:
                 return None
-        except User.DoesNotExist:
+        else:
+            raw_token = self.get_raw_token(header)
+
+        if raw_token is None:
             return None
 
-        if user.check_password(password) and self.user_can_authenticate(user):
-            return user
-        return None
+        validated_token = self.get_validated_token(raw_token)
+        return self.get_user(validated_token), validated_token

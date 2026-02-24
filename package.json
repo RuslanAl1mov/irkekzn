@@ -7,9 +7,5 @@
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
-  },
-  "dependencies": {
-    "@tanstack/react-query": "^5.90.16",
-    "react-router-dom": "^7.12.0"
   }
 }

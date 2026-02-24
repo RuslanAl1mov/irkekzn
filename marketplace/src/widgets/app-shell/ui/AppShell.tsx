@@ -1,14 +1,15 @@
-import { Outlet } from "react-router";
-
+import { Header } from "@/widgets/header";
 import cls from "./AppShell.module.css";
+
+import { Outlet } from "react-router";
 
 export const AppShell = () => {
 
   return (
     <div className={cls.mainLayout}>
-      {/* <Header />
-      <Sidebar /> */}
+      {/* <Sidebar /> */}
       <div className={cls.allContent}>
+        <Header />
         <Outlet />
       </div>
     </div>

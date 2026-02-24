@@ -1,15 +1,15 @@
 export interface IUser {
-	id: number;
-	email: string;
-	phone: string;
-	first_name: string;
-	last_name: string;
-	username: string;
-	photo: string;
-	role: string;
-	is_staff: string;
-	is_active: boolean;
-	date_joined: string;
-	is_archived: boolean;
-	permissions: string;
+  id: number;
+  email: string;
+  first_name: string;
+  last_name: string;
+  language: string;
+  is_active: boolean;
+  is_staff: boolean;
+  is_superuser: boolean;
+  phone_number: string | null;
+  photo: string;
+  username: string;
 }
+
+export type ApiResult<T> = { result: T };

@@ -59,36 +59,10 @@ JAZZMIN_SETTINGS = {
         "auth": "fas fa-users-cog",          # иконка для приложения "auth"
         "auth.user": "fas fa-user",            # для модели User
         "auth.group": "fas fa-people-roof",          # для модели Group
-        "users.User": "fas fa-users",       
-        "users.Employee": "fas fa-id-badge",       
-        "users.Client": "fas fa-user-tag",       
-        "company.AboutCompany": "fas fa-building",    # для модели AboutCompany
-        "company.Market": "fas fa-store",               # для модели Market
-        "services.CallRequest": "fas fa-headset",       
-        "marketplace.ProductCategory": "fas fa-layer-group",  # для модели ProductCategory
-        "marketplace.ProductTag": "fas fa-tags",               # для модели ProductTag
-        "marketplace.Product": "fas fa-boxes-stacked",         # для модели Product
-        "marketplace.ProductPhoto": "fas fa-images",           # для модели ProductPhoto
+        "users.User": "fas fa-users"
     },
     "order_with_respect_to": [
-        "company",
-        "company.AboutCompany",
-        "company.Market",
-        
-        "services",
-        "services.CallRequest",
-        
-        "marketplace",
-        "marketplace.ProductCategory",
-        "marketplace.ProductTag",
-        "marketplace.Product",
-        "marketplace.ProductPhoto",
-        
-        "users.User",
-        "users.Employee",
-        "users.Client"
-        
-        "products",
+        "users.User"
     ],
     "show_sidebar": True,
     "navigation_expanded": True,

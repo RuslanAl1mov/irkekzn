@@ -1,6 +1,9 @@
+import '@/app/styles/index.css';
+import 'react-toastify/dist/ReactToastify.css';
+import "@/shared/config/i18n";
+
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
-import '@/app/styles/index.css';
 import App from '@/app/App.tsx';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
