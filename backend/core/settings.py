@@ -4,7 +4,7 @@ from datetime import timedelta
 import os
 
 # Настройки Jazzmin
-from .jazzmin import *
+from .config import jazzmin
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent
@@ -36,11 +36,11 @@ INSTALLED_APPS = [
     "django.contrib.sitemaps",
     "django_filters",
     "modeltranslation",
-    "phonenumber_field",
     "rest_framework",
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
+    # Приложения
     "users",
     "marketplace",
     "administration",
@@ -73,6 +73,11 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
             ],
         },
+    },
+    {
+        "BACKEND": "django.template.backends.jinja2.Jinja2",
+        "DIRS": ["services/mail_templates/"],
+        "APP_DIRS": True,
     },
 ]
 
@@ -204,5 +209,58 @@ MEDIA_ROOT = os.path.join(BASE_DIR.parent, "")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+
+MARKETPLACE_DOMAIN = os.getenv("EMAIL_SENDER", "")
+ADMIN_DOMAIN = os.getenv("ADMIN_DOMAIN", "")
+
+# Email отправитель
+DEFAULT_FROM_EMAIL = os.getenv("EMAIL_SENDER")
+
+GOOGLE_SERVICE_ACCOUNT_SETTINGS = {
+    "type": os.getenv("GOOGLE_ACCOUNT_TYPE"),
+    "project_id": os.getenv("GOOGLE_ACCOUNT_PROJECT_ID"),
+    "private_key_id": os.getenv("GOOGLE_ACCOUNT_PRIVATE_KEY_ID"),
+    "private_key": os.getenv("GOOGLE_ACCOUNT_PRIVATE_KEY"),
+    "client_email": os.getenv("GOOGLE_ACCOUNT_CLIENT_EMAIL"),
+    "client_id": os.getenv("GOOGLE_ACCOUNT_CLIENT_ID"),
+    "auth_uri": os.getenv("GOOGLE_ACCOUNT_AUTH_URI"),
+    "token_uri": os.getenv("GOOGLE_ACCOUNT_TOKEN_URI"),
+    "auth_provider_x509_cert_url": os.getenv("GOOGLE_ACCOUNT_TOKEN_URI"),
+    "client_x509_cert_url": os.getenv("GOOGLE_ACCOUNT_AUTH_PROVIDER_CERT_URL"),
+    "universe_domain": os.getenv("GOOGLE_ACCOUNT_UNIVERSE_DOMAIN"),
+}
+
+# Настройки Redis
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = os.getenv("REDIS_PORT", 6379)
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(REDIS_HOST, REDIS_PORT)],
+        },
+    },
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/1",
+        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+    }
+}
+
+# Настройки Celery
+CELERY_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_TIMEZONE = "Europe/Moscow"
+
 # Игнорируем ошибки
 SILENCED_SYSTEM_CHECKS = ["auth.E003"]
+
+
+# Jazzmin settings
+JAZZMIN_SETTINGS = jazzmin.JAZZMIN_SETTINGS
+JAZZMIN_UI_TWEAKS = jazzmin.JAZZMIN_UI_TWEAKS

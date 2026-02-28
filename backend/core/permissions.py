@@ -3,10 +3,10 @@ from rest_framework import permissions
 
 class IsEmployee(permissions.BasePermission):
     def has_permission(self, request, view):
-        return request.user and request.user.is_staff
+        return request.user and request.user.is_staff and request.user.is_active
     
 
-class FullDjangoModelPermissions(permissions.DjangoModelPermissions):
+class CRUDPermissions(permissions.DjangoModelPermissions):
     """
     Класс переопределяющий список прав для метода GET для ПРОСМОТРА модели
 
@@ -22,7 +22,7 @@ class FullDjangoModelPermissions(permissions.DjangoModelPermissions):
     }
 
 
-class DjangoListModelPermissions(permissions.DjangoModelPermissions):
+class GetListPermissions(permissions.DjangoModelPermissions):
     """
     Класс переопределяющий список прав для метода GET ДЛЯ списков данных
 

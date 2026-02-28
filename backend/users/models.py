@@ -14,7 +14,7 @@ class User(AbstractUser):
     last_name = models.CharField(
         verbose_name="Фамилия", max_length=250, null=True, blank=True
     )
-    email = models.EmailField(verbose_name="Email")
+    email = models.EmailField(verbose_name="Email", null=True, blank=True)
     username = models.CharField(verbose_name="Username", null=True, blank=True)
     phone_number = models.CharField(
         verbose_name="Номер телефона", max_length=30, null=True, blank=True
@@ -35,14 +35,32 @@ class User(AbstractUser):
     objects: UserManager = UserManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ("first_name", "last_name")
+    REQUIRED_FIELDS = ["first_name", "last_name"]
 
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
 
-        # Админ может быть клиентом
-        unique_together = ("email", "is_staff")
+        constraints = [
+            # Для админов: уникальный email среди is_staff=True
+            models.UniqueConstraint(
+                fields=["email"],
+                condition=models.Q(is_staff=True),
+                name="unique_email_for_staff",
+            ),
+            # Для клиентов: уникальный phone_number среди is_staff=False
+            models.UniqueConstraint(
+                fields=["phone_number"],
+                condition=models.Q(is_staff=False),
+                name="unique_phone_for_non_staff",
+            ),
+            # Дополнительно: уникальный phone_number для админов (если нужно)
+            models.UniqueConstraint(
+                fields=["phone_number"],
+                condition=models.Q(is_staff=True),
+                name="unique_phone_for_staff",
+            ),
+        ]
 
         permissions = (("view_user_list", "Can see Users list"),)
 

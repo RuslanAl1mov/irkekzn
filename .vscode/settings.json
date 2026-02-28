@@ -1,0 +1,26 @@
+{
+    // Указываем на venv в backend
+    "python.defaultInterpreterPath": "/Users/ruslanalimov/GitProjects/irkekzn/backend/venv/bin/python",
+    
+    // Добавляем backend в пути для импортов
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/backend",
+        "${workspaceFolder}/backend/administration",
+        "${workspaceFolder}/backend/core",
+        "${workspaceFolder}/backend/marketplace", 
+        "${workspaceFolder}/backend/services",
+        "${workspaceFolder}/backend/users"
+    ],
+    
+    // Исключаем корневую папку administration из анализа (чтобы не путать)
+    "python.analysis.exclude": [
+        "${workspaceFolder}/administration"
+    ],
+    
+    // PYTHONPATH для терминала
+    "terminal.integrated.env.linux": {
+        "PYTHONPATH": "${workspaceFolder}/backend"
+    },
+    
+    "python.terminal.activateEnvironment": true
+}
