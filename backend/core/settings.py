@@ -73,12 +73,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
             ],
         },
-    },
-    {
-        "BACKEND": "django.template.backends.jinja2.Jinja2",
-        "DIRS": ["services/mail_templates/"],
-        "APP_DIRS": True,
-    },
+    }
 ]
 
 WSGI_APPLICATION = "core.wsgi.application"
@@ -208,27 +203,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR.parent, "")
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-
-MARKETPLACE_DOMAIN = os.getenv("EMAIL_SENDER", "")
-ADMIN_DOMAIN = os.getenv("ADMIN_DOMAIN", "")
-
-# Email отправитель
-DEFAULT_FROM_EMAIL = os.getenv("EMAIL_SENDER")
-
-GOOGLE_SERVICE_ACCOUNT_SETTINGS = {
-    "type": os.getenv("GOOGLE_ACCOUNT_TYPE"),
-    "project_id": os.getenv("GOOGLE_ACCOUNT_PROJECT_ID"),
-    "private_key_id": os.getenv("GOOGLE_ACCOUNT_PRIVATE_KEY_ID"),
-    "private_key": os.getenv("GOOGLE_ACCOUNT_PRIVATE_KEY"),
-    "client_email": os.getenv("GOOGLE_ACCOUNT_CLIENT_EMAIL"),
-    "client_id": os.getenv("GOOGLE_ACCOUNT_CLIENT_ID"),
-    "auth_uri": os.getenv("GOOGLE_ACCOUNT_AUTH_URI"),
-    "token_uri": os.getenv("GOOGLE_ACCOUNT_TOKEN_URI"),
-    "auth_provider_x509_cert_url": os.getenv("GOOGLE_ACCOUNT_TOKEN_URI"),
-    "client_x509_cert_url": os.getenv("GOOGLE_ACCOUNT_AUTH_PROVIDER_CERT_URL"),
-    "universe_domain": os.getenv("GOOGLE_ACCOUNT_UNIVERSE_DOMAIN"),
-}
 
 # Настройки Redis
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
