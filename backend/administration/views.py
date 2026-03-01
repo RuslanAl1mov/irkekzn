@@ -3,6 +3,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from django_filters.rest_framework import DjangoFilterBackend
 
+from services.mixin.logged_api_views import LoggedUpdateAPIView, LoggedCreateAPIView
+
 from core.permissions import IsEmployee, CRUDPermissions, GetListPermissions
 
 from users.models import User
@@ -55,13 +57,13 @@ class UserDetailView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
     
     
-class EmployeeUpdateView(generics.UpdateAPIView):
+class EmployeeUpdateView(LoggedUpdateAPIView):
     permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
     queryset = User.objects.all()
     serializer_class = UserSerializer
     
 
-class EmployeeCreateView(generics.CreateAPIView):
+class EmployeeCreateView(LoggedCreateAPIView):
     permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
     queryset = User.objects.all()
     serializer_class = EmployeeCreateSerializer

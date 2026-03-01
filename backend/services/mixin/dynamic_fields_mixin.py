@@ -7,6 +7,7 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
     Поддерживает ?select=id,name  ИЛИ fields=['id','name'] в kwargs.
     Никаких mixin-ов не нужно: request берётся из self.context.
     """
+
     query_param_name = "select"
 
     # ------------------------------------------------------------------ utils
@@ -56,22 +57,26 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
     def _process_nested_fields(self, nested_serializer_fields: dict):
         """
         Функция обработки вложенных полей сериализатора
-        
-        :param nested_serializer_fields: Словарь с необходимыми полями 
+
+        :param nested_serializer_fields: Словарь с необходимыми полями
                                          вложенного сериализатора
         :type nested_serializer_fields: dict
         """
         for field_name, nested_fields in nested_serializer_fields.items():
             serializer_field = self.fields.get(field_name)
-            if serializer_field and isinstance(serializer_field, serializers.Serializer):
+            if serializer_field and isinstance(
+                serializer_field, serializers.Serializer
+            ):
                 serializer_field.fields = self._get_fields_for_nested_serializer(
-                    serializer_field, nested_fields)
+                    serializer_field, nested_fields
+                )
 
-    def _get_fields_for_nested_serializer(self, serializer: serializers.Serializer, 
-                                          nested_fields: str) -> dict:
+    def _get_fields_for_nested_serializer(
+        self, serializer: serializers.Serializer, nested_fields: str
+    ) -> dict:
         """
         Функция получения полей и значений вложенного сериализатора
-        
+
         :param serializer: Класс сериализатора
         :type serializer: serializers.Serializer
         :param nested_fields: Поля сериализатора
@@ -79,6 +84,8 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
         :return: Словарь с полями и значениями вложенного сериализатора
         :rtype: dict
         """
-        return {field: serializer.fields[field] 
-                for field in nested_fields 
-                if field in serializer.fields}
+        return {
+            field: serializer.fields[field]
+            for field in nested_fields
+            if field in serializer.fields
+        }

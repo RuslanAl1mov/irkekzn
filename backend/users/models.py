@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
+
 from .managers import UserManager
 
 
@@ -71,3 +74,36 @@ class User(AbstractUser):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} (ID: {self.id})"
+
+
+class RequestLog(models.Model):
+    """
+        Модель для лонирования запросов пользователей методами POST, PUT, PATCH, DELETE
+    """
+    class RequestMethod(models.TextChoices):
+        POST = "POST", "POST"
+        PUT = "PUT", "PUT"
+        PATCH = "PATCH", "PATCH"
+
+    user = models.ForeignKey(
+        User, verbose_name="Пользователь", on_delete=models.CASCADE, related_name="logs"
+    )
+    method = models.CharField(
+        max_length=10, verbose_name="Метод запроса", choices=RequestMethod.choices
+    )
+    old_value = models.JSONField(verbose_name="Старое значение", default=dict)
+    new_value = models.JSONField(verbose_name="Новое значение", default=dict)
+    serializer_class = models.CharField(
+        verbose_name="Название класса сериализатора", max_length=250, null=True
+    )
+    model_name = models.CharField(
+        max_length=250, null=True, verbose_name="Наименование модели"
+    )
+    date = models.DateTimeField(auto_now_add=True, verbose_name="Дата запроса")
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveBigIntegerField()
+    content_object = GenericForeignKey("content_type", "object_id")
+
+    class Meta:
+        verbose_name = "Лог"
+        verbose_name_plural = "Логи"

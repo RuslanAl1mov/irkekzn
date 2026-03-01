@@ -95,6 +95,12 @@ class LoginSerializer(serializers.Serializer):
 
 
 class UserSerializer(DynamicFieldsModelSerializer):
+    """
+    Общий сериализатор для всех типов пользователей
+    - Клиент (is_staff=False)
+    - Сотрудник (is_staff=True)
+    """
+
     email = serializers.EmailField(required=False)
     password = serializers.CharField(required=False)
     phone_number = serializers.CharField(max_length=30, required=False)
@@ -138,22 +144,26 @@ class UserSerializer(DynamicFieldsModelSerializer):
         # Форматируем под российский стандарт
         phone_number: str = phone_number_ru_validator(value)
 
-        # Проверка на существующий номер телефона у админов и клиентов
-        request = self.context.get("request")
-        if request and hasattr(request, "user"):
-            user_exists = (
-                User.objects.filter(
-                    is_staff=self.instance.is_staff, phone_number=phone_number
+        if self.instance:  # Если изменяем данные пользователя
+            # Проверка на существующий номер телефона у админов и клиентов
+            request = self.context.get("request")
+            if request and hasattr(request, "user"):
+                user_exists = (
+                    User.objects.filter(
+                        is_staff=self.instance.is_staff, phone_number=phone_number
+                    )
+                    .exclude(pk=self.instance.pk if self.instance else None)
+                    .exists()
                 )
-                .exclude(pk=self.instance.pk if self.instance else None)
-                .exists()
-            )
 
-            if user_exists:
-                prefix = "Сотрудник" if self.instance.is_staff else "Клиент"
-                raise serializers.ValidationError(
-                    f"{prefix} с номером телефона +{phone_number} уже существует"
-                )
+                if user_exists:
+                    prefix = "Сотрудник" if self.instance.is_staff else "Клиент"
+                    raise serializers.ValidationError(
+                        f"{prefix} с номером телефона +{phone_number} уже существует"
+                    )
+
+        # При создании валидация конкретной ошибки происходит в сериализаторе создания
+        # (EmployeeCreateSerializer, ClientRegisterSerializer)
 
         return phone_number
 
@@ -161,20 +171,24 @@ class UserSerializer(DynamicFieldsModelSerializer):
         if not value:
             return value
 
-        # Проверка на существующий email у админов и клиентов
-        request = self.context.get("request")
-        if request and hasattr(request, "user"):
-            user_exists = (
-                User.objects.filter(is_staff=self.instance.is_staff, email=value)
-                .exclude(pk=self.instance.pk if self.instance else None)
-                .exists()
-            )
-
-            if user_exists:
-                prefix = "Сотрудник" if self.instance.is_staff else "Клиент"
-                raise serializers.ValidationError(
-                    f"{prefix} с адресом почты {value} уже существует"
+        if self.instance:  # Если изменяем данные пользователя
+            # Проверка на существующий email у админов и клиентов
+            request = self.context.get("request")
+            if request and hasattr(request, "user"):
+                user_exists = (
+                    User.objects.filter(is_staff=self.instance.is_staff, email=value)
+                    .exclude(pk=self.instance.pk if self.instance else None)
+                    .exists()
                 )
+
+                if user_exists:
+                    prefix = "Сотрудник" if self.instance.is_staff else "Клиент"
+                    raise serializers.ValidationError(
+                        f"{prefix} с адресом почты {value} уже существует"
+                    )
+
+        # При создании валидация конкретной ошибки происходит в сериализаторе создания
+        # (EmployeeCreateSerializer, ClientRegisterSerializer)
 
         return value
 
@@ -187,6 +201,13 @@ class EmployeeSerializer(UserSerializer):
 
 
 class EmployeeCreateSerializer(EmployeeSerializer):
+    """
+    Сериализатор создания сотрудника
+    Валидация исопользуется из EmployeeSerializer -> UserSerializer
+    
+    Дополнительный определитель ошибок вшит в create()
+    """
+
     email = serializers.EmailField(required=True)
     password = serializers.CharField(max_length=128, write_only=True, required=True)
     first_name = serializers.CharField(max_length=255, required=True)
@@ -211,8 +232,17 @@ class EmployeeCreateSerializer(EmployeeSerializer):
                     password=password,
                 )
             except IntegrityError as e:
-                print(repr(e))
-                raise ValidationError(f"Ошибка создания Сотрудника: {repr(e)}")
+                # Возможные ошибки при создании Сотрудника
+                if "unique_email_for_staff" in repr(e):
+                    raise ValidationError(
+                        f"Сотрудник с почтой {email} уже зарегистрирован в системе"
+                    )
+                elif "unique_phone_for_staff" in repr(e):
+                    raise ValidationError(
+                        f"Сотрудник с номером телефона +{phone_number} уже зарегистрирован в системе"
+                    )
+                else:
+                    raise ValidationError(f"Ошибка создания Сотрудника: {repr(e)}")
 
             return user
 
