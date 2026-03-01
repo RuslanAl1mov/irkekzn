@@ -56,14 +56,12 @@ JAZZMIN_SETTINGS = {
         },
     ],
     "icons": {
-        "auth": "fas fa-users-cog",          # иконка для приложения "auth"
-        "auth.user": "fas fa-user",            # для модели User
-        "auth.group": "fas fa-people-roof",          # для модели Group
-        "users.User": "fas fa-users"
+        "auth": "fas fa-users-cog",  # иконка для приложения "auth"
+        "auth.group": "fas fa-people-roof",  # для модели Group
+        "users.User": "fas fa-users",  # для модели User
+        "users.RequestLog": "fa-solid fa-rectangle-list",  # для модели RequestLog
     },
-    "order_with_respect_to": [
-        "users.User"
-    ],
+    "order_with_respect_to": ["users.User"],
     "show_sidebar": True,
     "navigation_expanded": True,
     "hide_apps": [],
@@ -74,5 +72,4 @@ JAZZMIN_SETTINGS = {
     "show_ui_builder": False,
     "changeform_format": "horizontal_tabs",
     "language_chooser": True,
-
 }
