@@ -1,0 +1,44 @@
+.container {
+  padding: 10px 5px;
+  box-sizing: border-box;
+}
+
+.textBox {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.title {
+  font: var(--body2);
+  font-weight: 600;
+  color: var(--black);
+}
+
+.text {
+  font: var(--body0);
+  color: var(--black);
+}
+
+.loaderContainer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toastAnimate {
+  animation: toastProgress linear forwards;
+}
+
+@keyframes toastProgress {
+  from {
+    stroke-dashoffset: 565.48px;
+    /* CIRC */
+  }
+
+  to {
+    stroke-dashoffset: 0px;
+  }
+}

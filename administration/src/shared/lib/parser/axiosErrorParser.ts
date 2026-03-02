@@ -92,3 +92,84 @@ export function getParsedValidation(err: unknown): ParsedValidation {
   }
   return parseAxiosValidationError(err);
 }
+
+/**
+ * Адаптер для преобразования всех типов ошибок в одну понятную строку
+ * @param err - ошибка от axios или любой другой
+ * @returns строка с понятным описанием ошибки
+ */
+export function getReadableErrorMessage(err: unknown): string {
+  const validation = getParsedValidation(err);
+  const messages: string[] = [];
+
+  // Добавляем общие ошибки
+  if (validation.general.length > 0) {
+    messages.push(...validation.general);
+  }
+
+  // Добавляем ошибки полей в читаемом формате
+  if (Object.keys(validation.fieldErrors).length > 0) {
+    const fieldMessages = Object.entries(validation.fieldErrors)
+      .map(([field, errors]) => {
+        const fieldName = field.charAt(0).toUpperCase() + field.slice(1); // Делаем первую букву заглавной
+        const errorText = errors.join('. ');
+        return `${fieldName}: ${errorText}`;
+      });
+    messages.push(...fieldMessages);
+  }
+
+  // Если сообщений нет, возвращаем дефолтное
+  if (messages.length === 0) {
+    return "Произошла неизвестная ошибка";
+  }
+
+  // Объединяем все в одну строку
+  return messages.join('. ');
+}
+
+/**
+ * Адаптер для получения HTML-форматированной ошибки (для тостов с поддержкой HTML)
+ */
+export function getHtmlErrorMessage(err: unknown): string {
+  const validation = getParsedValidation(err);
+  const parts: string[] = [];
+
+  // Общие ошибки
+  if (validation.general.length > 0) {
+    parts.push(`<div>${validation.general.join('<br/>')}</div>`);
+  }
+
+  // Ошибки полей
+  if (Object.keys(validation.fieldErrors).length > 0) {
+    const fieldErrorsList = Object.entries(validation.fieldErrors)
+      .map(([field, errors]) => {
+        const fieldName = field.charAt(0).toUpperCase() + field.slice(1);
+        return `<div><strong>${fieldName}:</strong> ${errors.join('. ')}</div>`;
+      })
+      .join('');
+    
+    parts.push(`<div>${fieldErrorsList}</div>`);
+  }
+
+  return parts.length > 0 ? parts.join('<hr/>') : 'Произошла неизвестная ошибка';
+}
+
+/**
+ * Адаптер для получения краткой версии ошибки (первое сообщение)
+ */
+export function getBriefErrorMessage(err: unknown): string {
+  const validation = getParsedValidation(err);
+  
+  // Сначала проверяем общие ошибки
+  if (validation.general.length > 0) {
+    return validation.general[0];
+  }
+  
+  // Затем ошибки полей
+  const firstFieldError = Object.values(validation.fieldErrors)[0]?.[0];
+  if (firstFieldError) {
+    return firstFieldError;
+  }
+  
+  return "Произошла неизвестная ошибка";
+}

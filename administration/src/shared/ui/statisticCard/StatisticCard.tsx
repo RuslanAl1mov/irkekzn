@@ -8,7 +8,6 @@ import { dateFormater } from "@/utils/dateFormater";
 
 // Иконки как React-компоненты (требуется vite-plugin-svgr в vite.config.ts)
 import ArrowUpIcon from "@/assets/icons/link-arrow.svg?react";
-import TrendUpIcon from "@/assets/icons/trend-up-icon.svg?react";
 
 interface StatisticCardProps {
   title: string;
@@ -65,7 +64,6 @@ export const StatisticCard: React.FC<StatisticCardProps> = ({
           {progressPercentage != null && (
             <div className={styles.percentageBlock}>
               <div className={cn(styles.percentageIconText, progressPercentage < 0 && styles.percentageIconTextDecrease)}>
-                <TrendUpIcon />
                 <p className={cn(styles.percentageValue, progressPercentage < 0 && styles.percentageValueDecrease)}>
                   {progressPercentage >= 0 ? progressPercentage : progressPercentage * -1}%
                 </p>

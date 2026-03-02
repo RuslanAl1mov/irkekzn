@@ -1,33 +1,40 @@
-import style from './LoginForm.module.css';
+import cls from './LoginForm.module.css';
 
-import { Button, Input } from '@/shared/ui';
+import LogoIcon from "@/assets/logo/irke_logo_black.svg";
+import MailIcon from "@/assets/icons/mail.svg?react";
+import PasswordIcon from "@/assets/icons/lock.svg?react";
+import EyeOpenIcon from "@/assets/icons/eye_open.svg?react";
+import EyeCloseIcon from "@/assets/icons/eye_close.svg?react";
+
+import { useNavigate } from 'react-router-dom';
 import { useState, type FormEvent } from 'react';
-
-import MailIcon from '@mui/icons-material/MailOutlineRounded';
-import LockIcon from '@mui/icons-material/LockOutlined';
 import { useLogin } from '../model/useLogin';
 
-// Лого
-import LogoIcon from "@/assets/logo/irke_logo_black.svg";
-import { useI18n } from '@/shared/lib/i18n';
-import { useNavigate } from 'react-router-dom';
+import { Button, Input } from '@/shared/ui';
+import { showValidationErrorToasts } from '@/shared/lib/validationErrorToasts';
+import { toast } from 'react-toastify';
+import { getReadableErrorMessage } from '@/shared/lib/parser/axiosErrorParser';
 
 
 export const LoginForm = () => {
-	const { t } = useI18n();
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+
+	const [email, setEmail] = useState<string>("");
+	const [password, setPassword] = useState<string>("")
+	const [showPassword, setShowPassword] = useState<boolean>(false);
+
 	const [error, setError] = useState("");
 
 	const navigate = useNavigate();
 
-	const { mutate, isPending } = useLogin({
+	const { mutate, isPending} = useLogin({
 		onSuccess: () => {
 			setError("");
-			// void navigate("/main", { replace: true });
+			toast.success("Добро пожаловать!")
+			void navigate("/", { replace: true });
 		},
-		onError: () => {
-			setError(t("auth.errors.invalidCredentials"));
+		onError: (error) => {
+			setError(String(error.code));
+  			toast.error(error.message);
 		},
 	});
 
@@ -40,33 +47,49 @@ export const LoginForm = () => {
 	}
 
 	return (
-		<form className={style.loginForm} onSubmit={handleSubmit}>
+		<form className={cls.loginForm} onSubmit={handleSubmit}>
 			{/* Логотип */}
-			<div className={style.logoBlock}>
-				<img src={LogoIcon} alt="ARDS Lux logo" className={style.logo} />
+			<div className={cls.logoBlock}>
+				<img src={LogoIcon} alt="Logo" className={cls.logo} />
 			</div>
 
 			{/* Поля ввода */}
-			<div className={style.inputsBlock}>
+			<div className={cls.inputsBlock}>
 				<Input
-					type='email'
-					placeholder='Почта'
-					name='email'
-					required
-					icon={<MailIcon />}
+					className={cls.input}
+					type="email"
+					name="email"
+					placeholder="example@email.com"
+					startIcon={<MailIcon />}
+					value={email}
+					setValue={(value) => {
+						setError("");
+						setEmail(value);
+					}}
+					showClearButton
+					error={!!error}
 				/>
 				<Input
-					type='password'
-					isPassword
-					placeholder='Пароль'
-					name='password'
-					required
-					icon={<LockIcon />}
+					className={cls.input}
+					type={showPassword ? "text" : "password"}
+					name="password"
+					placeholder={"Ваш пароль"}
+					startIcon={<PasswordIcon />}
+					value={password}
+					setValue={(value) => {
+						setError("");
+						setPassword(value);
+					}}
+					endIcon={showPassword ?
+						<EyeCloseIcon className={cls.eyeIcon} onClick={() => setShowPassword(!showPassword)} />
+						: <EyeOpenIcon className={cls.eyeIcon} onClick={() => setShowPassword(!showPassword)} />
+					}
+					error={!!error}
 				/>
 			</div>
 
 			{/* Кнопки входа */}
-			<div className={style.btnsBlock}>
+			<div className={cls.btnsBlock}>
 				<Button isLoading={isPending} size='full'>Войти</Button>
 			</div>
 		</form>

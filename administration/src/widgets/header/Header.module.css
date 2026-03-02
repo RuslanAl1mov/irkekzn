@@ -148,6 +148,6 @@
 }
 
 .userDropdownLink:hover {
-    background-color: var(--blue-2);
+    background-color: var(--blue2);
     color: var(--blue);
 }

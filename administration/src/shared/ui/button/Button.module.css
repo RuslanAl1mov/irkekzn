@@ -3,13 +3,13 @@
 	font-weight: 500;
 	color: var(--white);
 	padding: 20px 20px;
-	border-radius: 2px;
+	border-radius: 8px;
 	background: var(--blue);
 	transition: background 0.3s;
 }
 
 .btn:hover {
-	background: var(--blue-4);
+	background: var(--blue4);
 }
 
 .btn.full {

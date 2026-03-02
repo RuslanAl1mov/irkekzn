@@ -2,32 +2,46 @@
 
 /* Переменные */
 :root {
-    /* Цвета */
-    --white: #FFF;
-    --black: #333;
-    --gray: #F3F5FA;
-    --gray-2: #DFE1E6;
-    --gray-3: #d0d2d8;
-    --gray-4: #7d8086;
-    --gray-5: #717378;
-    --blue: #0a57e6;
-    --blue-2: #e6ebf4;
-    --blue-3: #7a9edf;
-    --blue-4: #074bc8;
-    --green: #2bab3c;
-    --green-2: #f1ffe6;
-    --green-3: #259a35;
-    --red: #cc2929;
-    --red-1: #FF9898;
-    --red-2: #a42222;
-    --beige: #e6b292;
+    /* Colors */
+    --white: #fff;
+    --black: #364153;
+    --green: #00B77F;
+    --green2: #009C88;
+    --gray: #585858;
+    --gray2: #808080;
+    --gray3: #939393;
+    --gray4: #BCBCBD;
+    --gray5: #d3d3d3;
+    --gray6: #ebebeb;
+    --gray7: #FAFBFC;
+    --purple: #961CF8;
+    --purple2: #b45efa;
+    --purple3: #d4a0ff;
+    --purple4: #F3E3FF;
+    --pink: #E10C85;
+    --red: #d70000;
+    --red2: #e02424;
+    --red3: #ec4b4b;
+    --blue: #074bc8;
+    --blue2: #0a57e6;
+    --blue3: #2c6fea;
+    --blue4: #457de6;
+    --orange: #ffca69;
+
+    /* Gradients */
+    --gradient-lightgreen-darkgreen: linear-gradient(90deg, #00B77F 30.77%, #009C88 100%);
+
+    /* Shadows */
+    --shadow-form: 0 10px 25px 0 rgba(0, 0, 0, 0.10);
+
 
     /* Шрифты */
+    --body0: 400 12px/100% 'Montserrat', sans-serif;
     --body1: 400 13px/100% 'Montserrat', sans-serif;
-    --body2: 550 16px/100% 'Montserrat', sans-serif;
-    --body3: 300 10px/100% 'Montserrat', sans-serif;
-	--link: 500 13px/100% 'Montserrat', sans-serif;
-	--button: 600 13px/100% 'Montserrat', sans-serif;
+    --body2: 400 14px/100% 'Montserrat', sans-serif;
+    --body3: 400 15px/100% 'Montserrat', sans-serif;
+    --body4: 400 16px/100% 'Montserrat', sans-serif;
+    --body5: 400 17px/100% 'Montserrat', sans-serif;
 
     /* Падинги на странице */
     --header-border-padding: 100px;
@@ -40,14 +54,14 @@
     /* Боковая панель */
     --aside-min-width: 70px;
     --aside-max-width: 230px;
-    
+
 }
 
 /* Сброс стилей */
 * {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 /* Удаление обводки при фокусе */
@@ -105,36 +119,26 @@ body.--noscroll,
 }
 
 a {
-	text-decoration: none;
-	color: inherit;
-	font: inherit;
+    text-decoration: none;
+    color: inherit;
+    font: inherit;
 }
 
 input {
-	border: 0;
-	background: none;
-	outline: none;
+    border: 0;
+    background: none;
+    outline: none;
 }
 
 img {
-	width: 100%;
-	display: block;
+    width: 100%;
+    display: block;
 }
 
 button {
-	background: none;
-	border: none;
-	cursor: pointer;
+    background: none;
+    border: none;
+    cursor: pointer;
 }
 
 
-.toast-styles {
-    font-size: var(--default-font-size);
-}
-
-.default-shadowed-block {
-    background-color: var(--white);
-    box-shadow: var(--card-box-shadow);
-    padding: 40px;
-    border-radius: 4px;
-}

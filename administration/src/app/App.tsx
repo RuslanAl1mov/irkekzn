@@ -1,7 +1,10 @@
 import { ToastContainer } from 'react-toastify';
 import { AppRouter } from './providers/router';
+import { setupCustomToastUI } from '@/shared/config/toast';
+import "react-toastify/dist/ReactToastify.css";
 
 
+setupCustomToastUI();
 
 function App() {
   return (
@@ -11,7 +14,12 @@ function App() {
       <ToastContainer
         position="top-right"
         autoClose={3000}
-        theme="colored"
+        closeOnClick
+        pauseOnFocusLoss
+        pauseOnHover
+        newestOnTop
+        closeButton={false}
+        hideProgressBar
       />
     </div>
   );

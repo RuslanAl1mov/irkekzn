@@ -1,9 +1,6 @@
-import style from "./Dashboard.module.css";
+import cls from "./Dashboard.module.css";
 import { motion } from "framer-motion";
 import { StatisticCard } from "@/shared/ui/statisticCard/StatisticCard";
-import { useEffect } from "react";
-import { toast } from "react-toastify";
-
 
 
 const DashboardPage = () => {
@@ -12,7 +9,7 @@ const DashboardPage = () => {
     <main className="main">
       <motion.div  initial="hidden" animate="visible" className="mainBlock">
 
-        <div className={style.mainDashboardInfo}>
+        <div className={cls.mainDashboardInfo}>
           <StatisticCard
             title="Товары"
             value={1}

@@ -1,47 +1,107 @@
 .inputCont {
-	border: 1px solid var(--gray-3);
-}
+	width: 100%;
+	border: 1px solid var(--gray5);
+	padding: 14px 14px;
+	border-radius: 8px;
+	cursor: text;
+	transition: border-color 0.3s, background-color 0.3s;
 
-.inputCont.withIcon {
 	display: grid;
-	grid-template-columns: 24px 1fr;
-	gap: 8px;
-	padding: 10px 15px;
-	border-radius: 2px;
+	grid-template-columns: 1fr;
+	gap: 15px;
 	align-items: center;
+	background-color: var(--gray7);
+	box-shadow: 0 4px 24px 0 var(--gray7);
 }
 
-.withIcon svg {
-	fill: var(--gray-3) !important;
-	stroke-width: 0.6px;
-	stroke: var(--white);
+.inputCont:focus-within {
+	background-color: var(--white);
+	border-color: var(--blue);
 }
 
-.input.password {
-	display: grid;
-	grid-template-columns: 1fr auto;
-	gap: 8px;
-	align-items: center;
-	align-content: center;
+.inputCont:has(input:not(:placeholder-shown)) {
+	background-color: var(--white);
 }
 
-.eyeBtn {
-	display: flex;
-	justify-content: center;
-	align-items: center;
+.inputCont.error {
+	border-color: var(--red);
+}
+
+.inputCont>svg {
+	width: 20px;
+	height: 20px;
+	transition: color 0.3s;
+	color: var(--gray4);
+}
+
+.inputCont:focus-within>svg:first-child,
+.inputCont:has(input:not(:placeholder-shown))>svg:first-child {
+	color: var(--blue);
+}
+
+.inputCont.error>svg:first-child {
+	color: var(--red);
+}
+
+.inputCont.withStartIcon {
+	grid-template-columns: 22px 1fr;
+}
+
+.inputCont.withStartIcon.withEndIcon {
+	grid-template-columns: 22px 1fr 24px;
 	cursor: pointer;
 }
 
-.input input::placeholder {
-	color: var(--gray-3);
+.inputCont.withStartIcon .input {
+	padding-left: 12px;
+	border-left: 1px solid var(--gray4);
+}
+
+.input {
+	width: 100%;
+	display: flex;
+	align-items: center;
+}
+
+.disable {
+	background-color: var(--gray4);
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.clearBtn {
+	border: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.inputCont.error .clearBtn {
+	color: var(--red);
+}
+
+.clearBtn svg {
+	width: 20px;
+	height: 20px;
+	display: block;
+	color: var(--gray4);
+	transition: color 0.3s;
+}
+
+.clearBtn:hover svg {
+	color: var(--red);
 }
 
 .input input {
-	font: var(--body1);
 	width: 100%;
+	font: var(--body1);
+	color: var(--black);
+	background: transparent;
+	border: none;
+	outline: none;
 }
 
-
-.inputCont:has(input:focus) {
-	border-color: var(--blue);
+.input input::placeholder {
+	color: var(--gray4);
+	opacity: 1;
 }

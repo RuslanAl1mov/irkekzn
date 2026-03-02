@@ -2,6 +2,7 @@ import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
 
 import i18n from "@/shared/config/i18n";
 import { parseAxiosValidationError } from "@/shared/lib";
+import { getReadableErrorMessage } from "@/shared/lib/parser/axiosErrorParser";
 
 interface RetryConfig extends InternalAxiosRequestConfig {
   _isRetry?: boolean;
@@ -38,7 +39,7 @@ $api.interceptors.response.use(
             headers: {
               "Accept-Language": i18n.language,
             },
-          }
+          },
         );
         return $api.request(originalRequest);
       } catch {
@@ -52,8 +53,12 @@ $api.interceptors.response.use(
         parsedValidation?: ReturnType<typeof parseAxiosValidationError>;
       }
     ).parsedValidation = parseAxiosValidationError(error);
+
+    // Перезапись message в человекочитаемый вид
+    error.message = getReadableErrorMessage(error);
+
     throw error;
-  }
+  },
 );
 
 export default $api;
