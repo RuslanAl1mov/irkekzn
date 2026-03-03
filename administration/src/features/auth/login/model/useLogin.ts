@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 
-import { useAuthStore } from "@/entities/user";
-import { userApi } from "@/entities/user";
+import { getMe, useAuthStore } from "@/entities/user";
 import { queryKeys } from "@/shared/lib/react-query/queryKeys";
 
 import { login } from "../api/login.api";
@@ -22,7 +21,7 @@ export function useLogin({
       login(email, password),
     onSuccess: async () => {
       try {
-        const userData = await userApi.getMe();
+        const userData = await getMe();
         setIsAuth(true);
         setUser(userData);
         queryClient.setQueryData(queryKeys.checkAuth(), userData);

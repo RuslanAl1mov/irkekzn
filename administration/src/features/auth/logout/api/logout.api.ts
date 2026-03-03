@@ -1,13 +1,6 @@
-import { useAuthStore } from '@/entities/user/model/store';
-import $api from '@/api/base';
+import $api from "@/api/base";
+import type { AxiosResponse } from "axios";
 
-export const logout = async () => {
-	try {
-		await $api.post('/auth/logout/', {}, { withCredentials: true });
-	} catch (error) {
-		console.warn('Logout request failed:', error);
-	}
-
-	// Сбрасываем состояние в Zustand
-    useAuthStore.getState().reset();
+export const logout = (): Promise<AxiosResponse<void>> => {
+  return $api.post<void>("/auth/logout/", {}, { withCredentials: true });
 };

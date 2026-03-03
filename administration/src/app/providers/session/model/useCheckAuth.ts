@@ -1,5 +1,4 @@
-import { useAuthStore } from '@/entities/user';
-import { checkAuth } from '../api/checkAuth.api';
+import { getMe, useAuthStore } from '@/entities/user';
 import { useQuery } from '@tanstack/react-query';
 
 export function useCheckAuth({ enabled }: { enabled: boolean }) {
@@ -9,12 +8,11 @@ export function useCheckAuth({ enabled }: { enabled: boolean }) {
 		queryKey: ['check-auth'],
 		queryFn: async () => {
 			try {
-				const res = await checkAuth();
+				const user = await getMe();
 				setIsAuth(true);
-				setUser(res.data.user);
-				return res.data;
+				setUser(user);
+				return user;
 			} catch (error) {
-				localStorage.removeItem('token');
 				setIsAuth(false);
 				setUser(null);
 				throw error;

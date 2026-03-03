@@ -102,7 +102,7 @@ class UserSerializer(DynamicFieldsModelSerializer):
     """
 
     email = serializers.EmailField(required=False)
-    password = serializers.CharField(required=False)
+    password = serializers.CharField(required=False, write_only=True)
     phone_number = serializers.CharField(max_length=30, required=False)
 
     class Meta:

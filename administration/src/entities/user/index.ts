@@ -1,3 +1,3 @@
-export { userApi } from "./api/userApi";
+export { getMe } from "./api/getMe.api";
 export { useAuthStore } from "./model/store";
-export type { ApiResult, IUser } from "./model/type";
+export type { IUserResponse, IUser } from "./model/type";

@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# --- ПРОВЕРКА АРГУМЕНТОВ ---
+if [ $# -eq 0 ]; then
+    echo "Ошибка: Не указаны параметры для запуска."
+    echo "------------------------------------------"
+    echo "Использование: run [аргументы]"
+    echo "Доступные варианты:"
+    echo "  backend        - запуск сервера Django"
+    echo "  administration - запуск админки"
+    echo "  marketplace    - запуск маркетплейса"
+    echo ""
+    echo "Пример: bash run backend administration"
+    echo "------------------------------------------"
+    exit 1  # Выходим из скрипта, так как нечего запускать
+fi
+
+# --- ФУНКЦИИ ---
+
+start_backend() {
+    echo "Starting Backend..."
+    cd backend
+    source venv/bin/activate
+    python manage.py runserver
+    cd ..
+}
+
+start_administration() {
+    echo "Starting Administration..."
+    cd administration
+    npm run dev
+    cd ..
+}
+
+start_marketplace() {
+    echo "Starting Marketplace..."
+    cd marketplace
+    npm run dev
+    cd ..
+}
+
+# --- ОСНОВНОЙ ЦИКЛ ---
+for arg in "$@"
+do
+    case $arg in
+        backend)
+            start_backend
+            ;;
+        administration)
+            start_administration
+            ;;
+        marketplace)
+            start_marketplace
+            ;;
+        *)
+            echo "Неизвестный параметр: $arg"
+            ;;
+    esac
+done
+
+# Ждем, пока работают фоновые процессы
+wait

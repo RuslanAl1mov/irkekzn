@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import type { IUser } from "./type.ts";
+import type { IUser } from "./type";
 
 type AuthState = {
   isAuth: boolean;
@@ -11,7 +11,7 @@ type AuthState = {
 };
 
 export const useAuthStore = create<AuthState>((set) => ({
-  isAuth: false,
+  isAuth: true,
   user: null,
   setIsAuth: (auth) => set({ isAuth: auth }),
   setUser: (user) => set({ user }),

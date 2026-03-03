@@ -126,21 +126,29 @@ class RefreshJWTView(TokenRefreshView):
 
         if response.status_code == status.HTTP_200_OK and "access" in response.data:
             cookie_service.set_access_token_to_cookie(response, response.data["access"])
-            response.data["access_expiration"] = (
-                timezone.now() + jwt_settings.ACCESS_TOKEN_LIFETIME
-            )
+
+            # Удаляем access при HTTPONLY из ответа
+            if settings.REST_AUTH.get("JWT_AUTH_HTTPONLY"):
+                del response.data["access"]
+            else:
+                response.data["access_expiration"] = (
+                    timezone.now() + jwt_settings.ACCESS_TOKEN_LIFETIME
+                )
 
         if response.status_code == status.HTTP_200_OK and "refresh" in response.data:
 
             cookie_service.set_refresh_token_to_cookie(
                 response, response.data["refresh"]
             )
+
+            # Удаляем refresh при HTTPONLY из ответа
             if settings.REST_AUTH.get("JWT_AUTH_HTTPONLY"):
                 del response.data["refresh"]
             else:
                 response.data["refresh_expiration"] = (
                     timezone.now() + jwt_settings.REFRESH_TOKEN_LIFETIME
                 )
+
         return super().finalize_response(request, response, *args, **kwargs)
 
 

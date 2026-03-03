@@ -11,9 +11,7 @@ import { useState, type FormEvent } from 'react';
 import { useLogin } from '../model/useLogin';
 
 import { Button, Input } from '@/shared/ui';
-import { showValidationErrorToasts } from '@/shared/lib/validationErrorToasts';
 import { toast } from 'react-toastify';
-import { getReadableErrorMessage } from '@/shared/lib/parser/axiosErrorParser';
 
 
 export const LoginForm = () => {
@@ -33,7 +31,7 @@ export const LoginForm = () => {
 			void navigate("/", { replace: true });
 		},
 		onError: (error) => {
-			setError(String(error.code));
+			setError(String(error.message));
   			toast.error(error.message);
 		},
 	});
