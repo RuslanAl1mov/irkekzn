@@ -1,6 +1,6 @@
 import { useState } from "react";
 import cn from 'classnames';
-import { useSidebarState } from "@/widgets/sidebar/model/store";
+import { useSidebarState } from "@/widgets/sidebar";
 import styles from "./Sidebar.module.css";
 import { Box } from '@mui/material';
 import Home from "@mui/icons-material/HomeRounded";
@@ -16,11 +16,9 @@ type GetLinkClass = {
   isActive: boolean;
 };
 
-const Sidebar: React.FC = () => {
+export const Sidebar: React.FC = () => {
   const { isOpen, toggleSidebar } = useSidebarState();
-
   const [isHovered, setIsHovered] = useState(false);
-
   const isMenuWide = isOpen || isHovered;
 
   const getLinkClass = ({ isActive }: GetLinkClass): string =>
@@ -161,5 +159,3 @@ const Sidebar: React.FC = () => {
     </aside>
   );
 };
-
-export default Sidebar;

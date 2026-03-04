@@ -22,26 +22,34 @@
     --red: #d70000;
     --red2: #e02424;
     --red3: #ec4b4b;
+    --red4: #f16666;
+    --red5: #f77575;
+    --red6: #ffc9c9;
     --blue: #074bc8;
     --blue2: #0a57e6;
     --blue3: #2c6fea;
     --blue4: #457de6;
+    --blue5: #6b8ef5;
+    --blue6: #dce4fc;
     --orange: #ffca69;
 
     /* Градиенты */
     --gradient-lightgreen-darkgreen: linear-gradient(90deg, #00B77F 30.77%, #009C88 100%);
 
     /* Тени */
-    --shadow-form: 0 10px 25px 0 rgba(0, 0, 0, 0.10);
+    --shadow-modal: 0 10px 25px 0 rgba(0, 0, 0, 0.10);
+
+    /* Грфницы */
+    --border-modal: 1px solid var(--gray6);
 
 
     /* Шрифты */
-    --body0: 400 12px/100% 'Montserrat', sans-serif;
-    --body1: 400 13px/100% 'Montserrat', sans-serif;
-    --body2: 400 14px/100% 'Montserrat', sans-serif;
-    --body3: 400 15px/100% 'Montserrat', sans-serif;
-    --body4: 400 16px/100% 'Montserrat', sans-serif;
-    --body5: 400 17px/100% 'Montserrat', sans-serif;
+    --body0: 400 11px/100% 'Montserrat', sans-serif;
+    --body1: 400 12px/100% 'Montserrat', sans-serif;
+    --body2: 400 13px/100% 'Montserrat', sans-serif;
+    --body3: 400 14px/100% 'Montserrat', sans-serif;
+    --body4: 400 15px/100% 'Montserrat', sans-serif;
+    --body5: 400 16px/100% 'Montserrat', sans-serif;
 
     /* Падинги на странице */
     --header-border-padding: 100px;

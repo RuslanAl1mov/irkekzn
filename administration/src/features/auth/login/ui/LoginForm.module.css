@@ -8,7 +8,7 @@
 
     border-radius: 8px;
     border: 1px solid var(--gray6);
-    box-shadow: var(--shadow-form);
+    box-shadow: var(--shadow-modal);
     background-color: var(--white);
 
     position: relative;
