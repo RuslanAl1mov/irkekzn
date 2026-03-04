@@ -1,22 +1,55 @@
-import { useAuthStore } from '@/entities/user';
-import { Navigate, useLocation } from 'react-router';
-import { useCheckAuth } from '../model/useCheckAuth';
-import { Loader } from '@/shared/ui/loader/Loader';
+import cls from "./RequireAuth.module.css";
+import { Navigate, useLocation } from "react-router";
+
+import { useAuthStore } from "@/entities/user";
+import { Loader } from "@/widgets/loader";
+
+import { useCheckAuth } from "../model/useCheckAuth";
+import { usePermission } from "../model/usePermissions";
 
 
-export function RequireAuth({ children }: { children: React.ReactNode }) {
+export function RequireAuth({
+	children,
+	requiredPerms,
+	onlySuperuser,
+}: {
+	children: React.ReactNode;
+	requiredPerms?: string[];
+	onlySuperuser?: boolean;
+}) {
 	const location = useLocation();
-	const { isAuth } = useAuthStore();
+	const { isAuth, user } = useAuthStore();
 	const { isLoading } = useCheckAuth({ enabled: true });
+	const { hasAny } = usePermission();
+	const isForbiddenPage = location.pathname === "/forbidden";
 
-	console.log('is runned');
-
+	// Заставка загрузки
 	if (isLoading) {
-		return <Loader width={30} />;
+		return (
+			<div className={cls.loaderBlock}>
+				<Loader size={40} />
+			</div>
+		);
 	}
 
+	// Проверка авторизации
 	if (!isAuth) {
-		return <Navigate to='/login' replace state={{ from: location }} />;
+		return <Navigate to="/login" replace state={{ from: location }} />
+	}
+
+	// Проверка на сотрудника
+	if (!user?.is_staff && !isForbiddenPage) {
+		return <Navigate to="/forbidden" replace />;
+	}
+
+	// Проверка на суперпользователя
+	if (onlySuperuser && !user?.is_superuser) {
+		return <Navigate to="/forbidden" replace />;
+	}
+
+	// Проверка прав доступов
+	if (requiredPerms && !hasAny(requiredPerms)) {
+		return <Navigate to="/forbidden" replace />;
 	}
 
 	return <>{children}</>;

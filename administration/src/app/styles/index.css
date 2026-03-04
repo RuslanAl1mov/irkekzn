@@ -2,7 +2,7 @@
 
 /* Переменные */
 :root {
-    /* Colors */
+    /* Цвета */
     --white: #fff;
     --black: #364153;
     --green: #00B77F;
@@ -28,10 +28,10 @@
     --blue4: #457de6;
     --orange: #ffca69;
 
-    /* Gradients */
+    /* Градиенты */
     --gradient-lightgreen-darkgreen: linear-gradient(90deg, #00B77F 30.77%, #009C88 100%);
 
-    /* Shadows */
+    /* Тени */
     --shadow-form: 0 10px 25px 0 rgba(0, 0, 0, 0.10);
 
 
@@ -140,5 +140,3 @@ button {
     border: none;
     cursor: pointer;
 }
-
-
