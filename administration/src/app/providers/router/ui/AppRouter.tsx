@@ -13,12 +13,20 @@ export const AppRouter = () => {
 			<Route path="/login" element={<LoginPage />} />
 			<Route path="/" element={<AppShell />} >
 
-				<Route index element={<Navigate to="dashboard" replace />} />
+				<Route index element={<Navigate to="dashboard/" replace />} />
 
-				<Route path="dashboard" element={
+				<Route path="dashboard/" element={
 					<RequireAuth>
 						<DashboardPage />
 					</RequireAuth >
+				} />
+
+				<Route path="clients/" element={
+					<div></div>
+				} />
+				
+				<Route path="products/" element={
+					<div></div>
 				} />
 
 			</Route>

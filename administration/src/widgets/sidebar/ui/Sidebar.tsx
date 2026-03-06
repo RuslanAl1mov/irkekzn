@@ -1,16 +1,19 @@
-import { useState } from "react";
+import cls from "./Sidebar.module.css";
 import cn from 'classnames';
-import { useSidebarState } from "@/widgets/sidebar";
-import styles from "./Sidebar.module.css";
-import { Box } from '@mui/material';
-import Home from "@mui/icons-material/HomeRounded";
-import Products from "@mui/icons-material/CategoryRounded";
-import ProductTag from "@mui/icons-material/LoyaltyRounded";
-import Categories from "@mui/icons-material/LayersRounded";
-import CallRequests from "@mui/icons-material/HeadsetMicRounded";
-import KeyboardDoubleArrowRightRoundedIcon from "@mui/icons-material/KeyboardDoubleArrowRightRounded";
-import CompanyIcon from "@mui/icons-material/ApartmentTwoTone";
+
+import { toast } from "react-toastify";
 import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import { useLogout } from "@/features/auth/logout";
+import { useSidebarState } from "@/widgets/sidebar";
+
+import Logo from "@/assets/logo/logo.svg?react";
+import DashboardLink from "@/assets/icons/dashboard.svg?react";
+import UsersLink from "@/assets/icons/users.svg?react";
+import DoubleArrowIcon from "@/assets/icons/arrow.svg?react";
+import UserImage from "@/assets/app/user.jpg";
+import ExitIcon from "@/assets/icons/exit.svg?react";
+
 
 type GetLinkClass = {
   isActive: boolean;
@@ -21,141 +24,86 @@ export const Sidebar: React.FC = () => {
   const [isHovered, setIsHovered] = useState(false);
   const isMenuWide = isOpen || isHovered;
 
+  const { mutate: logout } = useLogout({
+    onSuccess: () => {
+      toast.success("До свидания!");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
   const getLinkClass = ({ isActive }: GetLinkClass): string =>
-    `${styles.menuItemLink} ${isMenuWide ? styles.menuItemLinkWide : ""} ${isActive ? styles.menuItemLinkActive : ""
-    }`;
+    cn(cls.menuListLink, isMenuWide && cls.menuListLink__wide, isActive && cls.menuListLink__active);
 
   return (
-    <aside
-      className={`${styles.aside} ${isMenuWide ? styles.asideWide : ""}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <div className={styles.wrapper}>
-        <div className={styles.section}>
+    <aside className={cn(cls.aside, isMenuWide && cls.asideWide)}>
+      <div className={cls.asideBlock}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <div className={cls.headerBlock}>
+          <div className={cls.logoBlock}>
+            <Logo className={cls.logo} />
+          </div>
+          {isMenuWide && (
+            <div className={cls.titleBlock}>
+              <h1 className={cls.title} title="IRKE">IRKE</h1>
+              <p className={cls.subTitle} title="Управление сайтом">Управление сайтом</p>
+            </div>
+          )}
+
+        </div>
+        <div className={cls.content}>
 
           {/* Главное меню */}
-          <div className={styles.sectionBlock}>
-            {!isMenuWide && (<div className={styles.divider}></div>)}
-            <p className={cn(styles.sectionTitle, isMenuWide && styles.sectionTitleVisible)}>Главное меню</p>
-
-            <ul className={styles.list}>
-              <li>
-                <NavLink to="/dashboard" className={getLinkClass}>
-                  <Box className={styles.icon}>
-                    <Home />
-                  </Box>
-                  <span className={cn(styles.itemTitle, isMenuWide && styles.itemTitleVisible)}>
-                    Главная
-                  </span>
-                </NavLink>
-              </li>
-
-              {/* {has("marketplace.view_product_list") && ( */}
-              <li>
-                <NavLink to="/products" className={getLinkClass}>
-                  <Box className={styles.icon}>
-                    <Products />
-                  </Box>
-                  <span className={cn(styles.itemTitle, isMenuWide && styles.itemTitleVisible)}>
-                    Товары
-                  </span>
-                </NavLink>
-              </li>
-              {/* )} */}
-
-              {/* {has("marketplace.view_productcategory_list") && ( */}
-              <li>
-                <NavLink to="/categories" className={getLinkClass}>
-                  <Box className={styles.icon}>
-                    <Categories />
-                  </Box>
-                  <span className={cn(styles.itemTitle, isMenuWide && styles.itemTitleVisible)}>
-                    Категории
-                  </span>
-                </NavLink>
-              </li>
-              {/* )} */}
-
-              {/* {has("marketplace.view_producttag_list") && ( */}
-              <li>
-                <NavLink to="/product-tags" className={getLinkClass}>
-                  <Box className={styles.icon}>
-                    <ProductTag />
-                  </Box>
-                  <span className={cn(styles.itemTitle, isMenuWide && styles.itemTitleVisible)}>
-                    Теги товаров
-                  </span>
-                </NavLink>
-              </li>
-              {/* )} */}
-            </ul>
-          </div>
-
-
-          <div className={styles.sectionBlock}>
-            {/* {has("services.view_callrequest_list") && ( */}
-            <>
-              {!isMenuWide && (<div className={styles.divider}></div>)}
-              <p className={cn(styles.sectionTitle, isMenuWide && styles.sectionTitleVisible)}>Сервисы</p>
-            </>
-            {/* )} */}
-
-            <ul className={styles.list}>
-              {/* {has("services.view_callrequest_list") && ( */}
-              <li>
-                <NavLink to="/client-call-requests" className={getLinkClass}>
-                  <Box className={styles.icon}>
-                    <CallRequests />
-                  </Box>
-                  <span className={cn(styles.itemTitle, isMenuWide && styles.itemTitleVisible)}>
-                    Запросы на звонок
-                  </span>
-                </NavLink>
-              </li>
-              {/* )} */}
-            </ul>
-          </div>
-
-
-          <div className={styles.sectionBlock}>
-
-            {/* {has("company.view_aboutcompany") && ( */}
-            <>
-              {!isMenuWide && (<div className={styles.divider}></div>)}
-              <p className={cn(styles.sectionTitle, isMenuWide && styles.sectionTitleVisible)}>Компания</p>
-            </>
-            {/* )} */}
-
-            <ul className={styles.list}>
-              {/* {has("company.view_aboutcompany") && ( */}
-              <li>
-                <NavLink to="/about-company" className={getLinkClass}>
-                  <Box className={styles.icon}>
-                    <CompanyIcon />
-                  </Box>
-                  <span className={cn(styles.itemTitle, isMenuWide && styles.itemTitleVisible)}>
-                    О компании
-                  </span>
-                </NavLink>
-              </li>
-              {/* )} */}
-            </ul>
-          </div>
-        </div>
-
-        <div className={styles.section}>
-          <ul className={styles.list}>
+          <ul className={cls.contentList}>
             <li>
-              <button type="button" className={styles.menuItemLink} onClick={toggleSidebar}>
-                <Box className={`${styles.icon} ${isOpen ? styles.toggleIconOpen : ""}`}>
-                  <KeyboardDoubleArrowRightRoundedIcon />
-                </Box>
-              </button>
+              <NavLink to="/dashboard" className={getLinkClass}>
+                <DashboardLink className={cls.menuListIcon} />
+                <p className={cn(cls.menuListTitle, isMenuWide && cls.menuListTitle__visible)}>
+                  Панель управления
+                </p>
+              </NavLink>
             </li>
+
+            <li>
+              <NavLink to="/products" className={getLinkClass}>
+                <UsersLink className={cls.menuListIcon} />
+                <p className={cn(cls.menuListTitle, isMenuWide && cls.menuListTitle__visible)}>
+                  Клиенты
+                </p>
+              </NavLink>
+            </li>
+
           </ul>
         </div>
+
+        <div className={cls.userBlock}>
+          <div className={cls.userInfoBlock}>
+            <img src={UserImage} alt="User photo" className={cls.userPhoto} />
+            {isMenuWide && (
+
+              <div className={cls.userNameBlock}>
+                <p className={cls.userName} title="Ruslan Alimov">Ruslan Alimov</p>
+                <p className={cls.userEmail} title="ruslan.alimov@irkekzn.com">ruslan.alimov@.com</p>
+              </div>
+            )}
+          </div>
+
+          {isMenuWide && (
+            <div className={cls.exitBlock} title="Выйти из системы" onClick={() => logout()}>
+              <ExitIcon className={cls.exitIcon} />
+            </div>
+          )}
+
+        </div>
       </div>
-    </aside>
+
+      {/* Кнопка сжатия панели */}
+      <button type="button" className={cls.hideSidebarButton} onClick={toggleSidebar}>
+        <DoubleArrowIcon className={cn(cls.hideSidebarIcon, isOpen && cls.hideSidebarIcon__open)} />
+      </button>
+    </aside >
   );
 };

@@ -2,17 +2,14 @@
   position: absolute;
   z-index: 99;
   bottom: 0;
-  top: var(--header-height);
+  top: 0;
   left: 0;
   width: var(--aside-min-width);
   display: flex;
   flex-direction: column;
   background-color: var(--white);
-  box-shadow: 0px 97px 27px rgba(163, 159, 193, 0),
-              0px 62px 25px rgba(163, 159, 193, 0.01),
-              0px 35px 21px rgba(163, 159, 193, 0.03),
-              0px 16px 16px rgba(163, 159, 193, 0.06),
-              0px 4px 9px rgba(163, 159, 193, 0.07);
+  box-shadow: var(--shadow-sidebar);
+  border-right: 1px solid var(--gray6);
   transition: width 0.5s ease;
 }
 
@@ -20,123 +17,262 @@
   width: var(--aside-max-width);
 }
 
-.wrapper {
+.asideBlock {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.headerBlock {
+  width: 100%;
+  background-color: var(--blue7);
+  border-bottom: 1px solid var(--gray6);
+  display: flex;
+  padding: 30px 19px;
+  gap: 14px;
+}
+
+.logoBlock {
+  width: 40px;
+  height: 40px;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 10px;
+  background: var(--gradient-darkgray);
+  box-shadow: var(--shadow-icon);
+  box-sizing: border-box;
+}
+
+.logo {
+  fill: var(--white);
+}
+
+.titleBlock {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  overflow-x: hidden;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+
+.title {
+  font: var(--body7);
+  font-weight: 600;
+  color: var(--gray);
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  cursor: default;
+}
+
+.subTitle {
+  font: var(--body0);
+  color: var(--gray3);
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  cursor: default;
+}
+
+.content {
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 42px 12px 22px 12px;
+  padding: 12px;
   box-sizing: border-box;
   overflow-x: hidden;
 }
 
-.section {
+.contentList {
+  list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 7px;
 }
 
-.sectionBlock {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.sectionTitle {
-  text-transform: uppercase;
-  padding-top: 3px;
-  font: var(--body3);
-  letter-spacing: 1px;
-  white-space: nowrap;
-  visibility: hidden;
-  display: none;
-  opacity: 0;
-  transition: visibility 0.5s, opacity 0.5s;
-}
-
-.sectionTitleVisible {
-  visibility: visible !important;
-  opacity: 1 !important;
-  display: block;
-}
-
-.divider {
-  width: 100%;
-  height: 1px;
-  background-color: var(--gray-2);
-}
-
-.menuItemLink {
+.menuListLink {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  color: var(--black);
-  text-decoration: none;
   border-radius: 8px;
+  padding: 8px;
   cursor: pointer;
-  background-color: transparent;
-  transition: color 0.4s, fill 0.4s;
+  transition: background-color 0.2s;
 }
 
-.menuItemLink:hover svg {
-  fill: var(--blue);
-}
-
-.menuItemLink:hover .itemTitle {
-  color: var(--blue);
-}
-
-.menuItemLinkWide {
+.menuListLink__wide {
   justify-content: flex-start;
-  padding: 0 8px;
   box-sizing: border-box;
 }
 
-.menuItemLinkActive svg {
-  fill: var(--blue) !important;
+.menuListLink__active,
+.menuListLink:hover {
+  background-color: var(--blue6);
 }
 
-.menuItemLinkActive span {
-  color: var(--blue);
+.menuListLink__active .menuListTitle,
+.menuListLink__active .menuListIcon {
+  color: var(--gray);
+  font-weight: 580;
+  stroke-width: 2.3px;
 }
 
-.itemTitle {
-  visibility: hidden;
-  opacity: 0;
+.menuListTitle {
   display: none;
-  color: var(--gray-4);
+  color: var(--gray);
   font: var(--body1);
   white-space: nowrap;
-  transition: visibility 0.3s, opacity 0.3s, color 0.4s;
+  transition: visibility 0.3s, opacity 0.3s;
 }
 
-.itemTitleVisible {
-  visibility: visible !important;
-  opacity: 1 !important;
-  display: flex !important;
+.menuListTitle__visible {
+  display: flex;
+  opacity: 1;
+  visibility: visible;
 }
 
-.icon svg {
-  fill: var(--gray-4);
-  height: 21px;
-  width: 21px;
-  transition: fill 0.4s;
+
+.menuListIcon {
+  color: var(--gray);
+  min-height: 18px;
+  min-width: 18px;
+  height: 18px;
+  width: 18px;
+  transition: color 0.4s;
 }
 
-.list {
-  list-style: none;
+.hideSidebarButton {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--gray6);
+  border-top: 1px solid transparent;
+  border-left: 1px solid transparent;
+  border-radius: 50%;
+  bottom: 121px;
+  right: -16px;
+  rotate: -45deg;
+  background: var(--white);
+  pointer-events: auto;
+}
+
+.hideSidebarIcon {
+  color: var(--gray3);
+  rotate: 45deg;
+  height: 12px;
+  width: 12px;
+  margin-left: 5px;
+  margin-top: 5px;
+  transition: transform 0.5s ease;
+}
+
+.hideSidebarIcon__open {
+  transform: rotate(-180deg);
+}
+
+.userBlock {
+  width: 100%;
+  background-color: var(--blue7);
+  border-top: 1px solid var(--gray6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 10px 20px 15px;
+  overflow: hidden;
+}
+
+.userInfoBlock {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.userPhoto {
+  border-radius: 100%;
+  height: 36px;
+  width: 36px;
+  border: 1px solid var(--gray5);
+}
+
+.userNameBlock {
+  height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 13px;
-  padding: 0;
-  margin: 0;
-  list-style: none;
+  justify-content: left;
+  align-items: start;
+  gap: 5px;
+  overflow-x: hidden;
+  white-space: nowrap;
+  scrollbar-width: none;
 }
 
-.toggleIconOpen svg {
-  fill: var(--blue);
-  transform: rotate(-180deg);
-  transition: transform 0.5s ease;
+.userName {
+  font: var(--body1);
+  font-weight: 600;
+  color: var(--gray);
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+
+  cursor: pointer;
+}
+
+.userEmail {
+  font: var(--body-1);
+  color: var(--gray3);
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+
+  cursor: pointer;
+}
+
+.exitBlock {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.exitBlock:hover {
+  background-color: var(--blue6);
+  border-color: var(--gray6);
+}
+
+.exitIcon {
+  height: 15px;
+  width: 15px;
+  color: var(--gray2);
+  transition: color 0.5s;
+}
+
+.exitBlock:hover .exitIcon {
+  color: var(--pink);
 }

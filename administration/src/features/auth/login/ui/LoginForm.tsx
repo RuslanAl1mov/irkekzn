@@ -1,6 +1,6 @@
 import cls from './LoginForm.module.css';
 
-import LogoIcon from "@/assets/logo/irke_logo_black.svg";
+import Logo from "@/assets/logo/logo.svg?react";
 import MailIcon from "@/assets/icons/mail.svg?react";
 import PasswordIcon from "@/assets/icons/lock.svg?react";
 import EyeOpenIcon from "@/assets/icons/eye_open.svg?react";
@@ -24,7 +24,7 @@ export const LoginForm = () => {
 
 	const navigate = useNavigate();
 
-	const { mutate, isPending} = useLogin({
+	const { mutate, isPending } = useLogin({
 		onSuccess: () => {
 			setError("");
 			toast.success("Добро пожаловать!")
@@ -32,7 +32,7 @@ export const LoginForm = () => {
 		},
 		onError: (error) => {
 			setError(String(error.message));
-  			toast.error(error.message);
+			toast.error(error.message);
 		},
 	});
 
@@ -48,7 +48,7 @@ export const LoginForm = () => {
 		<form className={cls.loginForm} onSubmit={handleSubmit}>
 			{/* Логотип */}
 			<div className={cls.logoBlock}>
-				<img src={LogoIcon} alt="Logo" className={cls.logo} />
+				<Logo className={cls.logo} />
 			</div>
 
 			{/* Поля ввода */}

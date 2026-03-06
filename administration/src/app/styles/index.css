@@ -1,4 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
 
 /* Переменные */
 :root {
@@ -7,9 +10,9 @@
     --black: #364153;
     --green: #00B77F;
     --green2: #009C88;
-    --gray: #585858;
-    --gray2: #808080;
-    --gray3: #939393;
+    --gray: #50617c;
+    --gray2: #6c7a92;
+    --gray3: #76859f;
     --gray4: #BCBCBD;
     --gray5: #d3d3d3;
     --gray6: #ebebeb;
@@ -29,27 +32,56 @@
     --blue2: #0a57e6;
     --blue3: #2c6fea;
     --blue4: #457de6;
-    --blue5: #6b8ef5;
-    --blue6: #dce4fc;
+    --blue5: #cee3f5;
+    --blue6: #e0ebf34a;
+    --blue7: #f0f5f9;
     --orange: #ffca69;
 
     /* Градиенты */
     --gradient-lightgreen-darkgreen: linear-gradient(90deg, #00B77F 30.77%, #009C88 100%);
+    --gradient-lightgray: linear-gradient(0deg, #f6f9fb 30.77%, #e6e9eb 100%);
+    --gradient-darkgray: linear-gradient(270deg, var(--gray2) 30.77%, var(--gray3) 100%);
 
     /* Тени */
     --shadow-modal: 0 10px 25px 0 rgba(0, 0, 0, 0.10);
+    --shadow-sidebar: 0px 97px 27px rgba(163, 159, 193, 0),
+        0px 62px 25px rgba(163, 159, 193, 0.01),
+        0px 35px 21px rgba(163, 159, 193, 0.03),
+        0px 16px 16px rgba(163, 159, 193, 0.06),
+        0px 4px 9px rgba(163, 159, 193, 0.07);
+    --shadow-icon: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 
     /* Грфницы */
     --border-modal: 1px solid var(--gray6);
 
 
     /* Шрифты */
-    --body0: 400 11px/100% 'Montserrat', sans-serif;
-    --body1: 400 12px/100% 'Montserrat', sans-serif;
-    --body2: 400 13px/100% 'Montserrat', sans-serif;
-    --body3: 400 14px/100% 'Montserrat', sans-serif;
-    --body4: 400 15px/100% 'Montserrat', sans-serif;
-    --body5: 400 16px/100% 'Montserrat', sans-serif;
+    /* --body0: 400 11px/100% "IBM Plex Sans", sans-serif;
+    --body1: 400 12px/100% "IBM Plex Sans", sans-serif;
+    --body2: 400 13px/100% "IBM Plex Sans", sans-serif;
+    --body3: 400 14px/100% "IBM Plex Sans", sans-serif;
+    --body4: 400 15px/100% "IBM Plex Sans", sans-serif;
+    --body5: 400 16px/100% "IBM Plex Sans", sans-serif; */
+
+    --body-1: 400 11px/100% "Roboto", sans-serif;
+    --body0: 400 12px/100% "Roboto", sans-serif;
+    --body1: 400 13px/100% "Robot", sans-serif;
+    --body2: 400 14px/100% "Robot", sans-serif;
+    --body3: 400 15px/100% "Robot", sans-serif;
+    --body4: 400 16px/100% "Robot", sans-serif;
+    --body5: 400 17px/100% "Robot", sans-serif;
+    --body6: 400 18px/100% "Robot", sans-serif;
+    --body7: 400 19px/100% "Robot", sans-serif;
+
+
+
+    /* --body0: 400 11px/100% "Montserrat", sans-serif;
+    --body1: 400 12px/100% "Montserrat", sans-serif;
+    --body2: 400 13px/100% "Montserrat", sans-serif;
+    --body3: 400 14px/100% "Montserrat", sans-serif;
+    --body4: 400 15px/100% "Montserrat", sans-serif;
+    --body5: 400 16px/100% "Montserrat", sans-serif; */
+
 
     /* Падинги на странице */
     --header-border-padding: 100px;
@@ -60,8 +92,8 @@
     --header-height: 65px;
 
     /* Боковая панель */
-    --aside-min-width: 70px;
-    --aside-max-width: 230px;
+    --aside-min-width: 80px;
+    --aside-max-width: 255px;
 
 }
 
