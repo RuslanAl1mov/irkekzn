@@ -136,10 +136,6 @@
   padding: 3px 0;
 }
 
-.copyMenyBtn:hover {
-  background-color: var(--bg-secondary);
-}
-
 .copyTitleMenyBtn {
   width: fit-content;
   padding: 1px 6px;
@@ -196,12 +192,12 @@
 }
 
 .functionBlock:hover {
-  background-color: var(--bg-primary);
-  border-color: var(--border-primary);
+  background-color: var(--red);
+  border-color: var(--green);
 }
 
 .functionIcon {
   height: 18px;
   width: 18px;
-  fill: var(--text-placeholder);
+  fill: var(--red);
 }

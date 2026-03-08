@@ -1,16 +1,22 @@
 import cls from "./Clients.module.css";
-import { VirtualTable, type HeaderCell } from "@/shared/ui/virtual-table/table";
+
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getUsers } from "@/entities/user/api/getUsers.api";
-import { VirtualCell } from "@/shared/ui/virtual-table/cell";
-import ClientIcon from "@/assets/icons/users.svg?react";
+
 import type { IUser } from "@/entities/user";
-import { useNavigate } from "react-router-dom";
-import { dateFormater } from "@/utils/dateFormater";
+import type { HeaderCell } from "@/shared/ui/virtual-table/table";
 import type { RowItem } from "@/shared/ui/virtual-table/row";
 import type { ContextMenuItem } from "@/shared/ui/virtual-table/context-menu";
-import { formatPhoneNumber } from "@/shared/lib/formater";
+
+import { formatDateTime, formatPhoneNumber } from "@/shared/lib/formater";
+import { VirtualTable } from "@/shared/ui/virtual-table/table";
+import { VirtualCell } from "@/shared/ui/virtual-table/cell";
+
+import EyeIcon from "@/assets/icons/eye_open.svg?react";
+import { Loader } from "@/widgets/loader";
 
 
 export const Clients = () => {
@@ -31,10 +37,8 @@ export const Clients = () => {
     // запрос с пагинацией
     const {
         data: clients,
-        isLoading,
-        isError,
-        error,
         hasNextPage,
+        isLoading,
         fetchNextPage,
         isFetchingNextPage,
     } = useInfiniteQuery({
@@ -144,7 +148,7 @@ export const Clients = () => {
 
                 {
                     title: "Открыть",
-                    icon: ClientIcon,
+                    icon: EyeIcon,
                     onClick: () => navigate(`/clients/${client.id}`),
                 },
 
@@ -176,11 +180,12 @@ export const Clients = () => {
                         align="center"
                     />,
                     <VirtualCell
-                        title={dateFormater(client.last_login)}
+                        title={formatDateTime(client.last_login)}
                         align="center"
                     />,
                     <VirtualCell
-                        title={dateFormater(client.date_joined)}
+                        title={formatDateTime(client.date_joined)}
+                        // secTitle={formatDateTime(client.date_joined)}
                         align="center"
                     />,
                 ],
@@ -203,30 +208,38 @@ export const Clients = () => {
                 </p>
             </div>
 
-            <div className={cls.tableBlock}>
-                <div className={cls.summaryBlock}>
-                    <p className={cls.summaryText}>Всего: {totalUsers}</p>
-                    <p className={cls.summaryText}>|</p>
-                    <p className={cls.summaryText}>Активных: {totalActiveUsers}</p>
-                    <p className={cls.summaryText}>|</p>
-                    <p className={cls.summaryText}>Заблокированных: {totalUsers - totalActiveUsers}</p>
-
+            {isLoading && (
+                <div className={cls.loaderErrorBlock}>
+                    <Loader size={30} strokeWidth={6} />
                 </div>
+            )}
 
-                <VirtualTable
-                    headers={headers}
-                    data={rows}
-                    ordering={ordering}
-                    setOrdering={debouncedSetOrdering}
-                    row_height={70}
-                    loading={isFetchingNextPage}
-                    onEndReached={() => {
-                        if (hasNextPage && !isFetchingNextPage) {
-                            fetchNextPage();
-                        }
-                    }}
-                />
-            </div>
+            {!isLoading && (
+                <div className={cls.tableBlock}>
+                    <div className={cls.summaryBlock}>
+                        <p className={cls.summaryText}>Всего: {totalUsers}</p>
+                        <p className={cls.summaryText}>|</p>
+                        <p className={cls.summaryText}>Активных: {totalActiveUsers}</p>
+                        <p className={cls.summaryText}>|</p>
+                        <p className={cls.summaryText}>Заблокированных: {totalUsers - totalActiveUsers}</p>
+
+                    </div>
+
+                    <VirtualTable
+                        headers={headers}
+                        data={rows}
+                        ordering={ordering}
+                        setOrdering={debouncedSetOrdering}
+                        row_height={70}
+                        loading={isFetchingNextPage}
+                        onEndReached={() => {
+                            if (hasNextPage && !isFetchingNextPage) {
+                                fetchNextPage();
+                            }
+                        }}
+                    />
+                </div>
+            )}
 
         </section>
     );

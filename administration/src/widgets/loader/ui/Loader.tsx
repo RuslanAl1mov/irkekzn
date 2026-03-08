@@ -11,7 +11,7 @@ type LoaderProps = {
 export const Loader: React.FC<LoaderProps> = ({
   size = 20,
   color = "var(--blue)",
-  strokeWidth = 7,
+  strokeWidth = 5,
 }) => {
   const r = 25 - strokeWidth / 2;
 

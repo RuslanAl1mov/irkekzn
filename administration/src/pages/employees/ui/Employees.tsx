@@ -1,16 +1,23 @@
 import cls from "./Employees.module.css";
-import { VirtualTable, type HeaderCell } from "@/shared/ui/virtual-table/table";
+
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getUsers } from "@/entities/user/api/getUsers.api";
-import { VirtualCell } from "@/shared/ui/virtual-table/cell";
-import ClientIcon from "@/assets/icons/users.svg?react";
+
 import type { IUser } from "@/entities/user";
-import { useNavigate } from "react-router-dom";
-import { dateFormater } from "@/utils/dateFormater";
+import type { HeaderCell } from "@/shared/ui/virtual-table/table";
 import type { RowItem } from "@/shared/ui/virtual-table/row";
 import type { ContextMenuItem } from "@/shared/ui/virtual-table/context-menu";
-import { formatPhoneNumber } from "@/shared/lib/formater";
+
+import { formatDateTime, formatPhoneNumber, formatDate } from "@/shared/lib/formater";
+import { VirtualTable } from "@/shared/ui/virtual-table/table";
+import { VirtualCell } from "@/shared/ui/virtual-table/cell";
+
+import ClientIcon from "@/assets/icons/users.svg?react";
+import { Loader } from "@/widgets/loader";
+
 
 
 export const Employees = () => {
@@ -32,8 +39,6 @@ export const Employees = () => {
     const {
         data: employees,
         isLoading,
-        isError,
-        error,
         hasNextPage,
         fetchNextPage,
         isFetchingNextPage,
@@ -176,11 +181,12 @@ export const Employees = () => {
                         align="center"
                     />,
                     <VirtualCell
-                        title={dateFormater(employee.last_login)}
+                        title={formatDate(employee.last_login)}
                         align="center"
                     />,
                     <VirtualCell
-                        title={dateFormater(employee.date_joined)}
+                        title={formatDateTime(employee.date_joined)}
+                        // secTitle={formatDateTime(employee.date_joined)}
                         align="center"
                     />,
                 ],
@@ -193,7 +199,6 @@ export const Employees = () => {
 
     return (
         <section className={cls.section}>
-
             <div className={cls.titleBlock}>
                 <h1 className={cls.title}>
                     Управление сотрудниками
@@ -203,30 +208,39 @@ export const Employees = () => {
                 </p>
             </div>
 
-            <div className={cls.tableBlock}>
-                <div className={cls.summaryBlock}>
-                    <p className={cls.summaryText}>Всего: {totalUsers}</p>
-                    <p className={cls.summaryText}>|</p>
-                    <p className={cls.summaryText}>Активных: {totalActiveUsers}</p>
-                    <p className={cls.summaryText}>|</p>
-                    <p className={cls.summaryText}>Заблокированных: {totalUsers - totalActiveUsers}</p>
 
+            {isLoading && (
+                <div className={cls.loaderErrorBlock}>
+                    <Loader size={30} strokeWidth={6}/>
                 </div>
+            )}
 
-                <VirtualTable
-                    headers={headers}
-                    data={rows}
-                    ordering={ordering}
-                    setOrdering={debouncedSetOrdering}
-                    row_height={70}
-                    loading={isFetchingNextPage}
-                    onEndReached={() => {
-                        if (hasNextPage && !isFetchingNextPage) {
-                            fetchNextPage();
-                        }
-                    }}
-                />
-            </div>
+            {!isLoading && (
+                <div className={cls.tableBlock}>
+                    <div className={cls.summaryBlock}>
+                        <p className={cls.summaryText}>Всего: {totalUsers}</p>
+                        <p className={cls.summaryText}>|</p>
+                        <p className={cls.summaryText}>Активных: {totalActiveUsers}</p>
+                        <p className={cls.summaryText}>|</p>
+                        <p className={cls.summaryText}>Заблокированных: {totalUsers - totalActiveUsers}</p>
+
+                    </div>
+                    <VirtualTable
+                        headers={headers}
+                        data={rows}
+                        ordering={ordering}
+                        setOrdering={debouncedSetOrdering}
+                        row_height={70}
+                        loading={isFetchingNextPage}
+                        onEndReached={() => {
+                            if (hasNextPage && !isFetchingNextPage) {
+                                fetchNextPage();
+                            }
+                        }}
+                    />
+                </div>
+            )}
+
 
         </section>
     );

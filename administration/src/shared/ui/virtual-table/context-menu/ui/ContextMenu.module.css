@@ -8,13 +8,14 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  background: var(--bg-primary);
-  border: 1px solid var(--bg-tertiary);
-  border-radius: 8px;
-  box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.1),
-    0 2px 6px rgba(0, 0, 0, 0.08);
   overflow: hidden;
+
+  background: rgba(var(--glass-bg-color), 0.2);;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--glass-border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-modal);
 }
 
 .menuItem {
@@ -32,22 +33,24 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--text-secondary);
-  font: var(--link);
+  color: var(--gray);
+  font: var(--body1);
   transition:
     • color 0.3s,
     background-color 0.35;
 }
+
 .menuIcon {
-  color: var(--text-primary);
+  color: var(--gray);
   width: 16px;
   height: 16px;
   flex: 0 0 auto;
-  fill: var(--text-primary);
 }
+
 .menuLabel {
   flex: 1 1 auto;
 }
+
 .menuButton:hover {
-  background-color: var(--bg-tertiary);
+  background: rgba(var(--blue6--rgb), 0.4);;
 }

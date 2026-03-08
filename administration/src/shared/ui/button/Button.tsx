@@ -1,7 +1,7 @@
 import type { ComponentPropsWithoutRef, FC, PropsWithChildren } from 'react';
 import cls from './Button.module.css';
 import classNames from 'classnames';
-import { Loader } from '../loader/Loader';
+import { Loader } from '@/widgets/loader';
 
 interface Props extends PropsWithChildren<ComponentPropsWithoutRef<'button'>> {
 	className?: string;
@@ -19,7 +19,7 @@ export const Button: FC<Props> = (props) => {
 				[cls.full]: size === 'full',
 				[cls.withLoading]: isLoading,
 			})}>
-			{isLoading && <Loader width={20} />}
+			{isLoading && <Loader size={20} />}
 			{children}
 		</button>
 	);

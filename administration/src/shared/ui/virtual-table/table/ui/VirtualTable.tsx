@@ -38,7 +38,7 @@ export function VirtualTable({
     [row_height]
   );
 
-  console.log("ROW_HEIGHT",ROW_HEIGHT)
+  console.log("ROW_HEIGHT", ROW_HEIGHT)
   const EXPANDED_EXTRA = useMemo(() => {
     // полная высота раскрытой строки задаётся CSS-переменной
     const cssVal = cssVarNumber("--expanded-block-height");
@@ -223,7 +223,7 @@ export function VirtualTable({
 
         {loading && (
           <div className={cls.loadingFooter}>
-            <Loader size={20} color={"var(--border-accent)"} strokeWidth={7} />
+            <Loader />
           </div>
         )}
       </div>
