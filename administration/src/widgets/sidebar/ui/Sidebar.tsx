@@ -8,8 +8,9 @@ import { useLogout } from "@/features/auth/logout";
 import { useSidebarState } from "@/widgets/sidebar";
 
 import Logo from "@/assets/logo/logo.svg?react";
-import DashboardLink from "@/assets/icons/dashboard.svg?react";
-import UsersLink from "@/assets/icons/users.svg?react";
+import DashboardIcon from "@/assets/icons/dashboard.svg?react";
+import ClientsIcon from "@/assets/icons/users.svg?react";
+import EmployessIcon from "@/assets/icons/employee.svg?react";
 import DoubleArrowIcon from "@/assets/icons/arrow.svg?react";
 import UserImage from "@/assets/app/user.jpg";
 import ExitIcon from "@/assets/icons/exit.svg?react";
@@ -60,7 +61,7 @@ export const Sidebar: React.FC = () => {
           <ul className={cls.contentList}>
             <li>
               <NavLink to="/dashboard" className={getLinkClass}>
-                <DashboardLink className={cls.menuListIcon} />
+                <DashboardIcon className={cls.menuListIcon} />
                 <p className={cn(cls.menuListTitle, isMenuWide && cls.menuListTitle__visible)}>
                   Панель управления
                 </p>
@@ -68,10 +69,19 @@ export const Sidebar: React.FC = () => {
             </li>
 
             <li>
-              <NavLink to="/products" className={getLinkClass}>
-                <UsersLink className={cls.menuListIcon} />
+              <NavLink to="/clients" className={getLinkClass}>
+                <ClientsIcon className={cls.menuListIcon} />
                 <p className={cn(cls.menuListTitle, isMenuWide && cls.menuListTitle__visible)}>
                   Клиенты
+                </p>
+              </NavLink>
+            </li>
+
+            <li>
+              <NavLink to="/employees" className={getLinkClass}>
+                <EmployessIcon className={cls.menuListIcon} />
+                <p className={cn(cls.menuListTitle, isMenuWide && cls.menuListTitle__visible)}>
+                  Сотрудники
                 </p>
               </NavLink>
             </li>

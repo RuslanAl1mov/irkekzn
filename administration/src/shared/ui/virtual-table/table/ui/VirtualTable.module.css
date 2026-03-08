@@ -1,0 +1,93 @@
+:root {
+  --row-height: 40px;
+  /* базовая высота строки */
+  --expanded-extra-height: 621px;
+  /* полная высота раскрытой строки */
+}
+
+/* Контейнеры */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  height: 100%;
+}
+
+/* Шапка (Grid) */
+.header {
+  width: 100%;
+  height: 50px;
+  align-items: center;
+  position: sticky;
+  display: flex;
+  padding: 0 10px;
+  box-sizing: border-box;
+  background-color: var(--blue5);
+  border: 1px solid var(--gray7);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+
+  /* Стекло */
+  background: rgba(var(--gray7--rgb), 0.3);;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--glass-border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-glass);
+}
+
+.headerItem {
+  height: 100%;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  user-select: none;
+  position: relative;
+  transition: background-color 0.2s;
+  color: var(--black);
+}
+
+.headerItem span {
+  font: var(--body2);
+}
+
+.headerItemSortable:hover {
+  cursor: pointer;
+}
+
+.loadingFooter {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+/* Обертка таблицы */
+.wrapper {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border-radius: 10px;
+}
+
+/* Скрытие скроллбара */
+.hideScrollBar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hideScrollBar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 1220px) {
+  :root {
+    --row-height: 40px;
+    /* базовая высота строки */
+    --expanded-extra-height: 621px;
+    /* полная высота раскрытой строки */
+  }
+}

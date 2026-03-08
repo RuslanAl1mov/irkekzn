@@ -18,3 +18,12 @@ export interface IUser {
 export interface IUserResponse<T> {
   result: T;
 }
+
+export interface IUsersListResponse {
+  pages: number;
+  count: number;
+  active: number;
+  next: string | null;
+  previous: string | null;
+  result: IUser[];
+}

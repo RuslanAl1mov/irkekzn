@@ -13,10 +13,12 @@
     --gray: #50617c;
     --gray2: #6c7a92;
     --gray3: #76859f;
-    --gray4: #BCBCBD;
+    --gray4: #98a1b0;
     --gray5: #d3d3d3;
-    --gray6: #ebebeb;
-    --gray7: #FAFBFC;
+    --gray6: rgb(235, 235, 235);
+    --gray6--rgb: 235, 235, 235;
+    --gray7: rgb(250, 251, 252);
+    --gray7--rgb: 250, 251, 252;
     --purple: #961CF8;
     --purple2: #b45efa;
     --purple3: #d4a0ff;
@@ -28,19 +30,23 @@
     --red4: #f16666;
     --red5: #f77575;
     --red6: #ffc9c9;
-    --blue: #074bc8;
-    --blue2: #0a57e6;
-    --blue3: #2c6fea;
-    --blue4: #457de6;
+    --blue: #2585de;
+    --blue2: #559de0;
+    --blue3: #7bb1e4;
+    --blue4: #a9cbea;
     --blue5: #cee3f5;
-    --blue6: #e0ebf34a;
-    --blue7: #f0f5f9;
+    --blue6: rgb(220, 231, 239);
+    --blue6--rgb: 220, 231, 239;
+    --blue7: rgb(240, 245, 249);
+    --blue7--rgb: 240, 245, 249;
     --orange: #ffca69;
+    --glass-bg-color: 255, 255, 255;
 
     /* Градиенты */
     --gradient-lightgreen-darkgreen: linear-gradient(90deg, #00B77F 30.77%, #009C88 100%);
     --gradient-lightgray: linear-gradient(0deg, #f6f9fb 30.77%, #e6e9eb 100%);
     --gradient-darkgray: linear-gradient(270deg, var(--gray2) 30.77%, var(--gray3) 100%);
+
 
     /* Тени */
     --shadow-modal: 0 10px 25px 0 rgba(0, 0, 0, 0.10);
@@ -50,7 +56,7 @@
         0px 16px 16px rgba(163, 159, 193, 0.06),
         0px 4px 9px rgba(163, 159, 193, 0.07);
     --shadow-icon: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-
+    --shadow-glass: 0 4px 15px rgba(0, 0, 0, 0.1);
     /* Грфницы */
     --border-modal: 1px solid var(--gray6);
 
@@ -73,6 +79,20 @@
     --body6: 400 18px/100% "Robot", sans-serif;
     --body7: 400 19px/100% "Robot", sans-serif;
 
+    --header1: 400 21px/100% "Robot", sans-serif;
+
+    /* Прозрачность */
+    --glass-opacity: 0.5;
+    --glass-border-opacity: 0.8;
+
+    /* Размытие */
+    --glass-blur: 3px;
+
+    /* Обводка */
+    --glass-border: 1px solid rgba(var(--glass-bg-color), var(--glass-border-opacity));
+
+    /* Композитные переменные */
+    --glass-bg: rgba(var(--glass-bg-color), var(--glass-opacity));
 
 
     /* --body0: 400 11px/100% "Montserrat", sans-serif;
@@ -86,7 +106,12 @@
     /* Падинги на странице */
     --header-border-padding: 100px;
     --sections-padding: 0 22%;
-    --page-padding: 25px;
+
+    --page-top-padding: 30px;
+    --page-bottom-padding: 30px;
+    --page-right-padding: 50px;
+    --page-left-padding: 50px;
+
 
     /* Шапка */
     --header-height: 65px;

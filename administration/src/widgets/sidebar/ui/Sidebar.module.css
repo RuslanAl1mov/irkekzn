@@ -7,9 +7,8 @@
   width: var(--aside-min-width);
   display: flex;
   flex-direction: column;
-  background-color: var(--white);
   box-shadow: var(--shadow-sidebar);
-  border-right: 1px solid var(--gray6);
+  border-right: var(--glass-border);
   transition: width 0.5s ease;
 }
 
@@ -93,6 +92,10 @@
   padding: 12px;
   box-sizing: border-box;
   overflow-x: hidden;
+
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
 }
 
 .contentList {
@@ -121,7 +124,8 @@
 
 .menuListLink__active,
 .menuListLink:hover {
-  background-color: var(--blue6);
+  background-color: rgba(var(--blue6--rgb), 0.6);
+  backdrop-filter: blur(1px);
 }
 
 .menuListLink__active .menuListTitle,
@@ -162,20 +166,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--gray6);
+  border: var(--glass-border);
   border-top: 1px solid transparent;
   border-left: 1px solid transparent;
   border-radius: 50%;
   bottom: 121px;
   right: -16px;
   rotate: -45deg;
-  background: var(--white);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
   pointer-events: auto;
 }
 
 .hideSidebarIcon {
   color: var(--gray3);
-  rotate: 45deg;
+  rotate: 225deg;
   height: 12px;
   width: 12px;
   margin-left: 5px;
@@ -258,6 +264,7 @@
   border-radius: 5px;
   cursor: pointer;
   border: 1px solid transparent;
+
   transition: background-color 0.3s, border-color 0.3s;
 }
 

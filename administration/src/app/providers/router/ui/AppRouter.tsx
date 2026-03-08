@@ -3,6 +3,8 @@ import { Route, Routes, Navigate } from 'react-router';
 import { RequireAuth } from '../../session';
 import { AppShell } from '@/widgets/app-shell';
 import DashboardPage from '@/pages/dashboard/ui/Dashboard';
+import { Clients } from '@/pages/clients';
+import { Employees } from '@/pages/employees/ui/Employees';
 // import { AppShell } from '@/widgets/app-shell';
 // import DashboardPage from '@/pages/dashboard/ui/Dashboard';
 
@@ -22,11 +24,15 @@ export const AppRouter = () => {
 				} />
 
 				<Route path="clients/" element={
-					<div></div>
+					<RequireAuth>
+						<Clients />
+					</RequireAuth>
 				} />
-				
-				<Route path="products/" element={
-					<div></div>
+
+				<Route path="employees/" element={
+					<RequireAuth>
+						<Employees />
+					</RequireAuth>
 				} />
 
 			</Route>
