@@ -16,6 +16,7 @@ import { VirtualTable } from "@/shared/ui/virtual-table/table";
 import { VirtualCell } from "@/shared/ui/virtual-table/cell";
 
 import EyeIcon from "@/assets/icons/eye_open.svg?react";
+import EditIcon from "@/assets/icons/edit.svg?react";
 import { Loader } from "@/widgets/loader";
 
 
@@ -150,6 +151,11 @@ export const Clients = () => {
                     title: "Открыть",
                     icon: EyeIcon,
                     onClick: () => navigate(`/clients/${client.id}`),
+                },
+                {
+                    title: "Редактировать",
+                    icon: EditIcon,
+                    onClick: () => navigate("/"),
                 },
 
             ];

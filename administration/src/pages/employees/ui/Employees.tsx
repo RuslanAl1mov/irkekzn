@@ -16,6 +16,8 @@ import { VirtualTable } from "@/shared/ui/virtual-table/table";
 import { VirtualCell } from "@/shared/ui/virtual-table/cell";
 
 import ClientIcon from "@/assets/icons/users.svg?react";
+import EditIcon from "@/assets/icons/edit.svg?react";
+
 import { Loader } from "@/widgets/loader";
 
 
@@ -152,6 +154,11 @@ export const Employees = () => {
                     icon: ClientIcon,
                     onClick: () => navigate(`/employee/${employee.id}`),
                 },
+                {
+                    title: "Редактировать",
+                    icon: EditIcon,
+                    onClick: () => navigate("/"),
+                },
 
             ];
             const row = {
@@ -211,7 +218,7 @@ export const Employees = () => {
 
             {isLoading && (
                 <div className={cls.loaderErrorBlock}>
-                    <Loader size={30} strokeWidth={6}/>
+                    <Loader size={30} strokeWidth={6} />
                 </div>
             )}
 
