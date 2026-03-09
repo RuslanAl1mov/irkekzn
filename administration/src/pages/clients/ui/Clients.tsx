@@ -18,11 +18,14 @@ import { VirtualCell } from "@/shared/ui/virtual-table/cell";
 import EyeIcon from "@/assets/icons/eye_open.svg?react";
 import EditIcon from "@/assets/icons/edit.svg?react";
 import { Loader } from "@/widgets/loader";
+import { Title } from "@/widgets/title";
+import { useClientEditStore } from "@/features/user-edit";
 
 
 export const Clients = () => {
     const [ordering, setOrdering] = useState<string[]>([]);
     const navigate = useNavigate();
+    const openEditModal = useClientEditStore((s) => s.open);
 
     // параметры запроса
     const { params } = useMemo(() => {
@@ -155,7 +158,7 @@ export const Clients = () => {
                 {
                     title: "Редактировать",
                     icon: EditIcon,
-                    onClick: () => navigate("/"),
+                    onClick: () => openEditModal(client),
                 },
 
             ];
@@ -191,7 +194,6 @@ export const Clients = () => {
                     />,
                     <VirtualCell
                         title={formatDateTime(client.date_joined)}
-                        // secTitle={formatDateTime(client.date_joined)}
                         align="center"
                     />,
                 ],
@@ -199,20 +201,16 @@ export const Clients = () => {
             return row;
         });
     }, [
-        flatList
+        flatList,
+        openEditModal,
     ]);
 
     return (
         <section className={cls.section}>
-
-            <div className={cls.titleBlock}>
-                <h1 className={cls.title}>
-                    Управление клиентами
-                </h1>
-                <p className={cls.subTitle}>
-                    Управляйте отношениями с клиентами и персональной информацией
-                </p>
-            </div>
+            <Title
+                title="Управление клиентами"
+                subTitle="Управляйте отношениями с клиентами и персональной информацией"
+            />
 
             {isLoading && (
                 <div className={cls.loaderErrorBlock}>

@@ -1,0 +1,27 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+}
+
+.title {
+    margin: 0;
+}
+
+.h1 {
+    font: var(--header1);
+}
+
+.h2 {
+    font: var(--header2);
+}
+
+.h3 {
+    font: var(--header3);
+}
+
+.subTitle {
+    margin: 0;
+    font: var(--body0);
+    color: var(--gray3);
+}

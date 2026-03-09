@@ -15,6 +15,22 @@ export interface IUser {
   permissions: string[];
 }
 
+export interface IUserPayload {
+  last_login?: string | null;
+  date_joined?: string | null;
+  email?: string;
+  password?: string;
+  is_superuser?: boolean;
+  is_staff?: boolean;
+  is_active?: boolean;
+  first_name?: string;
+  last_name?: string;
+  username?: string;
+  phone_number?: string;
+  photo?: string | null;
+  language?: string;
+}
+
 export interface IUserResponse<T> {
   result: T;
 }

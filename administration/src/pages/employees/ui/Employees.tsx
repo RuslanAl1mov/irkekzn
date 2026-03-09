@@ -19,12 +19,14 @@ import ClientIcon from "@/assets/icons/users.svg?react";
 import EditIcon from "@/assets/icons/edit.svg?react";
 
 import { Loader } from "@/widgets/loader";
-
+import { Title } from "@/widgets/title";
+import { useClientEditStore } from "@/features/user-edit";
 
 
 export const Employees = () => {
     const [ordering, setOrdering] = useState<string[]>([]);
     const navigate = useNavigate();
+    const openEditModal = useClientEditStore((s) => s.open);
 
     // параметры запроса
     const { params } = useMemo(() => {
@@ -157,7 +159,7 @@ export const Employees = () => {
                 {
                     title: "Редактировать",
                     icon: EditIcon,
-                    onClick: () => navigate("/"),
+                    onClick: () => openEditModal(employee),
                 },
 
             ];
@@ -193,7 +195,6 @@ export const Employees = () => {
                     />,
                     <VirtualCell
                         title={formatDateTime(employee.date_joined)}
-                        // secTitle={formatDateTime(employee.date_joined)}
                         align="center"
                     />,
                 ],
@@ -201,19 +202,16 @@ export const Employees = () => {
             return row;
         });
     }, [
-        flatList
+        flatList,
+        openEditModal,
     ]);
 
     return (
         <section className={cls.section}>
-            <div className={cls.titleBlock}>
-                <h1 className={cls.title}>
-                    Управление сотрудниками
-                </h1>
-                <p className={cls.subTitle}>
-                    Управляйте командой и активностью сотрудников
-                </p>
-            </div>
+            <Title
+                title="Управление сотрудниками"
+                subTitle="Управляйте командой и активностью сотрудников"
+            />
 
 
             {isLoading && (

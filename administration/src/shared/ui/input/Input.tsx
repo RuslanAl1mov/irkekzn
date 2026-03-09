@@ -5,10 +5,12 @@ import CloseIcon from "@/assets/icons/close.svg?react";
 
 import cls from "./Input.module.css";
 
-interface Props extends Omit<
+export interface InputProps extends Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
   "value" | "onChange" | "defaultValue" | "type"
 > {
+  label?: string;
+  showLabel?: boolean;
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
   className?: string;
@@ -25,6 +27,8 @@ interface Props extends Omit<
 
 export const Input = ({
   type = "text",
+  label,
+  showLabel = true,
   startIcon,
   endIcon,
   className,
@@ -37,11 +41,13 @@ export const Input = ({
   disabled,
 
   ...rest
-}: Props) => {  const inputRef = useRef<HTMLInputElement>(null);
+}: InputProps) => {
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const isControlled = value !== undefined;
   const hasValue = isControlled ? !!value : false;
   const shouldShowClearButton = showClearButton && hasValue && !disabled;
+  const hasEndSlot = !!endIcon || showClearButton;
 
   function handleContainerMouseDown(e: React.MouseEvent<HTMLDivElement>) {
     const target = e.target as HTMLElement;
@@ -68,27 +74,32 @@ export const Input = ({
     inputRef.current?.focus();
   }
 
-  const finalEndIcon = shouldShowClearButton ? (
-    <button
-      type="button"
-      className={cls.clearBtn}
-      onClick={handleClear}
-      onMouseDown={(e) => e.preventDefault()}
-      aria-label={"Очистить"}
-      title={"Очистить"}
-    >
-      <CloseIcon />
-    </button>
-  ) : (
-    endIcon
+  const finalEndIcon = endIcon ?? (
+    showClearButton ? (
+      <button
+        type="button"
+        className={cls.clearBtn}
+        onClick={handleClear}
+        onMouseDown={(e) => e.preventDefault()}
+        aria-label="Очистить"
+        title="Очистить"
+        tabIndex={shouldShowClearButton ? 0 : -1}
+        style={{
+          visibility: shouldShowClearButton ? "visible" : "hidden",
+          pointerEvents: shouldShowClearButton ? "auto" : "none",
+        }}
+      >
+        <CloseIcon />
+      </button>
+    ) : null
   );
 
-  return (
+  const inputNode = (
     <div
       className={cn(
         cls.inputCont,
         { [cls.withStartIcon]: !!startIcon },
-        { [cls.withEndIcon]: !!finalEndIcon },
+        { [cls.withEndIcon]: hasEndSlot },
         { [cls.error]: error },
         className,
         { [cls.disable]: disabled }
@@ -110,6 +121,17 @@ export const Input = ({
 
       {finalEndIcon}
     </div>
+  );
+
+  if (!label || !showLabel) {
+    return inputNode;
+  }
+
+  return (
+    <label className={cls.field}>
+      <span className={cls.label}>{label}</span>
+      {inputNode}
+    </label>
   );
 };
 

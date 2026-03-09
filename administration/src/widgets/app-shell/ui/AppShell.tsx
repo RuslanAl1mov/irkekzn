@@ -5,6 +5,8 @@ import cls from './AppShell.module.css';
 import { useSidebarState } from "@/widgets/sidebar";
 import { Sidebar } from '@/widgets/sidebar';
 
+import { ClientEditForm } from '@/features/user-edit';
+
 
 export const AppShell = () => {
 	const { isOpen: isSidebarOpen } = useSidebarState();
@@ -14,6 +16,8 @@ export const AppShell = () => {
 			<div className={cn(cls.allContent, isSidebarOpen && cls.wideSidbar)}>
 				<Outlet />
 			</div>
+			{/* Модальные окна системы */}
+			<ClientEditForm />
 		</div>
 	);
 };

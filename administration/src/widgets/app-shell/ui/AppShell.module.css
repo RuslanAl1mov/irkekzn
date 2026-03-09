@@ -3,6 +3,7 @@
 	background: var(--gradient-lightgray);
 	display: flex;
 	justify-content: center;
+	position: relative;
 }
 
 .allContent {

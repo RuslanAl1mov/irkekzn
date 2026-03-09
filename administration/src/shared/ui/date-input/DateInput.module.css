@@ -1,0 +1,163 @@
+.filter {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font: var(--body1);
+  color: var(--gray);
+  padding-left: 3px;
+}
+
+.filterDisabled {
+  background-color: var(--gray6) !important;
+  border-color: var(--gray5) !important;
+  opacity: 0.6;
+}
+
+.trigger {
+  display: grid;
+  grid-template-columns: 1fr 20px;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--gray5);
+  background-color: var(--gray7);
+  box-shadow: 0 4px 24px 0 var(--gray7);
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+.trigger:focus-within {
+  background-color: var(--white);
+  border-color: var(--blue);
+}
+
+.triggerSelected {
+  background-color: var(--white);
+}
+
+.input {
+  font: var(--body1);
+  width: 100%;
+  color: var(--black);
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--gray4);
+}
+
+.calendarButton {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border-radius: 6px;
+  transition: background-color 0.3s;
+}
+
+.calendarButton:hover {
+  background-color: var(--blue7);
+}
+
+.calendarButton:disabled {
+  cursor: not-allowed;
+}
+
+.calendarIcon {
+  width: 18px;
+  height: 18px;
+  color: var(--gray4);
+  transition: color 0.3s;
+}
+
+.trigger:focus-within .calendarIcon {
+  color: var(--blue);
+}
+
+.popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 85;
+
+  background: rgba(var(--glass-bg-color), 0.95);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--glass-border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-modal);
+
+  padding: 15px;
+}
+
+.popoverContent {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 15px;
+}
+
+.listSection {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  list-style: none;
+}
+
+.itemButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: var(--gray2);
+  font: var(--body1);
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.itemButton:hover {
+  background: var(--blue6);
+  color: var(--black);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  justify-content: space-between;
+  min-width: 140px;
+}
+
+.actionsRow {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn {
+  width: 100%;
+}

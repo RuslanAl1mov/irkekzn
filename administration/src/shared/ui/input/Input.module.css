@@ -1,7 +1,20 @@
+.field {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.label {
+	font: var(--body1);
+	color: var(--gray);
+	padding-left: 3px;
+}
+
 .inputCont {
 	width: 100%;
 	border: 1px solid var(--gray5);
-	padding: 14px 14px;
+	padding: 11px 14px;
 	border-radius: 8px;
 	cursor: text;
 	transition: border-color 0.3s, background-color 0.3s;
@@ -43,13 +56,16 @@
 	color: var(--red);
 }
 
-.inputCont.withStartIcon {
+.withStartIcon {
 	grid-template-columns: 22px 1fr;
 }
 
-.inputCont.withStartIcon.withEndIcon {
-	grid-template-columns: 22px 1fr 24px;
-	cursor: pointer;
+.withEndIcon {
+	grid-template-columns: 1fr 20px;
+}
+
+.withStartIcon.withEndIcon {
+	grid-template-columns: 22px 1fr 20px;
 }
 
 .inputCont.withStartIcon .input {
@@ -64,9 +80,9 @@
 }
 
 .disable {
-	background-color: var(--gray4);
-	opacity: 0.6;
+	background-color: var(--gray6) !important;
 	cursor: not-allowed;
+	opacity: 0.6;
 }
 
 .clearBtn {
@@ -74,6 +90,10 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	padding: 0;
+	background: transparent;
+	cursor: pointer;
+	border-radius: 100%;
 }
 
 .inputCont.error .clearBtn {
@@ -81,8 +101,8 @@
 }
 
 .clearBtn svg {
-	width: 20px;
-	height: 20px;
+	width: 19px;
+	height: 19px;
 	display: block;
 	color: var(--gray4);
 	transition: color 0.3s;
@@ -100,6 +120,14 @@
 	border: none;
 	outline: none;
 }
+
+/* .input input:disabled {
+	color: var(--gray);
+	-webkit-text-fill-color: var(--gray);
+	opacity: 1;
+	cursor: not-allowed;
+
+} */
 
 .input input::placeholder {
 	color: var(--gray4);

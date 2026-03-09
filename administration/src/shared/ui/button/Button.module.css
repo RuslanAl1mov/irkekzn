@@ -1,16 +1,41 @@
 .btn {
-	font: var(--button);
+	font: var(--body1);
 	font-weight: 500;
 	color: var(--white);
-	padding: 20px 20px;
+	padding: 11px 18px;
 	border-radius: 8px;
-	background: var(--blue);
-	transition: background 0.3s;
+	background-color: var(--blue);
+	transition: background-color 0.3s;
 }
 
 .btn:hover {
-	background: var(--blue4);
+	background-color: var(--blue2);
 }
+
+.btn.gray {
+	background-color: var(--gray4);
+}
+
+.btn.gray:hover {
+	background-color: var(--gray3);
+}
+
+.btn.gray:active {
+	background-color: var(--gray3);
+}
+
+.btn.red {
+	background-color: var(--red2);
+}
+
+.btn.red:hover {
+	background-color: var(--red3);
+}
+
+.btn.red:active {
+	background-color: var(--red4);
+}
+
 
 .btn.full {
 	width: 100%;

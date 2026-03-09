@@ -1,26 +1,47 @@
-import type { ComponentPropsWithoutRef, FC, PropsWithChildren } from 'react';
-import cls from './Button.module.css';
-import classNames from 'classnames';
-import { Loader } from '@/widgets/loader';
+import type { ComponentPropsWithoutRef, FC, PropsWithChildren } from "react";
+import cn from "classnames";
 
-interface Props extends PropsWithChildren<ComponentPropsWithoutRef<'button'>> {
-	className?: string;
-	size?: 'full';
-	isLoading?: boolean;
+import { Loader } from "@/widgets/loader";
+
+import cls from "./Button.module.css";
+
+interface Props extends PropsWithChildren<ComponentPropsWithoutRef<"button">> {
+  className?: string;
+  size?: "full";
+  isLoading?: boolean;
+  variant?: "blue" | "gray" | "red";
+  type?: "button" | "submit" | "reset";
 }
 
 export const Button: FC<Props> = (props) => {
-	const { className, children, size, isLoading } = props;
+  const {
+    className,
+    children,
+    size,
+    isLoading,
+    variant = "blue",
+    type = "button",
+    ...restProps
+  } = props;
 
-	return (
-		<button
-			className={classNames(cls.btn, {
-				className,
-				[cls.full]: size === 'full',
-				[cls.withLoading]: isLoading,
-			})}>
-			{isLoading && <Loader size={20} />}
-			{children}
-		</button>
-	);
+  return (
+    <button
+      type={type}
+      className={cn(
+        cls.btn,
+        className,
+        {
+          [cls.full]: size === "full",
+          [cls.withLoading]: isLoading,
+          [cls.blue]: variant === "blue",
+          [cls.gray]: variant === "gray",
+          [cls.red]: variant === "red",
+        }
+      )}
+      {...restProps}
+    >
+      {isLoading && <Loader size={20} />}
+      {children}
+    </button>
+  );
 };
