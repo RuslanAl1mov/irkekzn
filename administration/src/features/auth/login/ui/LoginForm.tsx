@@ -88,7 +88,7 @@ export const LoginForm = () => {
 
 			{/* Кнопки входа */}
 			<div className={cls.btnsBlock}>
-				<Button isLoading={isPending} size='full'>Войти</Button>
+				<Button isLoading={isPending} type='submit' size='full'>Войти</Button>
 			</div>
 		</form>
 	);

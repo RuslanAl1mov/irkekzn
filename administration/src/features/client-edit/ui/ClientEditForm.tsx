@@ -148,7 +148,7 @@ export const ClientEditForm = (): JSX.Element | null => {
             <div className={cls.modal}>
                 <div className={cls.header}>
                     <Title
-                        title="Редактирование клиента"
+                        title="Информация о клиенте"
                         size="h3"
                         className={cls.titleBlock}
                         titleClassName={cls.title}

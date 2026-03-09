@@ -1,7 +1,6 @@
 import cls from "./Employees.module.css";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getUsers } from "@/entities/user/api/getUsers.api";
@@ -16,17 +15,16 @@ import { VirtualTable } from "@/shared/ui/virtual-table/table";
 import { VirtualCell } from "@/shared/ui/virtual-table/cell";
 
 import ClientIcon from "@/assets/icons/users.svg?react";
-import EditIcon from "@/assets/icons/edit.svg?react";
+// import EditIcon from "@/assets/icons/edit.svg?react";
 
 import { Loader } from "@/widgets/loader";
 import { Title } from "@/widgets/title";
-import { useClientEditStore } from "@/features/user-edit";
+import { useEmployeeEditStore } from "@/features/employee-edit";
 
 
 export const Employees = () => {
     const [ordering, setOrdering] = useState<string[]>([]);
-    const navigate = useNavigate();
-    const openEditModal = useClientEditStore((s) => s.open);
+    const openEditModal = useEmployeeEditStore((s) => s.open);
 
     // параметры запроса
     const { params } = useMemo(() => {
@@ -154,13 +152,13 @@ export const Employees = () => {
                 {
                     title: "Открыть",
                     icon: ClientIcon,
-                    onClick: () => navigate(`/employee/${employee.id}`),
-                },
-                {
-                    title: "Редактировать",
-                    icon: EditIcon,
                     onClick: () => openEditModal(employee),
                 },
+                // {
+                //     title: "Редактировать",
+                //     icon: EditIcon,
+                //     onClick: () => openEditModal(employee),
+                // },
 
             ];
             const row = {
