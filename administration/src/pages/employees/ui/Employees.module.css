@@ -7,18 +7,32 @@
 }
 
 .titleBlock {
+    display: flex; 
+    justify-content: space-between;
+    align-items: center;
+}
+
+.addButton {
     display: flex;
-    flex-direction: column;
-    gap: 11px;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 15px;
+    background: var(--gray2);
 }
 
-.title {
-    font: var(--header1);
+.addButton:hover {
+    background: var(--gray);
 }
 
-.subTitle {
-    font: var(--body0);
-    color: var(--gray3);
+.addButtonIcon {
+    width: 18px;
+    height: 18px;
+}
+
+.addButtonText {
+    font: var(--body1);
+    font-weight: 500;
+    color: var(--white);
 }
 
 .tableBlock {

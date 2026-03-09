@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getUsers } from "@/entities/user/api/getUsers.api";
 
-import type { IUser } from "@/entities/user";
+import { useAuthStore, type IUser } from "@/entities/user";
 import type { HeaderCell } from "@/shared/ui/virtual-table/table";
 import type { RowItem } from "@/shared/ui/virtual-table/row";
 import type { ContextMenuItem } from "@/shared/ui/virtual-table/context-menu";
@@ -14,17 +14,41 @@ import { formatDateTime, formatPhoneNumber, formatDate } from "@/shared/lib/form
 import { VirtualTable } from "@/shared/ui/virtual-table/table";
 import { VirtualCell } from "@/shared/ui/virtual-table/cell";
 
-import ClientIcon from "@/assets/icons/users.svg?react";
-// import EditIcon from "@/assets/icons/edit.svg?react";
+import EyeIcon from "@/assets/icons/eye_open.svg?react";
+import EditIcon from "@/assets/icons/edit.svg?react";
+import PlusIcon from "@/assets/icons/plus.svg?react";
 
 import { Loader } from "@/widgets/loader";
 import { Title } from "@/widgets/title";
 import { useEmployeeEditStore } from "@/features/employee-edit";
+import { useEmployeeInfoStore } from "@/features/employee-info";
+import type { AxiosError } from "axios";
+import { toast } from "react-toastify";
+import { Button } from "@/shared/ui";
+import { useEmployeeCreateStore } from "@/features/employee-create/model/store";
 
 
 export const Employees = () => {
     const [ordering, setOrdering] = useState<string[]>([]);
+    const openCreateModal = useEmployeeCreateStore((s) => s.open);
     const openEditModal = useEmployeeEditStore((s) => s.open);
+    const openInfoModal = useEmployeeInfoStore((s) => s.open);
+    const user = useAuthStore((s) => s.user);
+
+    // Дебаунс сортировки
+    const orderingDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(
+        null
+    );
+    const debouncedSetOrdering = useCallback(
+        (next: string[] | ((prev: string[]) => string[])) => {
+            if (orderingDebounceRef.current)
+                clearTimeout(orderingDebounceRef.current);
+            orderingDebounceRef.current = setTimeout(() => {
+                setOrdering((prev) => (typeof next === "function" ? next(prev) : next));
+            }, 3);
+        },
+        []
+    );
 
     // параметры запроса
     const { params } = useMemo(() => {
@@ -41,6 +65,8 @@ export const Employees = () => {
     const {
         data: employees,
         isLoading,
+        isError,
+        error,
         hasNextPage,
         fetchNextPage,
         isFetchingNextPage,
@@ -62,6 +88,14 @@ export const Employees = () => {
         refetchOnReconnect: false,
     });
 
+    // обработка ошибок
+    useEffect(() => {
+        if (isError) {
+            const err = error as AxiosError<{ error: string }>;
+            toast.error(err.message, { toastId: err.message });
+        }
+    }, [isError, error]);
+
 
     // Получаем общее количество пользователей
     const totalUsers = employees?.pages?.[0]?.count || 0;
@@ -73,31 +107,6 @@ export const Employees = () => {
         if (!employees?.pages) return [];
         return employees.pages.flatMap((page) => page.result ?? []);
     }, [employees]);
-
-
-    // Дебаунс сортировки
-    const orderingDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(
-        null
-    );
-    const debouncedSetOrdering = useCallback(
-        (next: string[] | ((prev: string[]) => string[])) => {
-            if (orderingDebounceRef.current)
-                clearTimeout(orderingDebounceRef.current);
-            orderingDebounceRef.current = setTimeout(() => {
-                setOrdering((prev) => (typeof next === "function" ? next(prev) : next));
-            }, 3);
-        },
-        []
-    );
-
-    useEffect(
-        () => () => {
-            if (orderingDebounceRef.current)
-                clearTimeout(orderingDebounceRef.current);
-        },
-        []
-    );
-
 
     // Заголовки таблицы
     const headers = useMemo<HeaderCell[]>(
@@ -148,25 +157,24 @@ export const Employees = () => {
 
         return list.map((employee: IUser) => {
             const rowActions: ContextMenuItem[] = [
-
                 {
                     title: "Открыть",
-                    icon: ClientIcon,
-                    onClick: () => openEditModal(employee),
+                    icon: EyeIcon,
+                    onClick: () => openInfoModal(employee),
                 },
-                // {
-                //     title: "Редактировать",
-                //     icon: EditIcon,
-                //     onClick: () => openEditModal(employee),
-                // },
-
+                ...(employee.id !== user?.id ? [{
+                    title: "Редактировать",
+                    icon: EditIcon,
+                    onClick: () => openEditModal(employee),
+                }] : []),
             ];
-            const row = {
+            const row: RowItem = {
+                ...(employee.id === user?.id ? { customRowStyle: { backgroundColor: "var(--gray6)" } } : {}),
                 props: {
                     objName: "User",
                     obj: employee,
                     keys: { employees: [employee] },
-                    actions: rowActions,
+                    actions: rowActions
                 },
                 data: [
                     <VirtualCell
@@ -174,7 +182,7 @@ export const Employees = () => {
                         align="center"
                     />,
                     <VirtualCell
-                        title={`${employee.first_name} ${employee.last_name}`}
+                        title={`${employee.first_name} ${employee.last_name} ${employee.id === user?.id ? "(Вы)" : ""}`}
                         secTitle={`ID: ${employee.id}`}
                         isCopible
                     />,
@@ -206,10 +214,18 @@ export const Employees = () => {
 
     return (
         <section className={cls.section}>
-            <Title
-                title="Управление сотрудниками"
-                subTitle="Управляйте командой и активностью сотрудников"
-            />
+
+            <div className={cls.titleBlock}>
+                <Title
+                    title="Управление сотрудниками"
+                    subTitle="Управляйте командой и активностью сотрудников"
+                />
+                <Button variant="blue" onClick={openCreateModal} className={cls.addButton}>
+                    <PlusIcon className={cls.addButtonIcon} />
+                    <p className={cls.addButtonText}>Добавить сотрудника</p>
+                </Button>
+
+            </div>
 
 
             {isLoading && (

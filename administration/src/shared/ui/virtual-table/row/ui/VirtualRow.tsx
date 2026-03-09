@@ -23,6 +23,9 @@ export function VirtualRow(props: VirtualRowProps) {
   const row = rows[index];
   if (!row) return null;
 
+  // Получаем customRowStyle из props строки
+  const customRowStyle = row.customRowStyle;
+
   const isExpanded = expandedRows.has(index);
 
   const onRowClick = () => {
@@ -40,11 +43,15 @@ export function VirtualRow(props: VirtualRowProps) {
 
   const isActive = ctx.activeRowIndex === index;
 
+  console.log("customRowStyle", customRowStyle);
   return (
     <div className={cls.wrapper} style={style}>
       {/* Основная строка */}
       <div
-        style={rowStyle}
+        style={{
+          ...rowStyle,  // из таблицы
+          ...customRowStyle,  // из ячейки
+        }}
         className={cn(cls.row, isActive && cls.rowActive)}
         onClick={onRowClick}
         onContextMenu={onContextMenu}

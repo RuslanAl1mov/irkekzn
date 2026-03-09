@@ -1,29 +1,22 @@
-import {
-    useEffect,
-    useRef,
-    useState,
-    type FormEvent,
-    type JSX,
-    type MouseEvent,
-} from "react";
+import cls from "./ClientEditForm.module.css";
+
+import { useEffect, useState, type JSX } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
-import CloseIcon from "@/assets/icons/close.svg?react";
 import { getUser, type IUser, type IUserPayload, updateUser } from "@/entities/user";
 import { formatDateTime } from "@/shared/lib/formater";
 import { queryKeys } from "@/shared/lib/react-query/queryKeys";
-import { Button, PhoneInput, Switch } from "@/shared/ui";
-import { Title } from "@/widgets/title";
+
+import { PhoneInput, Switch } from "@/shared/ui";
 
 import { useClientEditStore } from "../model/store";
+import { Modal } from "@/shared/ui/modal";
 
-import cls from "./ClientEditForm.module.css";
 
 export const ClientEditForm = (): JSX.Element | null => {
     const { isOpen, user, close } = useClientEditStore();
     const queryClient = useQueryClient();
-    const overlayRef = useRef<HTMLDivElement | null>(null);
     const [isActive, setIsActive] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState("");
     const userId = user?.id ?? null;
@@ -62,32 +55,12 @@ export const ClientEditForm = (): JSX.Element | null => {
             );
             await queryClient.invalidateQueries({ queryKey: ["users"] });
             toast.success("Данные клиента обновлены");
-            close();
+            handleClose();
         },
         onError: (error) => {
             toast.error(error.message, { toastId: error.message });
         },
     });
-
-    useEffect(() => {
-        if (!isOpen) return;
-
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === "Escape") {
-                close();
-            }
-        };
-
-        document.addEventListener("keydown", handleKeyDown);
-        return () => document.removeEventListener("keydown", handleKeyDown);
-    }, [isOpen, close]);
-
-    useEffect(() => {
-        document.body.style.overflow = isOpen ? "hidden" : "";
-        return () => {
-            document.body.style.overflow = "";
-        };
-    }, [isOpen]);
 
     useEffect(() => {
         const currentUser = userDetails ?? user;
@@ -128,43 +101,24 @@ export const ClientEditForm = (): JSX.Element | null => {
         },
     ];
 
-    const handleOverlayClick = (e: MouseEvent<HTMLDivElement>): void => {
-        if (e.target === overlayRef.current) {
-            close();
-        }
+    const handleClose = (): void => {
+        setPhoneNumber("");
+        setIsActive(false);
+        close();
     };
 
-    function handleSubmit(e: FormEvent<HTMLFormElement>): void {
-        e.preventDefault();
-        mutation.mutate();
-    }
-
     return (
-        <div
-            ref={overlayRef}
-            className={cls.overlay}
-            onClick={handleOverlayClick}
+        <Modal
+            title="Редактировать клиента"
+            subTitle="Редактирование данных клиента."
+            saveBtnTitle="Сохранить"
+            closeBtnTitle="Отмена"
+            onSaveBtnClick={() => mutation.mutate()}
+            onClose={handleClose}
         >
-            <div className={cls.modal}>
-                <div className={cls.header}>
-                    <Title
-                        title="Информация о клиенте"
-                        size="h3"
-                        className={cls.titleBlock}
-                        titleClassName={cls.title}
-                        subTitleClassName={cls.subTitle}
-                    />
-                    <button
-                        type="button"
-                        className={cls.closeBtn}
-                        onClick={close}
-                        aria-label="Закрыть"
-                    >
-                        <CloseIcon />
-                    </button>
-                </div>
-
-                <form className={cls.form} onSubmit={handleSubmit}>
+            <form className={cls.form}>
+                <div className={cls.dataList}>
+                    
                     <div className={cls.infoSection}>
                         {clientInfo.map((item) => (
                             <div key={item.label} className={cls.infoRow}>
@@ -173,6 +127,7 @@ export const ClientEditForm = (): JSX.Element | null => {
                             </div>
                         ))}
                     </div>
+
                     <div className={cls.infoSection}>
                         <div className={cls.field}>
                             <PhoneInput
@@ -185,8 +140,8 @@ export const ClientEditForm = (): JSX.Element | null => {
                             />
                         </div>
                     </div>
-                    <div className={cls.infoSection}>
 
+                    <div className={cls.infoSection}>
                         <div className={cls.field}>
                             <Switch
                                 value={isActive}
@@ -196,20 +151,9 @@ export const ClientEditForm = (): JSX.Element | null => {
                             />
                         </div>
                     </div>
-                    <div className={cls.actions}>
-                        <Button type="button" variant="gray" onClick={close}>
-                            Отмена
-                        </Button>
-                        <Button
-                            type="submit"
-                            isLoading={mutation.isPending}
-                            disabled={isLoading || mutation.isPending}
-                        >
-                            Сохранить
-                        </Button>
-                    </div>
-                </form>
-            </div>
-        </div>
+
+                </div>
+            </form>
+        </Modal>
     );
 };

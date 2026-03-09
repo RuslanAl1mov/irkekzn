@@ -7,6 +7,9 @@ import { Sidebar } from '@/widgets/sidebar';
 
 import { ClientEditForm } from '@/features/client-edit';
 import { EmployeeEditForm } from '@/features/employee-edit';
+import { ClientInfoForm } from '@/features/client-info';
+import { EmployeeInfoForm } from '@/features/employee-info';
+import { EmployeeCreateForm } from '@/features/employee-create/ui/EmployeeCreateForm';
 
 
 export const AppShell = () => {
@@ -17,8 +20,12 @@ export const AppShell = () => {
 			<div className={cn(cls.allContent, isSidebarOpen && cls.wideSidbar)}>
 				<Outlet />
 			</div>
+
 			{/* Модальные окна системы */}
+			<ClientInfoForm />
 			<ClientEditForm />
+			<EmployeeCreateForm />
+			<EmployeeInfoForm />
 			<EmployeeEditForm />
 		</div>
 	);

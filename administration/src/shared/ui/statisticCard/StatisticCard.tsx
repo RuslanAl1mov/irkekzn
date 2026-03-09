@@ -3,11 +3,11 @@ import { Skeleton } from "@mui/material";
 import styles from "./StatisticCard.module.css";
 
 import cn from 'classnames';
-import { formatNumberWithSpaces } from "@/utils/formatNumberWithSpaces";
-import { dateFormater } from "@/utils/dateFormater";
+import { formatNumber } from "@/shared/lib/formater";
 
 // Иконки как React-компоненты (требуется vite-plugin-svgr в vite.config.ts)
 import ArrowUpIcon from "@/assets/icons/link-arrow.svg?react";
+import { formatDate, formatDateTime } from "@/shared/lib/formater";
 
 interface StatisticCardProps {
   title: string;
@@ -53,7 +53,7 @@ export const StatisticCard: React.FC<StatisticCardProps> = ({
             {value !== undefined ? (
               (() => {
                 const [intPart, fracPart] = value.toFixed(2).split(".");
-                const formattedInt = formatNumberWithSpaces(intPart);
+                const formattedInt = formatNumber(Number(intPart));
                 return fracPart === "00" ? formattedInt : `${formattedInt}.${fracPart}`;
               })()
             ) : (
@@ -69,8 +69,8 @@ export const StatisticCard: React.FC<StatisticCardProps> = ({
                 </p>
               </div>
 
-              {dateAfter && <p className={styles.dateRange}>С {dateFormater(dateAfter)}</p>}
-              {dateBefore && <p className={styles.dateRange}>По {dateFormater(dateBefore)}</p>}
+              {dateAfter && <p className={styles.dateRange}>С {formatDate(dateAfter)}</p>}
+              {dateBefore && <p className={styles.dateRange}>По {formatDateTime(dateBefore)}</p>}
             </div>
           )}
         </div>

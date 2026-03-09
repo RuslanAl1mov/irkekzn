@@ -4,6 +4,7 @@ import type { ContextMenuItem } from "../../context-menu";
 export type RowItem = {
   data: React.ReactNode[];
   props?: VirtualExpandedBlockProps;
+  customRowStyle?: React.CSSProperties;
 };
 
 export type RowData = {

@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getUsers } from "@/entities/user/api/getUsers.api";
 
-import type { IUser } from "@/entities/user";
+import { type IUser } from "@/entities/user";
 import type { HeaderCell } from "@/shared/ui/virtual-table/table";
 import type { RowItem } from "@/shared/ui/virtual-table/row";
 import type { ContextMenuItem } from "@/shared/ui/virtual-table/context-menu";
@@ -14,16 +14,36 @@ import { formatDateTime, formatPhoneNumber } from "@/shared/lib/formater";
 import { VirtualTable } from "@/shared/ui/virtual-table/table";
 import { VirtualCell } from "@/shared/ui/virtual-table/cell";
 
+import EditIcon from "@/assets/icons/edit.svg?react";
 import EyeIcon from "@/assets/icons/eye_open.svg?react";
-// import EditIcon from "@/assets/icons/edit.svg?react";
+
 import { Loader } from "@/widgets/loader";
 import { Title } from "@/widgets/title";
 import { useClientEditStore } from "@/features/client-edit";
+import { useClientInfoStore } from "@/features/client-info";
+import type { AxiosError } from "axios";
+import { toast } from "react-toastify";
 
 
 export const Clients = () => {
     const [ordering, setOrdering] = useState<string[]>([]);
     const openEditModal = useClientEditStore((s) => s.open);
+    const openInfoModal = useClientInfoStore((s) => s.open);
+
+    // Дебаунс сортировки
+    const orderingDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(
+        null
+    );
+    const debouncedSetOrdering = useCallback(
+        (next: string[] | ((prev: string[]) => string[])) => {
+            if (orderingDebounceRef.current)
+                clearTimeout(orderingDebounceRef.current);
+            orderingDebounceRef.current = setTimeout(() => {
+                setOrdering((prev) => (typeof next === "function" ? next(prev) : next));
+            }, 3);
+        },
+        []
+    );
 
     // параметры запроса
     const { params } = useMemo(() => {
@@ -41,6 +61,8 @@ export const Clients = () => {
         data: clients,
         hasNextPage,
         isLoading,
+        isError,
+        error,
         fetchNextPage,
         isFetchingNextPage,
     } = useInfiniteQuery({
@@ -61,41 +83,24 @@ export const Clients = () => {
         refetchOnReconnect: false,
     });
 
+    // обработка ошибок
+    useEffect(() => {
+        if (isError) {
+            const err = error as AxiosError<{ error: string }>;
+            toast.error(err.message, { toastId: err.message });
+        }
+    }, [isError, error]);
+
 
     // Получаем общее количество пользователей
     const totalUsers = clients?.pages?.[0]?.count || 0;
     const totalActiveUsers = clients?.pages?.[0]?.active || 0;
-
 
     // Плоский список клиентов
     const flatList = useMemo<IUser[]>(() => {
         if (!clients?.pages) return [];
         return clients.pages.flatMap((page) => page.result ?? []);
     }, [clients]);
-
-
-    // Дебаунс сортировки
-    const orderingDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(
-        null
-    );
-    const debouncedSetOrdering = useCallback(
-        (next: string[] | ((prev: string[]) => string[])) => {
-            if (orderingDebounceRef.current)
-                clearTimeout(orderingDebounceRef.current);
-            orderingDebounceRef.current = setTimeout(() => {
-                setOrdering((prev) => (typeof next === "function" ? next(prev) : next));
-            }, 3);
-        },
-        []
-    );
-
-    useEffect(
-        () => () => {
-            if (orderingDebounceRef.current)
-                clearTimeout(orderingDebounceRef.current);
-        },
-        []
-    );
 
 
     // Заголовки таблицы
@@ -151,13 +156,13 @@ export const Clients = () => {
                 {
                     title: "Открыть",
                     icon: EyeIcon,
+                    onClick: () => openInfoModal(client),
+                },
+                {
+                    title: "Редактировать",
+                    icon: EditIcon,
                     onClick: () => openEditModal(client),
                 },
-                // {
-                //     title: "Редактировать",
-                //     icon: EditIcon,
-                //     onClick: () => openEditModal(client),
-                // },
 
             ];
             const row = {

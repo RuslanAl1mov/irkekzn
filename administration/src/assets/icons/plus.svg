@@ -1,3 +1,4 @@
-<svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M7.54884 0.399994V14.4M14.3999 7.54893H0.399902"  stroke="currentColor" stroke-width="0.8" stroke-linecap="round" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus h-4 w-4 mr-2" data-fg-c7it36="1.31:2109.2468:/components/CustomerManagement.tsx:170:15:5821:33:e:Plus::::::ISW">
+    <path d="M5 12h14"></path>
+    <path d="M12 5v14"></path>
 </svg>

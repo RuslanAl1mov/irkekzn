@@ -1,19 +1,7 @@
 .form {
-    flex: 1;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     gap: 16px;
-}
-
-.dataList {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    overflow-y: auto;
-    padding-right: 10px;
-    max-height: 99%;
 }
 
 .infoSection {
@@ -23,7 +11,14 @@
     padding: 16px;
     border: 1px solid var(--gray6);
     border-radius: 12px;
-    background: var(--blue7);
+    background: var(--gray7);
+}
+
+.infoRow {
+    display: grid;
+    grid-template-columns: minmax(140px, 180px) 1fr;
+    gap: 12px;
+    align-items: start;
 }
 
 .infoLabel {
@@ -37,16 +32,9 @@
     word-break: break-word;
 }
 
-.infoRow {
-    display: grid;
-    grid-template-columns: minmax(140px, 180px) 1fr;
-    gap: 12px;
-    align-items: start;
-}
-
 .field {
     display: flex;
-    gap: 10px;
+    gap: 6px;
 }
 
 .label {

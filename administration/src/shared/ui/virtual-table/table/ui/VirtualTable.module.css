@@ -28,7 +28,7 @@
   border-top-right-radius: 10px;
 
   /* Стекло */
-  background: rgba(var(--gray7--rgb), 0.3);;
+  background: rgba(var(--gray7--rgb), 0.3);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
   border: var(--glass-border);

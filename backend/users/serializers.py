@@ -213,7 +213,8 @@ class EmployeeCreateSerializer(EmployeeSerializer):
     first_name = serializers.CharField(max_length=255, required=True)
     last_name = serializers.CharField(max_length=255, required=True)
     phone_number = serializers.CharField(max_length=30, required=True)
-
+    is_active = serializers.BooleanField(required=False)
+    
     def create(self, validated_data):
         with transaction.atomic():
             email = validated_data["email"]
@@ -221,6 +222,7 @@ class EmployeeCreateSerializer(EmployeeSerializer):
             first_name = validated_data["first_name"]
             last_name = validated_data["last_name"]
             phone_number = validated_data["phone_number"]
+            is_active = validated_data.get("is_active", True)
             try:
                 user = User.objects.create_user(
                     email=email,
@@ -230,6 +232,7 @@ class EmployeeCreateSerializer(EmployeeSerializer):
                     username=email.split("@")[0],
                     is_staff=True,
                     password=password,
+                    is_active=is_active,
                 )
             except IntegrityError as e:
                 # Возможные ошибки при создании Сотрудника

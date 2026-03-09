@@ -1,52 +1,32 @@
-import cls from "./EmployeeEditForm.module.css";
+import cls from "./EmployeeCreateForm.module.css";
 
-import { useEffect, useState, type JSX } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState, type JSX } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
-import { getUser, type IUser, type IUserPayload, updateUser } from "@/entities/user";
-import { formatDateTime } from "@/shared/lib/formater";
+import { createUser, type IUserPayload } from "@/entities/user";
 import { queryKeys } from "@/shared/lib/react-query/queryKeys";
 
 import { Input, PhoneInput, Switch } from "@/shared/ui";
 
-import { useEmployeeEditStore } from "../model/store";
+import { useEmployeeCreateStore } from "../model/store";
 import { Modal } from "@/shared/ui/modal";
 
 
-export const EmployeeEditForm = (): JSX.Element | null => {
-    const { isOpen, user, close } = useEmployeeEditStore();
+export const EmployeeCreateForm = (): JSX.Element | null => {
+    const { isOpen, close } = useEmployeeCreateStore();
     const queryClient = useQueryClient();
-    const [isActive, setIsActive] = useState(false);
+    const [isActive, setIsActive] = useState(true);
     const [phoneNumber, setPhoneNumber] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const userId = user?.id ?? null;
 
-
-    const { data: userDetails, isLoading } = useQuery<IUser>({
-        queryKey: userId !== null ? queryKeys.userDetail(userId) : ["user", null],
-        queryFn: async (): Promise<IUser> => {
-            if (userId === null) {
-                throw new Error("User id is required");
-            }
-
-            return getUser(userId);
-        },
-        enabled: isOpen && userId !== null,
-        refetchOnWindowFocus: false,
-    });
 
     const mutation = useMutation({
-        mutationKey: queryKeys.updateUser(),
         mutationFn: async () => {
-            if (!userId) {
-                throw new Error("User ID is required");
-            }
-
             const userPayload: IUserPayload = {
                 is_active: isActive,
                 phone_number: phoneNumber,
@@ -54,18 +34,18 @@ export const EmployeeEditForm = (): JSX.Element | null => {
                 last_name: lastName,
                 username: username,
                 email: email,
-                ...(password ? { password } : {}),
+                password: password,
             };
 
-            return updateUser(userId, userPayload);
+            return createUser(userPayload);
         },
-        onSuccess: async (updatedUser) => {
+        onSuccess: async (createdUser) => {
             queryClient.setQueryData(
-                queryKeys.userDetail(updatedUser.id),
-                updatedUser
+                queryKeys.userDetail(createdUser.id),
+                createdUser
             );
             await queryClient.invalidateQueries({ queryKey: ["users"] });
-            toast.success("Данные сотрудника обновлены");
+            toast.success("Сотрудник успешно создан");
             handleClose();
         },
         onError: (error) => {
@@ -73,42 +53,7 @@ export const EmployeeEditForm = (): JSX.Element | null => {
         },
     });
 
-    useEffect(() => {
-        const currentUser = userDetails ?? user;
-
-        if (!currentUser) return;
-
-        setIsActive(currentUser.is_active);
-        setPhoneNumber(currentUser.phone_number ?? "");
-        setFirstName(currentUser.first_name ?? "");
-        setLastName(currentUser.last_name ?? "");
-        setUsername(currentUser.username ?? "");
-        setEmail(currentUser.email ?? "");
-    }, [user, userDetails]);
-
-    if (!isOpen || !user) return null;
-
-    const currentUser = userDetails ?? user;
-    const clientInfo = [
-        { label: "ID", value: String(currentUser.id) },
-        {
-            label: "Суперпользователь",
-            value: currentUser.is_superuser ? "Да" : "Нет",
-        },
-        {
-            label: "Сотрудник",
-            value: currentUser.is_staff ? "Да" : "Нет",
-        },
-        { label: "Язык", value: currentUser.language || "-" },
-        {
-            label: "Дата последнего входа",
-            value: formatDateTime(currentUser.last_login) || "-",
-        },
-        {
-            label: "Дата регистрации",
-            value: formatDateTime(currentUser.date_joined) || "-",
-        },
-    ];
+    if (!isOpen) return null;
 
     const handleClose = (): void => {
         setPassword("");
@@ -117,100 +62,91 @@ export const EmployeeEditForm = (): JSX.Element | null => {
         setLastName("");
         setUsername("");
         setEmail("");
-        setIsActive(false);
+        setIsActive(true);
         close();
     };
 
-
     return (
+
         <Modal
-            title="Редактировать сотрудника"
-            subTitle="Введите данные сотрудника для редактирования профиля."
+            title="Добавить сотрудника"
+            subTitle="Введите данные сотрудника для создания профиля."
             saveBtnTitle="Сохранить"
             closeBtnTitle="Отмена"
             onSaveBtnClick={() => mutation.mutate()}
             onClose={handleClose}
         >
-
-            <div className={cls.infoSection}>
-                {clientInfo.map((item) => (
-                    <div key={item.label} className={cls.infoRow}>
-                        <span className={cls.infoLabel}>{item.label}</span>
-                        <span className={cls.infoValue}>{item.value}</span>
-                    </div>
-                ))}
-            </div>
-
             <form className={cls.form}>
-
                 <div className={cls.dataList}>
+
                     <div className={cls.infoSection}>
                         <div className={cls.field}>
                             <Input
                                 value={firstName}
                                 setValue={setFirstName}
                                 label="Имя"
-                                disabled={isLoading || mutation.isPending}
+                                disabled={mutation.isPending}
                                 required
                             />
                             <Input
                                 value={lastName}
                                 setValue={setLastName}
                                 label="Фамилия"
-                                disabled={isLoading || mutation.isPending}
+                                disabled={mutation.isPending}
                                 required
                             />
                         </div>
-
                         <div className={cls.field}>
                             <PhoneInput
                                 value={phoneNumber}
                                 setValue={setPhoneNumber}
                                 label="Номер телефона"
-                                disabled={isLoading || mutation.isPending}
+                                disabled={mutation.isPending}
                             />
                             <Input
                                 value={username}
                                 setValue={setUsername}
                                 label="Username"
-                                disabled={isLoading || mutation.isPending}
+                                disabled={mutation.isPending}
                             />
+
                         </div>
                     </div>
-                    <div className={cls.infoSection}>
 
+                    <div className={cls.infoSection}>
                         <div className={cls.field}>
                             <Input
                                 value={email}
                                 setValue={setEmail}
                                 label="Email"
-                                disabled={isLoading || mutation.isPending}
+                                disabled={mutation.isPending}
                                 required
                             />
+
                         </div>
                         <div className={cls.field}>
                             <Input
                                 value={password}
                                 setValue={setPassword}
-                                label="Задать новый Пароль"
-                                disabled={isLoading || mutation.isPending}
+                                label="Создать пароль"
+                                disabled={mutation.isPending}
+                                required
                             />
                         </div>
                     </div>
 
                     <div className={cls.infoSection}>
-
                         <div className={cls.field}>
                             <Switch
                                 value={isActive}
                                 setValue={setIsActive}
                                 label="Активен"
-                                disabled={isLoading || mutation.isPending}
+                                disabled={mutation.isPending}
                             />
                         </div>
                     </div>
-                </div>
 
+                </div>
             </form>
         </Modal>
     );
