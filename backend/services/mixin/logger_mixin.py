@@ -1,8 +1,8 @@
 from decimal import Decimal
-
 import logging
 from django.db.models import ForeignKey
-from django.utils.functional import cached_property
+from django.utils.functional import cached_property, Promise
+from django.utils.encoding import force_str
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import FieldDoesNotExist
 
@@ -18,6 +18,28 @@ class UserLoggingMixin:
 
     METHODS_TO_LOG = ("POST", "PUT", "PATCH", "DELETE")
     SENSITIVE_FIELDS = ("password",)
+
+    def _prepare_for_json(self, obj):
+        """
+        Рекурсивно преобразует все Django lazy objects в строки
+        и обрабатывает специальные типы (Decimal и др.)
+        """
+        if isinstance(obj, Promise):
+            return force_str(obj)
+        elif isinstance(obj, Decimal):
+            return str(obj)
+        elif isinstance(obj, dict):
+            return {key: self._prepare_for_json(value) for key, value in obj.items()}
+        elif isinstance(obj, (list, tuple)):
+            return [self._prepare_for_json(item) for item in obj]
+        elif isinstance(obj, (str, int, float, bool, type(None))):
+            return obj
+        else:
+            # Для всего остального - пробуем привести к строке
+            try:
+                return str(obj)
+            except:
+                return None
 
     @cached_property
     def _initial_object_data(self) -> dict | None:
@@ -48,7 +70,8 @@ class UserLoggingMixin:
         for field in instance_class._meta.concrete_fields:
             if isinstance(field, ForeignKey):
                 try:
-                    return field.related_model._meta.get_field(field_name).verbose_name
+                    # Принудительно преобразуем verbose_name в строку
+                    return str(field.related_model._meta.get_field(field_name).verbose_name)
                 except FieldDoesNotExist:
                     continue
         return ""
@@ -77,40 +100,37 @@ class UserLoggingMixin:
         instance_class = instance.__class__
         new_values = []
         old_values = []
+        
         if old_data:
             for key, value in new_data.items():
                 if key in self.SENSITIVE_FIELDS:
                     continue
+                    
                 if value != (old_value := old_data.get(key)):
                     try:
-                        verbose_name = instance_class._meta.get_field(key).verbose_name
+                        # Принудительно преобразуем verbose_name в строку
+                        verbose_name = str(instance_class._meta.get_field(key).verbose_name)
                     except FieldDoesNotExist:
                         verbose_name = self._get_foreign_key_verbose(
                             instance_class, key
                         )
 
-                    if type(value) == Decimal:
-                        value = str(value)
+                    # Добавляем значения (они уже обработаны)
+                    new_values.append({
+                        "field_name": key,
+                        "value": value,
+                        "verbose_name": verbose_name,
+                    })
+                    
+                    old_values.append({
+                        "field_name": key,
+                        "value": old_value,
+                        "verbose_name": verbose_name,
+                    })
 
-                    if type(old_value) == Decimal:
-                        old_value = str(old_value)
-
-                    new_values.append(
-                        {
-                            "field_name": key,
-                            "value": value,
-                            "verbose_name": verbose_name,
-                        }
-                    )
-                    old_values.append(
-                        {
-                            "field_name": key,
-                            "value": old_value,
-                            "verbose_name": verbose_name,
-                        }
-                    )
             if not new_values:
                 return
+
         content_type = ContentType.objects.get_for_model(instance)
 
         request_method = getattr(RequestLog.RequestMethod, request.method.upper(), "")
@@ -118,6 +138,10 @@ class UserLoggingMixin:
             return
 
         try:
+            # Очищаем данные перед сохранением
+            cleaned_new_values = self._prepare_for_json(new_values)
+            cleaned_old_values = self._prepare_for_json(old_values)
+
             RequestLog.objects.create(
                 user=user,
                 method=request_method,
@@ -125,8 +149,8 @@ class UserLoggingMixin:
                 object_id=instance.pk,
                 model_name=instance._meta.object_name,
                 serializer_class=serializer_classname.split("'")[1],
-                old_value=old_values,
-                new_value=new_values,
+                old_value=cleaned_old_values,
+                new_value=cleaned_new_values,
             )
         except Exception as e:
             logger.exception("Failed to write RequestLog: %s", e)
