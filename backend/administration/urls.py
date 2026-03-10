@@ -3,14 +3,16 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from .views import (
+    GroupListView,
     UsersListView,
     UserDetailView,
     EmployeeUpdateView,
-    EmployeeCreateView
-    )
+    EmployeeCreateView,
+)
 
 
 urlpatterns = [
+    path("users/groups/", GroupListView.as_view(), name="groups-list"),
     path("users/", UsersListView.as_view(), name="users-list"),
     path("users/<int:pk>/", UserDetailView.as_view(), name="users-detail"),
     path("users/<int:pk>/update/", EmployeeUpdateView.as_view(), name="users-update"),

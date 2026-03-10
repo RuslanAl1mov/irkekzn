@@ -5,7 +5,6 @@ from django.db import IntegrityError, transaction
 from django.utils.translation import gettext_lazy
 from django.contrib.auth.hashers import make_password
 
-
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.exceptions import InvalidToken
@@ -204,7 +203,7 @@ class EmployeeCreateSerializer(EmployeeSerializer):
     """
     Сериализатор создания сотрудника
     Валидация исопользуется из EmployeeSerializer -> UserSerializer
-    
+
     Дополнительный определитель ошибок вшит в create()
     """
 
@@ -214,7 +213,7 @@ class EmployeeCreateSerializer(EmployeeSerializer):
     last_name = serializers.CharField(max_length=255, required=True)
     phone_number = serializers.CharField(max_length=30, required=True)
     is_active = serializers.BooleanField(required=False)
-    
+
     def create(self, validated_data):
         with transaction.atomic():
             email = validated_data["email"]

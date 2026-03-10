@@ -1,6 +1,7 @@
 from rest_framework import generics, filters
 from rest_framework.permissions import IsAuthenticated
 
+from django.contrib.auth.models import Group
 from django_filters.rest_framework import DjangoFilterBackend
 
 from services.mixin.logged_api_views import LoggedUpdateAPIView, LoggedCreateAPIView
@@ -9,9 +10,20 @@ from core.permissions import IsEmployee, CRUDPermissions, GetListPermissions
 
 from users.models import User
 from users.serializers import UserSerializer, EmployeeCreateSerializer
+from .serializers import GroupSerializer
 
 from .pagination import UsersListPagination
 from .filters import UsersListFilter
+
+
+class GroupListView(generics.ListAPIView):
+    """
+    Эндпоинт для получения списка групп (только GET)
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, GetListPermissions]
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
 
 
 class UsersListView(generics.ListAPIView):
