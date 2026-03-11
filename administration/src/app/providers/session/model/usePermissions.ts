@@ -4,10 +4,9 @@ import { useAuthStore } from "@/entities/user";
 
 export function usePermission() {
   const { user } = useAuthStore();
-  console.log("user", user);
   const set = useMemo(
-    () => new Set(user?.permissions ?? []),
-    [user?.permissions],
+    () => new Set(user?.permission_codes ?? []),
+    [user?.permission_codes],
   );
 
   const has = useCallback(

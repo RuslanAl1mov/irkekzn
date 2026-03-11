@@ -204,8 +204,7 @@ class MeView(APIView):
             serialized_data = EmployeeSerializer(
                 employee, context={"request": request}
             ).data
-            print(serialized_data)
-            serialized_data["permissions"] = request.user.get_all_permissions()
+            serialized_data["permission_codes"] = request.user.get_all_permissions()
             return Response(serialized_data, status=status.HTTP_200_OK)
 
         elif request.user.is_staff == False:

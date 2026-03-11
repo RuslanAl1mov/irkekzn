@@ -12,7 +12,7 @@ import { Input, PhoneInput, Switch } from "@/shared/ui";
 
 import { useEmployeeEditStore } from "../model/store";
 import { Modal } from "@/shared/ui/modal";
-import { UserGroupSelect } from "@/shared/ui/select";
+import { UserGroupSelect, UserPermissionSelect } from "@/shared/ui/select";
 
 
 export const EmployeeEditForm = (): JSX.Element | null => {
@@ -26,6 +26,7 @@ export const EmployeeEditForm = (): JSX.Element | null => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [userGroupIds, setUserGroupIds] = useState<number[]>([]);
+    const [permissionIds, setPermissionIds] = useState<number[]>([]);
     const userId = user?.id ?? null;
 
 
@@ -57,6 +58,7 @@ export const EmployeeEditForm = (): JSX.Element | null => {
                 username: username,
                 email: email,
                 group_ids: userGroupIds,
+                permission_ids: permissionIds,
                 ...(password ? { password } : {}),
             };
 
@@ -88,6 +90,7 @@ export const EmployeeEditForm = (): JSX.Element | null => {
         setUsername(currentUser.username ?? "");
         setEmail(currentUser.email ?? "");
         setUserGroupIds(currentUser.groups?.map((group) => group.id) ?? []);
+        setPermissionIds(currentUser.user_permissions?.map((permission) => permission.id) ?? []);
     }, [user, userDetails]);
 
     if (!isOpen || !user) return null;
@@ -123,6 +126,7 @@ export const EmployeeEditForm = (): JSX.Element | null => {
         setEmail("");
         setIsActive(false);
         setUserGroupIds([]);
+        setPermissionIds([]);
         close();
     };
 
@@ -186,6 +190,14 @@ export const EmployeeEditForm = (): JSX.Element | null => {
                                 isMulti={true}
                                 selected={userGroupIds}
                                 setSelected={setUserGroupIds}
+                                disabled={isLoading || mutation.isPending}
+                            />
+                        </div>
+                        <div className={cls.field}>
+                            <UserPermissionSelect
+                                isMulti={true}
+                                selected={permissionIds}
+                                setSelected={setPermissionIds}
                                 disabled={isLoading || mutation.isPending}
                             />
                         </div>

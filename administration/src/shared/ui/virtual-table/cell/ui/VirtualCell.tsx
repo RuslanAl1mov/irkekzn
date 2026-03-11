@@ -185,10 +185,7 @@ export const VirtualCell = ({
           )}
           {secTitle != null && secTitle != undefined && (
             <div
-              className={cn(
-                cls.secondaryTitleBlock,
-                isOpenCopyMenu && cls.copySecTitleMenyBtn
-              )}
+              className={cn(cls.secondaryTitleBlock, isOpenCopyMenu && cls.copySecTitleMenyBtn)}
               title={toPlainText(secTitle)}
               onClick={(e) => {
                 if (isOpenCopyMenu) {

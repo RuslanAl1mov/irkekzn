@@ -123,20 +123,20 @@ export const Employees = () => {
                 align: "left",
             },
             {
-                name: "Email",
+                name: "Контакты",
                 width: "0.5fr",
                 ordering: "email",
-            },
-            {
-                name: "Номер телефона",
-                width: "0.5fr",
-                ordering: "phone_number",
-                align: "center",
             },
             {
                 name: "Группы",
                 width: "0.5fr",
                 ordering: "groups__name",
+                align: "center",
+            },
+            {
+                name: "Доступы",
+                width: "0.5fr",
+                ordering: "permission_codes",
                 align: "center",
             },
             {
@@ -192,17 +192,18 @@ export const Employees = () => {
                         isCopible
                     />,
                     <VirtualCell
-                        title={employee.email}
-                        isCopible
-                    />,
-                    <VirtualCell
                         title={formatPhoneNumber(employee.phone_number)}
+                        secTitle={employee.email}
                         isCopible
-                        align="center"
                     />,
                     <VirtualCell
                         textColor="var(--gray3)"
                         title={employee.groups?.map((group) => group.name) ?? null}
+                        align="center"
+                    />,
+                    <VirtualCell
+                        textColor="var(--gray3)"
+                        title={employee.user_permissions?.map(perm => perm.name) ?? null}
                         align="center"
                     />,
                     <VirtualCell
@@ -246,14 +247,15 @@ export const Employees = () => {
 
             {!isLoading && (
                 <div className={cls.tableBlock}>
+                    
                     <div className={cls.summaryBlock}>
                         <p className={cls.summaryText}>Всего: {totalUsers}</p>
                         <p className={cls.summaryText}>|</p>
                         <p className={cls.summaryText}>Активных: {totalActiveUsers}</p>
                         <p className={cls.summaryText}>|</p>
                         <p className={cls.summaryText}>Заблокированных: {totalUsers - totalActiveUsers}</p>
-
                     </div>
+
                     <VirtualTable
                         headers={headers}
                         data={rows}

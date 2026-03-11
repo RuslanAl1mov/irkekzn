@@ -1,7 +1,7 @@
 from rest_framework import generics, filters
 from rest_framework.permissions import IsAuthenticated
 
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, Permission
 from django_filters.rest_framework import DjangoFilterBackend
 
 from services.mixin.logged_api_views import LoggedUpdateAPIView, LoggedCreateAPIView
@@ -11,6 +11,7 @@ from core.permissions import IsEmployee, CRUDPermissions, GetListPermissions
 from users.models import User
 from users.serializers import (
     GroupSerializer,
+    PermissionSerializer,
     UserSerializer,
     EmployeeSerializer,
     EmployeeCreateSerializer,
@@ -47,6 +48,35 @@ class GroupListView(generics.ListAPIView):
     )
 
     ordering = ["name"]
+
+
+class PermissionListView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated, IsEmployee, GetListPermissions]
+    queryset = Permission.objects.select_related("content_type").all()
+    serializer_class = PermissionSerializer
+
+    filter_backends = [
+        filters.OrderingFilter,
+        filters.SearchFilter,
+    ]
+
+    search_fields = (
+        "id",
+        "name",
+        "codename",
+        "content_type__app_label",
+        "content_type__model",
+    )
+
+    ordering_fields = (
+        "id",
+        "name",
+        "codename",
+        "content_type__app_label",
+        "content_type__model",
+    )
+
+    ordering = ["content_type__app_label", "codename"]
 
 
 class UsersListView(generics.ListAPIView):

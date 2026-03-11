@@ -1,4 +1,5 @@
 import type { IUserGroup } from "@/entities/user-group";
+import type { IUserPermission } from "@/entities/user-permission";
 
 export interface IUser {
   id: number;
@@ -15,7 +16,8 @@ export interface IUser {
   photo: string | null;
   language: string;
   groups?: IUserGroup[];
-  permissions: string[];
+  user_permissions?: IUserPermission[];
+  permission_codes?: string[];
 }
 
 export interface IUserPayload {
@@ -33,6 +35,7 @@ export interface IUserPayload {
   photo?: string | null;
   language?: string;
   group_ids?: number[];
+  permission_ids?: number[];
 }
 
 export interface IUserResponse<T> {

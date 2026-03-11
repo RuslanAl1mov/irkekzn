@@ -4,6 +4,7 @@ from django.conf.urls.static import static
 
 from .views import (
     GroupListView,
+    PermissionListView,
     UsersListView,
     UserDetailView,
     EmployeeUpdateView,
@@ -13,6 +14,7 @@ from .views import (
 
 urlpatterns = [
     path("users/groups/", GroupListView.as_view(), name="groups-list"),
+    path("users/permissions/", PermissionListView.as_view(), name="permissions-list"),
     path("users/", UsersListView.as_view(), name="users-list"),
     path("users/<int:pk>/", UserDetailView.as_view(), name="users-detail"),
     path("users/<int:pk>/update/", EmployeeUpdateView.as_view(), name="users-update"),

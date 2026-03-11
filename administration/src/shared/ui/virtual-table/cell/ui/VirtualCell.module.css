@@ -153,7 +153,7 @@
 .copyTitleMenyBtn {
   width: fit-content;
   padding: 1px 6px;
-  border: 1px solid var(--gray3);
+  border: 1px solid var(--gray4);
   background-color: var(--gray7);
   border-radius: 3px;
   cursor: pointer;
@@ -169,7 +169,7 @@
 
 .copySecTitleMenyBtn {
   width: fit-content;
-  border-color: var(--border-primary);
+  border: 1px solid var(--gray4);
   border-radius: 3px;
   background-color: var(--gray7);
   cursor: pointer;

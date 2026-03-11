@@ -11,7 +11,7 @@ import { Input, PhoneInput, Switch } from "@/shared/ui";
 
 import { useEmployeeCreateStore } from "../model/store";
 import { Modal } from "@/shared/ui/modal";
-import { UserGroupSelect } from "@/shared/ui/select";
+import { UserGroupSelect, UserPermissionSelect } from "@/shared/ui/select";
 
 
 export const EmployeeCreateForm = (): JSX.Element | null => {
@@ -25,6 +25,7 @@ export const EmployeeCreateForm = (): JSX.Element | null => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [userGroupIds, setUserGroupIds] = useState<number[]>([]);
+    const [permissionIds, setPermissionIds] = useState<number[]>([]);
 
 
     const mutation = useMutation({
@@ -38,6 +39,7 @@ export const EmployeeCreateForm = (): JSX.Element | null => {
                 email: email,
                 password: password,
                 group_ids: userGroupIds,
+                permission_ids: permissionIds,
             };
 
             return createUser(userPayload);
@@ -67,6 +69,7 @@ export const EmployeeCreateForm = (): JSX.Element | null => {
         setEmail("");
         setIsActive(true);
         setUserGroupIds([]);
+        setPermissionIds([]);
         close();
     };
 
@@ -124,6 +127,14 @@ export const EmployeeCreateForm = (): JSX.Element | null => {
                                 isMulti={true}
                                 selected={userGroupIds}
                                 setSelected={setUserGroupIds}
+                                disabled={mutation.isPending}
+                            />
+                        </div>
+                        <div className={cls.field}>
+                            <UserPermissionSelect
+                                isMulti={true}
+                                selected={permissionIds}
+                                setSelected={setPermissionIds}
                                 disabled={mutation.isPending}
                             />
                         </div>

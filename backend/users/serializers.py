@@ -1,7 +1,7 @@
 import bleach
 
 from django.conf import settings
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, Permission
 from django.db import IntegrityError, transaction
 from django.utils.translation import gettext_lazy
 from django.contrib.auth.hashers import make_password
@@ -105,6 +105,15 @@ class GroupSerializer(serializers.ModelSerializer):
         fields = ["id", "name", "permissions"]
 
 
+class PermissionSerializer(serializers.ModelSerializer):
+    app_label = serializers.CharField(source="content_type.app_label", read_only=True)
+    model = serializers.CharField(source="content_type.model", read_only=True)
+
+    class Meta:
+        model = Permission
+        fields = ["id", "name", "codename", "app_label", "model"]
+
+
 class UserSerializer(DynamicFieldsModelSerializer):
     """
     Общий сериализатор для всех типов пользователей
@@ -114,6 +123,7 @@ class UserSerializer(DynamicFieldsModelSerializer):
 
     email = serializers.EmailField(required=False)
     groups = GroupSerializer(many=True, read_only=True)
+    user_permissions = PermissionSerializer(many=True, read_only=True)
     password = serializers.CharField(required=False, write_only=True)
     phone_number = serializers.CharField(max_length=30, required=False)
 
@@ -134,7 +144,8 @@ class UserSerializer(DynamicFieldsModelSerializer):
             "phone_number",
             "photo",
             "language",
-            "groups"
+            "groups",
+            "user_permissions",
         ]
         read_only_fields = [
             "is_superuser",
@@ -217,16 +228,30 @@ class EmployeeSerializer(UserSerializer):
         write_only=True,
         source="groups",
     )
+    permission_ids = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=Permission.objects.all(),
+        required=False,
+        write_only=True,
+        source="user_permissions",
+    )
 
     class Meta(UserSerializer.Meta):
-        fields = UserSerializer.Meta.fields + ["group_ids"]
+        fields = UserSerializer.Meta.fields + [
+            "group_ids",
+            "permission_ids",
+        ]
 
     def update(self, instance, validated_data):
         groups = validated_data.pop("groups", serializers.empty)
+        user_permissions = validated_data.pop("user_permissions", serializers.empty)
         instance = super().update(instance, validated_data)
 
         if groups is not serializers.empty:
             instance.groups.set(groups)
+
+        if user_permissions is not serializers.empty:
+            instance.user_permissions.set(user_permissions)
 
         return instance
 
@@ -249,6 +274,7 @@ class EmployeeCreateSerializer(EmployeeSerializer):
     def create(self, validated_data):
         with transaction.atomic():
             groups = validated_data.pop("groups", [])
+            user_permissions = validated_data.pop("user_permissions", [])
             email = validated_data["email"]
             password = validated_data["password"]
             first_name = validated_data["first_name"]
@@ -281,6 +307,9 @@ class EmployeeCreateSerializer(EmployeeSerializer):
 
             if groups:
                 user.groups.set(groups)
+
+            if user_permissions:
+                user.user_permissions.set(user_permissions)
 
             return user
 
