@@ -12,6 +12,7 @@ import { Input, PhoneInput, Switch } from "@/shared/ui";
 
 import { useEmployeeEditStore } from "../model/store";
 import { Modal } from "@/shared/ui/modal";
+import { UserGroupSelect } from "@/shared/ui/select";
 
 
 export const EmployeeEditForm = (): JSX.Element | null => {
@@ -24,6 +25,7 @@ export const EmployeeEditForm = (): JSX.Element | null => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [userGroupIds, setUserGroupIds] = useState<number[]>([]);
     const userId = user?.id ?? null;
 
 
@@ -54,6 +56,7 @@ export const EmployeeEditForm = (): JSX.Element | null => {
                 last_name: lastName,
                 username: username,
                 email: email,
+                group_ids: userGroupIds,
                 ...(password ? { password } : {}),
             };
 
@@ -84,6 +87,7 @@ export const EmployeeEditForm = (): JSX.Element | null => {
         setLastName(currentUser.last_name ?? "");
         setUsername(currentUser.username ?? "");
         setEmail(currentUser.email ?? "");
+        setUserGroupIds(currentUser.groups?.map((group) => group.id) ?? []);
     }, [user, userDetails]);
 
     if (!isOpen || !user) return null;
@@ -118,6 +122,7 @@ export const EmployeeEditForm = (): JSX.Element | null => {
         setUsername("");
         setEmail("");
         setIsActive(false);
+        setUserGroupIds([]);
         close();
     };
 
@@ -125,7 +130,7 @@ export const EmployeeEditForm = (): JSX.Element | null => {
     return (
         <Modal
             title="Редактировать сотрудника"
-            subTitle="Введите данные сотрудника для редактирования профиля."
+            subTitle="Введите данные сотрудника для редактирования профиля"
             saveBtnTitle="Сохранить"
             closeBtnTitle="Отмена"
             onSaveBtnClick={() => mutation.mutate()}
@@ -144,7 +149,7 @@ export const EmployeeEditForm = (): JSX.Element | null => {
             <form className={cls.form}>
 
                 <div className={cls.dataList}>
-                    <div className={cls.infoSection}>
+                    <div className={cls.inputSection}>
                         <div className={cls.field}>
                             <Input
                                 value={firstName}
@@ -176,9 +181,16 @@ export const EmployeeEditForm = (): JSX.Element | null => {
                                 disabled={isLoading || mutation.isPending}
                             />
                         </div>
+                        <div className={cls.field}>
+                            <UserGroupSelect
+                                isMulti={true}
+                                selected={userGroupIds}
+                                setSelected={setUserGroupIds}
+                                disabled={isLoading || mutation.isPending}
+                            />
+                        </div>
                     </div>
-                    <div className={cls.infoSection}>
-
+                    <div className={cls.inputSection}>
                         <div className={cls.field}>
                             <Input
                                 value={email}
@@ -198,7 +210,7 @@ export const EmployeeEditForm = (): JSX.Element | null => {
                         </div>
                     </div>
 
-                    <div className={cls.infoSection}>
+                    <div className={cls.inputSection}>
 
                         <div className={cls.field}>
                             <Switch

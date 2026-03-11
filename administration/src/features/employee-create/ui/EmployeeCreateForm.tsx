@@ -11,6 +11,7 @@ import { Input, PhoneInput, Switch } from "@/shared/ui";
 
 import { useEmployeeCreateStore } from "../model/store";
 import { Modal } from "@/shared/ui/modal";
+import { UserGroupSelect } from "@/shared/ui/select";
 
 
 export const EmployeeCreateForm = (): JSX.Element | null => {
@@ -23,6 +24,7 @@ export const EmployeeCreateForm = (): JSX.Element | null => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [userGroupIds, setUserGroupIds] = useState<number[]>([]);
 
 
     const mutation = useMutation({
@@ -35,6 +37,7 @@ export const EmployeeCreateForm = (): JSX.Element | null => {
                 username: username,
                 email: email,
                 password: password,
+                group_ids: userGroupIds,
             };
 
             return createUser(userPayload);
@@ -63,6 +66,7 @@ export const EmployeeCreateForm = (): JSX.Element | null => {
         setUsername("");
         setEmail("");
         setIsActive(true);
+        setUserGroupIds([]);
         close();
     };
 
@@ -70,7 +74,7 @@ export const EmployeeCreateForm = (): JSX.Element | null => {
 
         <Modal
             title="Добавить сотрудника"
-            subTitle="Введите данные сотрудника для создания профиля."
+            subTitle="Введите данные сотрудника для создания профиля"
             saveBtnTitle="Сохранить"
             closeBtnTitle="Отмена"
             onSaveBtnClick={() => mutation.mutate()}
@@ -79,13 +83,14 @@ export const EmployeeCreateForm = (): JSX.Element | null => {
             <form className={cls.form}>
                 <div className={cls.dataList}>
 
-                    <div className={cls.infoSection}>
+                    <div className={cls.inputSection}>
                         <div className={cls.field}>
                             <Input
                                 value={firstName}
                                 setValue={setFirstName}
                                 label="Имя"
                                 disabled={mutation.isPending}
+                                placeholder="Имя"
                                 required
                             />
                             <Input
@@ -93,6 +98,7 @@ export const EmployeeCreateForm = (): JSX.Element | null => {
                                 setValue={setLastName}
                                 label="Фамилия"
                                 disabled={mutation.isPending}
+                                placeholder="Фамилия"
                                 required
                             />
                         </div>
@@ -102,24 +108,35 @@ export const EmployeeCreateForm = (): JSX.Element | null => {
                                 setValue={setPhoneNumber}
                                 label="Номер телефона"
                                 disabled={mutation.isPending}
+                                placeholder="Номер телефона"
                             />
                             <Input
                                 value={username}
                                 setValue={setUsername}
                                 label="Username"
                                 disabled={mutation.isPending}
+                                placeholder="Username"
                             />
+                        </div>
 
+                        <div className={cls.field}>
+                            <UserGroupSelect
+                                isMulti={true}
+                                selected={userGroupIds}
+                                setSelected={setUserGroupIds}
+                                disabled={mutation.isPending}
+                            />
                         </div>
                     </div>
 
-                    <div className={cls.infoSection}>
+                    <div className={cls.inputSection}>
                         <div className={cls.field}>
                             <Input
                                 value={email}
                                 setValue={setEmail}
                                 label="Email"
                                 disabled={mutation.isPending}
+                                placeholder="Email"
                                 required
                             />
 
@@ -130,12 +147,13 @@ export const EmployeeCreateForm = (): JSX.Element | null => {
                                 setValue={setPassword}
                                 label="Создать пароль"
                                 disabled={mutation.isPending}
+                                placeholder="Создать пароль"
                                 required
                             />
                         </div>
                     </div>
 
-                    <div className={cls.infoSection}>
+                    <div className={cls.inputSection}>
                         <div className={cls.field}>
                             <Switch
                                 value={isActive}

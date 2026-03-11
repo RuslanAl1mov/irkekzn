@@ -1,9 +1,11 @@
 import bleach
 
 from django.conf import settings
+from django.contrib.auth.models import Group
 from django.db import IntegrityError, transaction
 from django.utils.translation import gettext_lazy
 from django.contrib.auth.hashers import make_password
+
 
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -93,6 +95,16 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
 
 
+class GroupSerializer(serializers.ModelSerializer):
+    permissions = serializers.SlugRelatedField(
+        many=True, read_only=True, slug_field="name"
+    )
+
+    class Meta:
+        model = Group
+        fields = ["id", "name", "permissions"]
+
+
 class UserSerializer(DynamicFieldsModelSerializer):
     """
     Общий сериализатор для всех типов пользователей
@@ -101,6 +113,7 @@ class UserSerializer(DynamicFieldsModelSerializer):
     """
 
     email = serializers.EmailField(required=False)
+    groups = GroupSerializer(many=True, read_only=True)
     password = serializers.CharField(required=False, write_only=True)
     phone_number = serializers.CharField(max_length=30, required=False)
 
@@ -121,6 +134,7 @@ class UserSerializer(DynamicFieldsModelSerializer):
             "phone_number",
             "photo",
             "language",
+            "groups"
         ]
         read_only_fields = [
             "is_superuser",
@@ -196,7 +210,25 @@ class UserSerializer(DynamicFieldsModelSerializer):
 
 
 class EmployeeSerializer(UserSerializer):
-    pass
+    group_ids = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=Group.objects.all(),
+        required=False,
+        write_only=True,
+        source="groups",
+    )
+
+    class Meta(UserSerializer.Meta):
+        fields = UserSerializer.Meta.fields + ["group_ids"]
+
+    def update(self, instance, validated_data):
+        groups = validated_data.pop("groups", serializers.empty)
+        instance = super().update(instance, validated_data)
+
+        if groups is not serializers.empty:
+            instance.groups.set(groups)
+
+        return instance
 
 
 class EmployeeCreateSerializer(EmployeeSerializer):
@@ -216,6 +248,7 @@ class EmployeeCreateSerializer(EmployeeSerializer):
 
     def create(self, validated_data):
         with transaction.atomic():
+            groups = validated_data.pop("groups", [])
             email = validated_data["email"]
             password = validated_data["password"]
             first_name = validated_data["first_name"]
@@ -245,6 +278,9 @@ class EmployeeCreateSerializer(EmployeeSerializer):
                     )
                 else:
                     raise ValidationError(f"Ошибка создания Сотрудника: {repr(e)}")
+
+            if groups:
+                user.groups.set(groups)
 
             return user
 

@@ -9,8 +9,12 @@ from services.mixin.logged_api_views import LoggedUpdateAPIView, LoggedCreateAPI
 from core.permissions import IsEmployee, CRUDPermissions, GetListPermissions
 
 from users.models import User
-from users.serializers import UserSerializer, EmployeeCreateSerializer
-from .serializers import GroupSerializer
+from users.serializers import (
+    GroupSerializer,
+    UserSerializer,
+    EmployeeSerializer,
+    EmployeeCreateSerializer,
+)
 
 from .pagination import UsersListPagination
 from .filters import UsersListFilter
@@ -24,6 +28,25 @@ class GroupListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated, IsEmployee, GetListPermissions]
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+
+    filter_backends = [
+        filters.OrderingFilter,
+        filters.SearchFilter,
+    ]
+
+    search_fields = (
+        "id",
+        "name",
+        "permissions__name",
+    )
+
+    ordering_fields = (
+        "id",
+        "name",
+        "permissions__name",
+    )
+
+    ordering = ["name"]
 
 
 class UsersListView(generics.ListAPIView):
@@ -85,13 +108,16 @@ class UsersListView(generics.ListAPIView):
 class UserDetailView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+
+    def get_serializer_class(self):
+        user = self.get_object()
+        return EmployeeSerializer if user.is_staff else UserSerializer
 
 
 class EmployeeUpdateView(LoggedUpdateAPIView):
     permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = EmployeeSerializer
 
 
 class EmployeeCreateView(LoggedCreateAPIView):

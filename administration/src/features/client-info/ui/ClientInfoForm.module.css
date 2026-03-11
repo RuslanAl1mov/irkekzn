@@ -1,17 +1,8 @@
-.form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
 .infoSection {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    padding: 16px;
-    border: 1px solid var(--gray6);
-    border-radius: 12px;
-    background: var(--gray7);
+    gap: 13px;
+    padding: 0 15px;
 }
 
 .infoRow {
@@ -22,19 +13,20 @@
 }
 
 .infoLabel {
-    font: var(--body1);
+    font: var(--body0);
+    font-weight: 550;
     color: var(--gray);
 }
 
 .infoValue {
-    font: var(--body1);
-    color: var(--black);
+    font: var(--body0);
+    color: var(--gray);
     word-break: break-word;
 }
 
 .field {
     display: flex;
-    gap: 6px;
+    gap: 10px;
 }
 
 .label {

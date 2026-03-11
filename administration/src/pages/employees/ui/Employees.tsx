@@ -133,16 +133,21 @@ export const Employees = () => {
                 ordering: "phone_number",
                 align: "center",
             },
-
+            {
+                name: "Группы",
+                width: "0.5fr",
+                ordering: "groups__name",
+                align: "center",
+            },
             {
                 name: "Логин",
-                width: "0.5fr",
+                width: "125px",
                 ordering: "last_login",
                 align: "center",
             },
             {
                 name: "Регистрация",
-                width: "0.5fr",
+                width: "135px",
                 ordering: "date_joined",
                 align: "center",
             },
@@ -196,6 +201,11 @@ export const Employees = () => {
                         align="center"
                     />,
                     <VirtualCell
+                        textColor="var(--gray3)"
+                        title={employee.groups?.map((group) => group.name) ?? null}
+                        align="center"
+                    />,
+                    <VirtualCell
                         title={formatDate(employee.last_login)}
                         align="center"
                     />,
@@ -220,7 +230,7 @@ export const Employees = () => {
                     title="Управление сотрудниками"
                     subTitle="Управляйте командой и активностью сотрудников"
                 />
-                <Button variant="blue" onClick={openCreateModal} className={cls.addButton}>
+                <Button onClick={openCreateModal} className={cls.addButton}>
                     <PlusIcon className={cls.addButtonIcon} />
                     <p className={cls.addButtonText}>Добавить сотрудника</p>
                 </Button>

@@ -8,7 +8,7 @@ import { getUser, type IUser, type IUserPayload, updateUser } from "@/entities/u
 import { formatDateTime } from "@/shared/lib/formater";
 import { queryKeys } from "@/shared/lib/react-query/queryKeys";
 
-import { PhoneInput, Switch } from "@/shared/ui";
+import { Input, PhoneInput, Switch } from "@/shared/ui";
 
 import { useClientEditStore } from "../model/store";
 import { Modal } from "@/shared/ui/modal";
@@ -19,6 +19,10 @@ export const ClientEditForm = (): JSX.Element | null => {
     const queryClient = useQueryClient();
     const [isActive, setIsActive] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
     const userId = user?.id ?? null;
 
     const { data: userDetails, isLoading } = useQuery<IUser>({
@@ -41,9 +45,13 @@ export const ClientEditForm = (): JSX.Element | null => {
                 throw new Error("User ID is required");
             }
 
-            const userPayload: Pick<IUserPayload, "is_active" | "phone_number"> = {
+            const userPayload: IUserPayload = {
                 is_active: isActive,
                 phone_number: phoneNumber,
+                first_name: firstName,
+                last_name: lastName,
+                username: username,
+                email: email,
             };
 
             return updateUser(userId, userPayload);
@@ -69,6 +77,10 @@ export const ClientEditForm = (): JSX.Element | null => {
 
         setIsActive(currentUser.is_active);
         setPhoneNumber(currentUser.phone_number ?? "");
+        setFirstName(currentUser.first_name ?? "");
+        setLastName(currentUser.last_name ?? "");
+        setUsername(currentUser.username ?? "");
+        setEmail(currentUser.email ?? "");
     }, [user, userDetails]);
 
     if (!isOpen || !user) return null;
@@ -76,12 +88,6 @@ export const ClientEditForm = (): JSX.Element | null => {
     const currentUser = userDetails ?? user;
     const clientInfo = [
         { label: "ID", value: String(currentUser.id) },
-
-        { label: "Имя", value: currentUser.first_name || "-" },
-        { label: "Фамилия", value: currentUser.last_name || "-" },
-        { label: "Username", value: currentUser.username || "-" },
-        { label: "Email", value: currentUser.email || "-" },
-        { label: "Фото", value: currentUser.photo || "-" },
         {
             label: "Суперпользователь",
             value: currentUser.is_superuser ? "Да" : "Нет",
@@ -103,6 +109,10 @@ export const ClientEditForm = (): JSX.Element | null => {
 
     const handleClose = (): void => {
         setPhoneNumber("");
+        setFirstName("");
+        setLastName("");
+        setUsername("");
+        setEmail("");
         setIsActive(false);
         close();
     };
@@ -110,25 +120,43 @@ export const ClientEditForm = (): JSX.Element | null => {
     return (
         <Modal
             title="Редактировать клиента"
-            subTitle="Редактирование данных клиента."
+            subTitle="Редактирование данных клиента"
             saveBtnTitle="Сохранить"
             closeBtnTitle="Отмена"
             onSaveBtnClick={() => mutation.mutate()}
             onClose={handleClose}
         >
+
+            <div className={cls.infoSection}>
+                {clientInfo.map((item) => (
+                    <div key={item.label} className={cls.infoRow}>
+                        <span className={cls.infoLabel}>{item.label}</span>
+                        <span className={cls.infoValue}>{item.value}</span>
+                    </div>
+                ))}
+            </div>
+
             <form className={cls.form}>
                 <div className={cls.dataList}>
-                    
-                    <div className={cls.infoSection}>
-                        {clientInfo.map((item) => (
-                            <div key={item.label} className={cls.infoRow}>
-                                <span className={cls.infoLabel}>{item.label}</span>
-                                <span className={cls.infoValue}>{item.value}</span>
-                            </div>
-                        ))}
-                    </div>
 
-                    <div className={cls.infoSection}>
+                    <div className={cls.inputSection}>
+                        <div className={cls.field}>
+                            <Input
+                                value={firstName}
+                                setValue={setFirstName}
+                                label="Имя"
+                                disabled={isLoading || mutation.isPending}
+                                required
+                            />
+                            <Input
+                                value={lastName}
+                                setValue={setLastName}
+                                label="Фамилия"
+                                disabled={isLoading || mutation.isPending}
+                                required
+                            />
+                        </div>
+
                         <div className={cls.field}>
                             <PhoneInput
                                 value={phoneNumber}
@@ -138,10 +166,28 @@ export const ClientEditForm = (): JSX.Element | null => {
                                 showClearButton
                                 required
                             />
+                            <Input
+                                value={username}
+                                setValue={setUsername}
+                                label="Username"
+                                disabled={isLoading || mutation.isPending}
+                            />
                         </div>
                     </div>
 
-                    <div className={cls.infoSection}>
+                    <div className={cls.inputSection}>
+                        <div className={cls.field}>
+                            <Input
+                                value={email}
+                                setValue={setEmail}
+                                label="Email"
+                                disabled={isLoading || mutation.isPending}
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div className={cls.inputSection}>
                         <div className={cls.field}>
                             <Switch
                                 value={isActive}
@@ -154,6 +200,6 @@ export const ClientEditForm = (): JSX.Element | null => {
 
                 </div>
             </form>
-        </Modal>
+        </Modal >
     );
 };

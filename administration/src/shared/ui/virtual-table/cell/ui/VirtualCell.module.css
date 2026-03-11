@@ -7,15 +7,23 @@
 }
 
 .titlesBlock {
+  max-height: 100%;
   width: fit-content;
   max-width: 94%;
   display: flex;
   flex-direction: column;
+  /* justify-content: center; */
   gap: 3px;
-  border-radius: 10px;
+  overflow-y: auto;
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
 }
 
 .title {
+  width: 100%;
   font: var(--body1);
   font-weight: 500;
   color: var(--black);
@@ -28,6 +36,12 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   transition: padding 0.3s;
+}
+
+.secondaryTitleBlock {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .secondaryTitle {

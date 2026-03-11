@@ -27,6 +27,10 @@
 	box-shadow: 0 4px 24px 0 var(--gray7);
 }
 
+.inputCont:hover {
+	background-color: var(--white);
+}
+
 .inputCont:focus-within {
 	background-color: var(--white);
 	border-color: var(--blue);
@@ -120,14 +124,6 @@
 	border: none;
 	outline: none;
 }
-
-/* .input input:disabled {
-	color: var(--gray);
-	-webkit-text-fill-color: var(--gray);
-	opacity: 1;
-	cursor: not-allowed;
-
-} */
 
 .input input::placeholder {
 	color: var(--gray4);

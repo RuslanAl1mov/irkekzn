@@ -72,7 +72,7 @@ export const EmployeeInfoForm = (): JSX.Element | null => {
     return (
         <Modal
             title="Информация о сотруднике"
-            subTitle="Информация о сотруднике."
+            subTitle="Информация о сотруднике"
             closeBtnTitle="Закрыть"
             onClose={close}
         >

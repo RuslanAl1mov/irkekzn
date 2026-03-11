@@ -9,23 +9,18 @@ import { useClickOutside } from "@/shared/lib/react";
 
 import cls from "./VirtualCell.module.css";
 
-type SourceGalleryItem = {
-  id: number;
-  name?: string | null;
-  icon?: string | null;
-};
-
 type CellFunctionProps = {
   icon: React.ComponentType<{ className?: string }>;
   title: string;
   onClick: () => void;
 };
 
+type TextValue = string | string[] | null | undefined;
+
 type VirtualCellProps = {
-  title?: string;
-  secTitle?: string | null | undefined;
+  title?: TextValue;
+  secTitle?: TextValue;
   img?: string | null;
-  sourcesGalery?: SourceGalleryItem[];
   extraNum?: number;
   align?: "start" | "center" | "end";
   status?: "active" | "archived" | "negative";
@@ -39,8 +34,6 @@ export const VirtualCell = ({
   title,
   secTitle,
   img,
-  sourcesGalery,
-  extraNum,
   align = "start",
   status,
   isCopible,
@@ -55,6 +48,9 @@ export const VirtualCell = ({
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     (e.currentTarget as HTMLImageElement).src = UserImage;
   };
+
+  const toPlainText = (value?: TextValue | null) =>
+    Array.isArray(value) ? value.join("\n") : value ?? "";
 
   const handleCopy = (text: string) => {
     if (!text) return;
@@ -122,9 +118,9 @@ export const VirtualCell = ({
             if (title && secTitle) {
               setIsOpenCopyMenu((v) => !v);
             } else if (title) {
-              handleCopy(title);
+              handleCopy(toPlainText(title));
             } else if (secTitle) {
-              handleCopy(secTitle);
+              handleCopy(toPlainText(secTitle));
             }
           }}
           onMouseDown={(e) => e.stopPropagation()}
@@ -149,31 +145,6 @@ export const VirtualCell = ({
         />
       )}
 
-      {/* Галерея источников */}
-      {sourcesGalery && sourcesGalery.length > 0 ? (
-        <div className={cls.iconsGalery}>
-          {sourcesGalery.map((source) => {
-            return (
-              <img
-                key={source.id}
-                title={source.name ?? undefined}
-                className={cls.iconsGaleryIcon}
-                src={source.icon || ""}
-                alt={source.name ?? undefined}
-              />
-            );
-          })}
-        </div>
-      ) : null}
-
-      {/* Кргулешок с цифоркой или буквой */}
-      {extraNum != undefined &&
-        (() => {
-          if (extraNum > 0)
-            return <div className={cls.roundedNum}>+{extraNum}</div>;
-          else if (extraNum == 0 && sourcesGalery && sourcesGalery.length == 0)
-            return <>—</>;
-        })()}
 
       {/* Круглая картинка */}
       {img && <img className={cls.img} src={img} onError={handleImageError} />}
@@ -183,45 +154,72 @@ export const VirtualCell = ({
         <div className={cls.titlesBlock} style={coloredBlockStyle}>
           {title && (
             <div
-              className={cn(cls.title, isOpenCopyMenu && cls.copyTitleMenyBtn)}
-              style={{ textAlign: align, color: textColor }}
-              title={title}
+              className={cn(cls.titleBlock, isOpenCopyMenu && cls.copyTitleMenyBtn)}
+              title={toPlainText(title)}
               onClick={(e) => {
                 if (isOpenCopyMenu) {
                   e.stopPropagation();
-                  handleCopy(title);
+                  handleCopy(toPlainText(title));
                 }
               }}
               onMouseDown={(e) => {
                 if (isOpenCopyMenu) e.stopPropagation();
               }}
             >
-              {title}
+              {Array.isArray(title) ? (
+                <>
+                  {title.map((value, index) => (
+                    <p className={cls.title} style={{ textAlign: align, color: textColor }}
+                      key={index}>
+                      {value}
+                      {index < title.length - 1 && <br />}
+                    </p>
+                  ))}
+                </>
+              ) : (
+                <p className={cls.title} style={{ textAlign: align }}>
+                  {title}
+                </p>
+              )}
             </div>
           )}
           {secTitle != null && secTitle != undefined && (
             <div
               className={cn(
-                cls.secondaryTitle,
+                cls.secondaryTitleBlock,
                 isOpenCopyMenu && cls.copySecTitleMenyBtn
               )}
-              title={secTitle}
-              style={{ textAlign: align }}
+              title={toPlainText(secTitle)}
               onClick={(e) => {
                 if (isOpenCopyMenu) {
                   e.stopPropagation();
-                  handleCopy(secTitle);
+                  handleCopy(toPlainText(secTitle));
                 }
               }}
               onMouseDown={(e) => {
                 if (isOpenCopyMenu) e.stopPropagation();
               }}
             >
-              {secTitle}
+              {Array.isArray(secTitle) ? (
+                <>
+                  {secTitle.map((value, index) => (
+                    <p className={cls.secondaryTitle} style={{ textAlign: align }}
+                      key={index}>
+                      {value}
+                      {index < secTitle.length - 1 && <br />}
+                    </p>
+                  ))}
+                </>
+              ) : (
+                <p className={cls.secondaryTitle} style={{ textAlign: align }}>
+                  {secTitle}
+                </p>
+              )}
             </div>
           )}
         </div>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 };

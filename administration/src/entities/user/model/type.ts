@@ -1,3 +1,5 @@
+import type { IUserGroup } from "@/entities/user-group";
+
 export interface IUser {
   id: number;
   last_login: string;
@@ -12,6 +14,7 @@ export interface IUser {
   phone_number: string;
   photo: string | null;
   language: string;
+  groups?: IUserGroup[];
   permissions: string[];
 }
 
@@ -29,6 +32,7 @@ export interface IUserPayload {
   phone_number?: string;
   photo?: string | null;
   language?: string;
+  group_ids?: number[];
 }
 
 export interface IUserResponse<T> {

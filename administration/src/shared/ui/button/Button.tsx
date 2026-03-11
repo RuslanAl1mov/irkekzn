@@ -9,7 +9,7 @@ interface Props extends PropsWithChildren<ComponentPropsWithoutRef<"button">> {
   className?: string;
   size?: "full";
   isLoading?: boolean;
-  variant?: "blue" | "gray" | "red";
+  variant?: "default" | "gray" | "red";
   type?: "button" | "submit" | "reset";
 }
 
@@ -19,7 +19,7 @@ export const Button: FC<Props> = (props) => {
     children,
     size,
     isLoading,
-    variant = "blue",
+    variant = "default",
     type = "button",
     ...restProps
   } = props;
@@ -33,7 +33,6 @@ export const Button: FC<Props> = (props) => {
         {
           [cls.full]: size === "full",
           [cls.withLoading]: isLoading,
-          [cls.blue]: variant === "blue",
           [cls.gray]: variant === "gray",
           [cls.red]: variant === "red",
         }

@@ -65,7 +65,7 @@ export const Modal = ({ title, subTitle, children, saveBtnTitle = "Сохран�
                 </div>
                 <div className={cls.actions}>
                     {onSaveBtnClick && (
-                        <Button type="submit" variant="blue" onClick={onSaveBtnClick}>{saveBtnTitle}</Button>
+                        <Button type="submit" onClick={onSaveBtnClick}>{saveBtnTitle}</Button>
                     )}
                     {onClose && (
                         <Button type="button" variant="gray" onClick={onClose}>{closeBtnTitle}</Button>
