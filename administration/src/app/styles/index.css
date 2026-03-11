@@ -5,7 +5,7 @@
 
 /* Переменные */
 :root {
-    /* Цвета */
+    /* Светлая тема по умолчанию */
     --white: #fff;
     --black: #364153;
     --green: #00B77F;
@@ -47,6 +47,22 @@
     --blue7--rgb: 240, 245, 249;
     --orange: #ffca69;
     --glass-bg-color: 255, 255, 255;
+
+    /* Семантические алиасы */
+    --bg-primary: var(--white);
+    --bg-tertiary: var(--gray7);
+    --text-primary: var(--black);
+    --text-placeholder: var(--gray4);
+    --border-primary: var(--gray6);
+    --border-accent: var(--blue);
+    --black-inverted: var(--black);
+    --static-white: #fff;
+    --gray-gray-2: var(--gray2);
+    --gray-gray-3: var(--gray3);
+    --gray-4: var(--gray4);
+    --button: var(--body1);
+    --default-font-size: 16px;
+    --shadow: var(--shadow-modal);
 
     /* Градиенты */
     --gradient-lightgreen-darkgreen: linear-gradient(90deg, #00B77F 30.77%, #009C88 100%);
@@ -129,6 +145,68 @@
     --aside-min-width: 80px;
     --aside-max-width: 255px;
 
+
+}
+
+:root[data-theme="dark"] {
+    --white: #141718;
+    --black: #ffffff;
+    --green: #00d891;
+    --green2: #009C88;
+    --gray: #f3f2ef;
+    --gray2: #cecccb;
+    --gray2--rgb: 237, 227, 213;
+    --gray3: #a9a9a9;
+    --gray3--rgb: 207, 190, 168;
+    --gray4: #969692;
+    --gray4--rgb: 168, 149, 126;
+    --gray5: #656361;
+    --gray5--rgb: 74, 66, 59;
+    --gray6: #454343;
+    --gray6--rgb: 48, 43, 39;
+    --gray7: #272625;
+    --gray7--rgb: 32, 28, 25;
+    --purple: #961CF8;
+    --purple2: #b45efa;
+    --purple3: #d4a0ff;
+    --purple4: #F3E3FF;
+    --pink: #ff0098;
+    --red: #ff0000;
+    --red2: #ff1515;
+    --red3: #e50707;
+    --red4: #cd0202;
+    --red5: #f77575;
+    --red6: #ffc9c9;
+    --blue: #1894ff;
+    --blue2: #1786ee;
+    --blue3: #1567b5;
+    --blue4: #124c83;
+    --blue4--rgb: 169, 203, 234;
+    --blue5: #2f3437;
+    --blue5--rgb: 206, 227, 245;
+    --blue6: #2a3032;
+    --blue6--rgb: 42, 48, 50;
+    --blue7: #1d2024;
+    --blue7--rgb: 240, 245, 249;
+    --orange: #ffca69;
+    --glass-bg-color: 20, 23, 24;
+
+    --gradient-lightgreen-darkgreen: linear-gradient(90deg, var(--green) 30.77%, var(--green2) 100%);
+    --gradient-lightgray: linear-gradient(0deg, #1a1d1f 30.77%, #282d2f 100%);
+    --gradient-darkgray: linear-gradient(270deg, var(--gray2) 30.77%, var(--gray3) 100%);
+
+    --shadow-modal: 0 10px 25px 0 rgba(0, 0, 0, 0.10);
+    --shadow-sidebar: 0px 97px 27px rgba(163, 159, 193, 0),
+        0px 62px 25px rgba(163, 159, 193, 0.01),
+        0px 35px 21px rgba(163, 159, 193, 0.03),
+        0px 16px 16px rgba(163, 159, 193, 0.06),
+        0px 4px 9px rgba(163, 159, 193, 0.07);
+    --shadow-icon: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-glass: 0 4px 15px rgba(0, 0, 0, 0.1);
+    --border-modal: 1px solid var(--gray6);
+
+    --glass-border: 1px solid rgba(var(--glass-bg-color), var(--glass-border-opacity));
+    --glass-bg: rgba(var(--glass-bg-color), var(--glass-opacity));
 }
 
 /* Сброс стилей */

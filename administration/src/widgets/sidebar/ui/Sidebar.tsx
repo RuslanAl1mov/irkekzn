@@ -5,6 +5,8 @@ import { toast } from "react-toastify";
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import { useLogout } from "@/features/auth/logout";
+import { useThemeState } from "@/app/providers/theme";
+import { Switch } from "@/shared/ui/switch/Switch";
 import { useSidebarState } from "@/widgets/sidebar";
 
 import Logo from "@/assets/logo/logo.svg?react";
@@ -22,8 +24,10 @@ type GetLinkClass = {
 
 export const Sidebar: React.FC = () => {
   const { isOpen, toggleSidebar } = useSidebarState();
+  const { theme, setTheme } = useThemeState();
   const [isHovered, setIsHovered] = useState(false);
   const isMenuWide = isOpen || isHovered;
+  const isDarkTheme = theme === "dark";
 
   const { mutate: logout } = useLogout({
     onSuccess: () => {
@@ -87,6 +91,26 @@ export const Sidebar: React.FC = () => {
             </li>
 
           </ul>
+
+          <div
+            className={cn(cls.themeBlock, !isMenuWide && cls.themeBlockCompact)}
+            title={`Тема: ${isDarkTheme ? "темная" : "светлая"}`}
+          >
+            {isMenuWide && (
+              <div className={cls.themeTextBlock}>
+                <p className={cls.themeTitle}>Тема</p>
+                <p className={cls.themeValue}>
+                  {isDarkTheme ? "Темная" : "Светлая"}
+                </p>
+              </div>
+            )}
+
+            <Switch
+              value={isDarkTheme}
+              setValue={(value) => setTheme(value ? "dark" : "light")}
+              aria-label="Переключить тему"
+            />
+          </div>
         </div>
 
         <div className={cls.userBlock}>
