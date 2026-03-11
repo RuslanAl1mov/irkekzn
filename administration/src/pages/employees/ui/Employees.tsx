@@ -26,6 +26,8 @@ import type { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { Button } from "@/shared/ui";
 import { useEmployeeCreateStore } from "@/features/employee-create/model/store";
+import { FiltersBlock } from "@/shared/ui/filters-block";
+import { useFiltersStore } from "@/entities/filters";
 
 
 export const Employees = () => {
@@ -34,6 +36,9 @@ export const Employees = () => {
     const openEditModal = useEmployeeEditStore((s) => s.open);
     const openInfoModal = useEmployeeInfoStore((s) => s.open);
     const user = useAuthStore((s) => s.user);
+
+    // Глобальные фильтры
+    const searchTerm = useFiltersStore((s) => s.searchTerm);
 
     // Дебаунс сортировки
     const orderingDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(
@@ -50,15 +55,17 @@ export const Employees = () => {
         []
     );
 
-    // параметры запроса
+    // Параметры запроса
     const { params } = useMemo(() => {
         const p = {
+            ...(searchTerm?.trim() ? { search: searchTerm.trim() } : {}),
             ...(ordering.length ? { ordering } : {}),
             ...({ is_staff: true }),
         };
         return { params: p };
     }, [
-        ordering
+        ordering,
+        searchTerm,
     ]);
 
     // запрос с пагинацией
@@ -219,8 +226,7 @@ export const Employees = () => {
             return row;
         });
     }, [
-        flatList,
-        openEditModal,
+        flatList
     ]);
 
     return (
@@ -238,39 +244,46 @@ export const Employees = () => {
 
             </div>
 
+            <div className={cls.content}>
 
-            {isLoading && (
-                <div className={cls.loaderErrorBlock}>
-                    <Loader size={30} strokeWidth={6} />
-                </div>
-            )}
+                <FiltersBlock filtersObject="employee" leftBlockChildren={
+                    (
+                        <div className={cls.summaryBlock}>
+                            <p className={cls.summaryText}>Всего: {totalUsers}</p>
+                            <p className={cls.summaryText}>|</p>
+                            <p className={cls.summaryText}>Активных: {totalActiveUsers}</p>
+                            <p className={cls.summaryText}>|</p>
+                            <p className={cls.summaryText}>Заблокированных: {totalUsers - totalActiveUsers}</p>
+                        </div>
+                    )
+                } />
 
-            {!isLoading && (
-                <div className={cls.tableBlock}>
-                    
-                    <div className={cls.summaryBlock}>
-                        <p className={cls.summaryText}>Всего: {totalUsers}</p>
-                        <p className={cls.summaryText}>|</p>
-                        <p className={cls.summaryText}>Активных: {totalActiveUsers}</p>
-                        <p className={cls.summaryText}>|</p>
-                        <p className={cls.summaryText}>Заблокированных: {totalUsers - totalActiveUsers}</p>
+
+                {isLoading ? (
+                    <div className={cls.loaderErrorBlock}>
+                        <Loader size={30} strokeWidth={6} />
                     </div>
 
-                    <VirtualTable
-                        headers={headers}
-                        data={rows}
-                        ordering={ordering}
-                        setOrdering={debouncedSetOrdering}
-                        row_height={70}
-                        loading={isFetchingNextPage}
-                        onEndReached={() => {
-                            if (hasNextPage && !isFetchingNextPage) {
-                                fetchNextPage();
-                            }
-                        }}
-                    />
-                </div>
-            )}
+                ) : (
+                    <div className={cls.tableBlock}>
+                        <VirtualTable
+                            headers={headers}
+                            data={rows}
+                            ordering={ordering}
+                            setOrdering={debouncedSetOrdering}
+                            row_height={75}
+                            isError={isError}
+                            error={error}
+                            isLoading={isFetchingNextPage}
+                            onEndReached={() => {
+                                if (hasNextPage && !isFetchingNextPage) {
+                                    fetchNextPage();
+                                }
+                            }}
+                        />
+                    </div>
+                )}
+            </div>
 
 
         </section>

@@ -1,0 +1,18 @@
+.wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
+
+.leftBlock {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.rightBlock {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}

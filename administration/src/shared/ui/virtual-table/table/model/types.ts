@@ -1,5 +1,6 @@
 import type { RowItem } from "@/shared/ui/virtual-table/row";
 import type { ContextMenuItem } from "../../context-menu";
+import type { AxiosError } from "axios";
 
 
 // Общие типы для VirtualExpandedBlock без зависимостей от entities
@@ -24,7 +25,9 @@ export interface VirtualTableProps {
   data: RowItem[];
   headers: HeaderCell[];
   row_height?: number;
-  loading?: boolean;
+  isLoading?: boolean;
+  isError?: boolean;
+  error?: Error | AxiosError | null; // или просто unknown;
   expandedBlock?: React.ComponentType<VirtualExpandedBlockProps> | null;
   setOrdering?: (ordering: string[]) => void;
   ordering?: string[];

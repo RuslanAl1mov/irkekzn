@@ -7,9 +7,15 @@ import { ContextMenu } from "../../context-menu";
 import type { ContextMenuItem } from "../../context-menu";
 import { SortableHeader } from "../../sortable-header";
 
+import NothingFoundImg from "@/assets/app/404.png";
+import ErrorForbiddenImg from "@/assets/app/403.png";
+import ServerErrorImg from "@/assets/app/500.png";
+import NetworkErrorImg from "@/assets/app/network-error.png";
+
 import { Loader } from "@/widgets/loader";
 import { type RowData, VirtualRow } from "@/shared/ui/virtual-table/row"
 import type { VirtualTableProps } from "../model/types";
+import axios from "axios";
 
 
 // ---------- утилиты ----------
@@ -26,7 +32,9 @@ export function VirtualTable({
   data,
   headers,
   row_height,
-  loading,
+  isLoading,
+  isError,
+  error,
   expandedBlock = null,
   setOrdering,
   ordering = [],
@@ -203,6 +211,39 @@ export function VirtualTable({
 
       {/* Body */}
       <div className={cn(cls.wrapper, cls.hideScrollBar)}>
+
+        {/* Ошибка */}
+        {isError && data.length === 0 && (
+          <div className={cls.messageBlock}>
+            <img
+              alt="Ошибка"
+              className={cls.messageImg}
+              src={axios.isAxiosError(error) && error.response?.status === 403 ? ErrorForbiddenImg :
+                axios.isAxiosError(error) && error.response?.status === 500 ? ServerErrorImg :
+                  axios.isAxiosError(error) && error.response?.status === 503 ? NetworkErrorImg : NetworkErrorImg}
+            />
+            {axios.isAxiosError(error) && (
+              <p className={cls.messageText}>
+                {error.response?.status === 403 ? "Доступ запрещен" : error.response?.status === 500 ? "Ошибка сервера" : error.response?.status === 503 ? "Сетевая ошибка" : error.message}
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* Список пуст */}
+        {!isLoading && !isError && data.length === 0 && (
+          <div className={cls.messageBlock}>
+            <img
+              alt="Ничего не найдено"
+              className={cls.messageImg}
+              src={NothingFoundImg}
+            />
+            <p className={cls.messageText}>
+              Кажется, здесь ничего нет...
+            </p>
+          </div>
+        )}
+
         <Virtuoso
           className={cls.hideScrollBar}
           data={data}
@@ -221,7 +262,7 @@ export function VirtualTable({
           onClose={closeContextMenu}
         />
 
-        {loading && (
+        {isLoading && (
           <div className={cls.loadingFooter}>
             <Loader />
           </div>

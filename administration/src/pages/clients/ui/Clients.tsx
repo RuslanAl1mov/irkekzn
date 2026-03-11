@@ -23,12 +23,18 @@ import { useClientEditStore } from "@/features/client-edit";
 import { useClientInfoStore } from "@/features/client-info";
 import type { AxiosError } from "axios";
 import { toast } from "react-toastify";
+import { FiltersBlock } from "@/shared/ui/filters-block";
+import { useFiltersStore } from "@/entities/filters";
 
 
 export const Clients = () => {
     const [ordering, setOrdering] = useState<string[]>([]);
     const openEditModal = useClientEditStore((s) => s.open);
     const openInfoModal = useClientInfoStore((s) => s.open);
+
+    // Глобавльные фильтры
+    const searchTerm = useFiltersStore((s) => s.searchTerm);
+
 
     // Дебаунс сортировки
     const orderingDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(
@@ -45,15 +51,17 @@ export const Clients = () => {
         []
     );
 
-    // параметры запроса
+    // Параметры запроса
     const { params } = useMemo(() => {
         const p = {
+            ...(searchTerm?.trim() ? { search: searchTerm.trim() } : {}),
             ...(ordering.length ? { ordering } : {}),
             ...({ is_staff: false }),
         };
         return { params: p };
     }, [
-        ordering
+        ordering,
+        searchTerm,
     ]);
 
     // запрос с пагинацией
@@ -215,38 +223,43 @@ export const Clients = () => {
                 subTitle="Управляйте отношениями с клиентами и персональной информацией"
             />
 
-            {isLoading && (
-                <div className={cls.loaderErrorBlock}>
-                    <Loader size={30} strokeWidth={6} />
-                </div>
-            )}
+            <div className={cls.content}>
 
-            {!isLoading && (
-                <div className={cls.tableBlock}>
+                <FiltersBlock filtersObject="client" leftBlockChildren={(
                     <div className={cls.summaryBlock}>
                         <p className={cls.summaryText}>Всего: {totalUsers}</p>
                         <p className={cls.summaryText}>|</p>
                         <p className={cls.summaryText}>Активных: {totalActiveUsers}</p>
                         <p className={cls.summaryText}>|</p>
                         <p className={cls.summaryText}>Заблокированных: {totalUsers - totalActiveUsers}</p>
+                    </div>
+                )} />
 
+                {isLoading ? (
+                    <div className={cls.loaderErrorBlock}>
+                        <Loader size={30} strokeWidth={6} />
                     </div>
 
-                    <VirtualTable
-                        headers={headers}
-                        data={rows}
-                        ordering={ordering}
-                        setOrdering={debouncedSetOrdering}
-                        row_height={70}
-                        loading={isFetchingNextPage}
-                        onEndReached={() => {
-                            if (hasNextPage && !isFetchingNextPage) {
-                                fetchNextPage();
-                            }
-                        }}
-                    />
-                </div>
-            )}
+                ) : (
+                    <div className={cls.tableBlock}>
+                        <VirtualTable
+                            headers={headers}
+                            data={rows}
+                            ordering={ordering}
+                            setOrdering={debouncedSetOrdering}
+                            row_height={75}
+                            isError={isError}
+                            error={error}
+                            isLoading={isFetchingNextPage}
+                            onEndReached={() => {
+                                if (hasNextPage && !isFetchingNextPage) {
+                                    fetchNextPage();
+                                }
+                            }}
+                        />
+                    </div>
+                )}
+            </div>
 
         </section>
     );
