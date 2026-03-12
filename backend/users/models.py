@@ -35,6 +35,11 @@ class User(AbstractUser):
         choices=Languages.choices,
         default=Languages.EN,
     )
+    date_archived = models.DateTimeField(
+        verbose_name="Дата архивации",
+        null=True,
+        blank=True,
+    )
     objects: UserManager = UserManager()
 
     USERNAME_FIELD = "email"

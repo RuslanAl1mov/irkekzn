@@ -8,18 +8,22 @@
   gap: 9px;
   padding: 11px 8px 11px 12px;
   border-radius: 10px;
-  background-color: var(--bg-primary);
-  border: 1px solid var(--bg-primary);
-  box-shadow: var(--shadow);
   cursor: pointer;
-  color: var(--text-placeholder);
+  color: var(--gray4);
   user-select: none;
-  transition: background-color 0.3s;
+
+    /* Стекло */
+    background: rgba(var(--gray7--rgb), 0.2);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: var(--glass-border);
+    border-radius: 10px;
+    transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
 
 .triggerBordered {
   box-shadow: none;
-  border: 1px solid var(--border-primary);
+  border: 1px solid var(--gray5);
 }
 
 .triggerLabel {
@@ -34,22 +38,23 @@
   font-weight: 550;
   transition: color 0.3s;
   white-space: nowrap;
-  color: var(--black-inverted);
+  color: var(--gray4);
 }
 
 .triggerSelected {
-  font: var(--body1);
-  background-color: var(--border-accent);
+  background: rgba(var(--gray7--rgb), 0.3);
+  box-shadow: var(--shadow-icon);
+  border-color: var(--gray5);
 }
 
 .triggerSelected .triggerLabel {
-  color: var(--static-white);
+  color: var(--gray);
 }
 
 .chevronIcon {
   height: auto;
   padding-top: 4px;
-  fill: var(--gray-gray-2);
+  fill: var(--gray4);
   transition: transform 0.3s;
 }
 
@@ -58,17 +63,13 @@
 }
 
 .filterActive .trigger {
-  border-color: var(--border-accent);
+  border-color: var(--blue);
 }
 
 .popover {
   position: absolute;
   top: calc(100% + 10px);
   right: 0;
-  background-color: var(--bg-primary);
-  border-radius: 12px;
-  border: var(--border-modal);
-  box-shadow: var(--shadow);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -76,6 +77,13 @@
   padding: 20px 10px;
   z-index: 85;
   white-space: nowrap;
+
+  background: rgba(var(--gray7--rgb), 0.7);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--gray5);
+  border-radius: 10px;
+  box-shadow: var(--shadow-modal);
 }
 
 .content {
@@ -87,7 +95,7 @@
 
 .layout {
   display: flex;
-  gap: 16px;
+  gap: 15px;
 }
 
 .presets {
@@ -102,26 +110,26 @@
 
 .presetItem {
   font: var(--body1);
-  padding: 10px 12px;
+  padding: 7px 12px;
   letter-spacing: 0.2px;
   border-radius: 8px;
   cursor: pointer;
   user-select: none;
   transition: background-color 0.2s;
-  color: var(--text-primary);
+  color: var(--gray);
 }
 
 .presetItemActive {
-  background-color: var(--border-accent);
+  background-color: var(--blue);
   color: var(--static-white);
 }
 
 .presetItemActive:hover {
-  background-color: var(--border-accent) !important;
+  background-color: var(--blue) !important;
 }
 
 .presetItem:hover {
-  background-color: var(--bg-tertiary);
+  background-color: rgba(var(--blue6--rgb), 0.5);
 }
 
 /* Календарь */

@@ -18,7 +18,6 @@ import DatePicker, { registerLocale } from "react-datepicker";
 
 import ArrowIcon from "@/assets/icons/listArrow.svg?react";
 import { useFiltersStore } from "@/entities/filters";
-import { useI18n } from "@/shared/lib/i18n/hooks";
 import { useClickOutside } from "@/shared/lib/react";
 import { Button } from "@/shared/ui";
 
@@ -39,6 +38,7 @@ type Props = {
   setIsOpen?: (open: boolean) => void;
   style?: "default" | "bordered" | "noshadow";
   className?: string;
+  type: "start" | "archivation";
 };
 
 export const DateFilter: React.FC<Props> = ({
@@ -49,16 +49,32 @@ export const DateFilter: React.FC<Props> = ({
   setIsOpen,
   style = "default",
   className,
+  type,
 }) => {
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const { t, language } = useI18n();
-  const labelAriaText = label ?? t("dateFilter.label");
 
   // ----- Глобальный стор (fallback, если пропсов нет) -----
-  const storeIsOpen = useFiltersStore((s) => s.isDateOpen);
-  const storeSetIsOpen = useFiltersStore((s) => s.setIsDateOpen);
-  const storeRange = useFiltersStore((s) => s.dateRange);
-  const storeSetRange = useFiltersStore((s) => s.setDateRange);
+  let storeIsOpen: boolean;
+  let storeSetIsOpen: (open: boolean) => void;
+  let storeRange: DateRange;
+  let storeSetRange: (range: DateRange) => void;
+  let labelAriaText: string;
+
+  if (type === "start") {
+    storeIsOpen = useFiltersStore((s) => s.isStartDateOpen);
+    storeSetIsOpen = useFiltersStore((s) => s.setIsStartDateOpen);
+    storeRange = useFiltersStore((s) => s.startDateRange);
+    storeSetRange = useFiltersStore((s) => s.setStartDateRange);
+    labelAriaText = label ?? "Дата старта";
+  } else if (type === "archivation") {
+    storeIsOpen = useFiltersStore((s) => s.isArchivationDateOpen);
+    storeSetIsOpen = useFiltersStore((s) => s.setIsArchivationDateOpen);
+    storeRange = useFiltersStore((s) => s.archivationDateRange);
+    storeSetRange = useFiltersStore((s) => s.setArchivationDateRange);
+    labelAriaText = label ?? "Дата архивации";
+  } else {
+    throw new Error(`Invalid type: ${type}`);
+  }
 
   // ----- Режимы -----
   const isRangeControlled =
@@ -188,43 +204,43 @@ export const DateFilter: React.FC<Props> = ({
                     className={cls.presetItem}
                     onClick={() => handlePreset("today")}
                   >
-                    {t("dateFilter.preset.today")}
+                    Сегодня
                   </li>
                   <li
                     className={cls.presetItem}
                     onClick={() => handlePreset("yesterday")}
                   >
-                    {t("dateFilter.preset.yesterday")}
+                    Вчера
                   </li>
                   <li
                     className={cls.presetItem}
                     onClick={() => handlePreset("thisWeek")}
                   >
-                    {t("dateFilter.preset.thisWeek")}
+                    Эта неделя
                   </li>
                   <li
                     className={cls.presetItem}
                     onClick={() => handlePreset("lastWeek")}
                   >
-                    {t("dateFilter.preset.lastWeek")}
+                    Прошлая неделя
                   </li>
                   <li
                     className={cls.presetItem}
                     onClick={() => handlePreset("thisMonth")}
                   >
-                    {t("dateFilter.preset.thisMonth")}
+                    Этот месяц
                   </li>
                   <li
                     className={cls.presetItem}
                     onClick={() => handlePreset("lastMonth")}
                   >
-                    {t("dateFilter.preset.lastMonth")}
+                    Прошлый месяц
                   </li>
                   <li
                     className={cls.presetItem}
                     onClick={() => handlePreset("lastQuarter")}
                   >
-                    {t("dateFilter.preset.lastQuarter")}
+                    Прошлый квартал
                   </li>
                 </ul>
               </div>
@@ -240,7 +256,7 @@ export const DateFilter: React.FC<Props> = ({
                   onChange={(dates) =>
                     setTempRange(normalizeRange(dates as DateRange))
                   }
-                  locale={language === "ru" ? "ru" : "en"}
+                  locale="ru"
                 />
               </div>
             </div>
@@ -254,7 +270,7 @@ export const DateFilter: React.FC<Props> = ({
                     else storeSetIsOpen(false);
                   }}
                 >
-                  {t("filter.common.apply")}
+                  Применить
                 </Button>
                 <Button
                   className={cls.resetBtn}
@@ -266,7 +282,7 @@ export const DateFilter: React.FC<Props> = ({
                     else storeSetIsOpen(false);
                   }}
                 >
-                  {t("filter.common.reset")}
+                  Сбросить
                 </Button>
               </div>
             </div>

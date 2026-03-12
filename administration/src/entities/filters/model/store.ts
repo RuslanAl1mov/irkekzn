@@ -5,12 +5,14 @@ import type { DateRange, FiltersActions, FiltersState } from "./type";
 
 const DEFAULTS: FiltersState = {
   // значения
-  dateRange: [null, null],
+  startDateRange: [null, null],
+  archivationDateRange: [null, null],
   archivation: null,
   searchTerm: "",
 
   // UI состояния попапов
-  isDateOpen: false,
+  isStartDateOpen: false,
+  isArchivationDateOpen: false,
   isArchivationOpen: false,
 };
 
@@ -22,12 +24,14 @@ export const useFiltersStore = create<Store>()(
       ...DEFAULTS,
 
       // значения
-      setDateRange: (dateRange: DateRange) => set({ dateRange }),
+      setStartDateRange: (startDateRange: DateRange) => set({ startDateRange }),
+      setArchivationDateRange: (archivationDateRange: DateRange) => set({ archivationDateRange }),
       setArchivation: (v) => set({ archivation: v }),
       setSearchTerm: (value) => set({ searchTerm: value }),
 
       // UI
-      setIsDateOpen: (v) => set({ isDateOpen: v }),
+      setIsStartDateOpen: (v) => set({ isStartDateOpen: v }),
+      setIsArchivationDateOpen: (v) => set({ isArchivationDateOpen: v }),
       setIsArchivationOpen: (v) => set({ isArchivationOpen: v }),
 
       reset: () => set(DEFAULTS),
@@ -36,7 +40,8 @@ export const useFiltersStore = create<Store>()(
       name: "adskill_crm_filters@v1",
       partialize: (s) => ({
         // сохраняем только значения фильтров
-        dateRange: s.dateRange,
+        startDateRange: s.startDateRange,
+        archivationDateRange: s.archivationDateRange,
         archivation: s.archivation,
         searchTerm: s.searchTerm,
       }),

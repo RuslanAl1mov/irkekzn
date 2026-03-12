@@ -3,14 +3,14 @@ import cls from "./Employees.module.css";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getUsers } from "@/entities/user/api/getUsers.api";
+import { getUsers, type UsersListGetParams } from "@/entities/user/api/getUsers.api";
 
 import { useAuthStore, type IUser } from "@/entities/user";
 import type { HeaderCell } from "@/shared/ui/virtual-table/table";
 import type { RowItem } from "@/shared/ui/virtual-table/row";
 import type { ContextMenuItem } from "@/shared/ui/virtual-table/context-menu";
 
-import { formatDateTime, formatPhoneNumber, formatDate } from "@/shared/lib/formater";
+import { formatDateTime, formatPhoneNumber, formatDate, toApiDate } from "@/shared/lib/formater";
 import { VirtualTable } from "@/shared/ui/virtual-table/table";
 import { VirtualCell } from "@/shared/ui/virtual-table/cell";
 
@@ -41,6 +41,8 @@ export const Employees = () => {
     const searchTerm = useFiltersStore((s) => s.searchTerm);
 
     // Дебаунс сортировки
+    const [start_date_after, start_date_before] = useFiltersStore((s) => s.startDateRange);
+    const [archivation_date_after, archivation_date_before] = useFiltersStore((s) => s.archivationDateRange);
     const orderingDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(
         null
     );
@@ -57,15 +59,23 @@ export const Employees = () => {
 
     // Параметры запроса
     const { params } = useMemo(() => {
-        const p = {
+        const p: UsersListGetParams = {
             ...(searchTerm?.trim() ? { search: searchTerm.trim() } : {}),
             ...(ordering.length ? { ordering } : {}),
+            ...(start_date_after ? { date_joined_after: toApiDate(start_date_after) } : {}),
+            ...(start_date_before ? { date_joined_before: toApiDate(start_date_before) } : {}),
+            ...(archivation_date_after ? { date_archived_after: toApiDate(archivation_date_after) } : {}),
+            ...(archivation_date_before ? { date_archived_before: toApiDate(archivation_date_before) } : {}),
             ...({ is_staff: true }),
         };
         return { params: p };
     }, [
         ordering,
         searchTerm,
+        start_date_after,
+        start_date_before,
+        archivation_date_after,
+        archivation_date_before,
     ]);
 
     // запрос с пагинацией

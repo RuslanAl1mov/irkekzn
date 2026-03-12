@@ -4,31 +4,38 @@ import { useFiltersStore } from "./store";
 
 export const useFiltersValues = () =>
   useFiltersStore((s) => ({
-    dateRange: s.dateRange,
+    startDateRange: s.startDateRange,
+    archivationDateRange: s.archivationDateRange,
+
     archivation: s.archivation,
     searchTerm: s.searchTerm,
   }));
 
 export const useFiltersUI = () =>
   useFiltersStore((s) => ({
-    isDateOpen: s.isDateOpen,
+    isStartDateOpen: s.isStartDateOpen,
+    isArchivationDateOpen: s.isArchivationDateOpen,
     isArchivationOpen: s.isArchivationOpen,
-    setIsDateOpen: s.setIsDateOpen,
+    setIsStartDateOpen: s.setIsStartDateOpen,
+    setIsArchivationDateOpen: s.setIsArchivationDateOpen,
     setIsArchivationOpen: s.setIsArchivationOpen,
   }));
 
 export const useFiltersQueryParams = () => {
   const {
-    dateRange,
+    startDateRange,
+    archivationDateRange,
     archivation,
     searchTerm,
   } = useFiltersValues();
 
-  const [from, to] = dateRange;
-
+  const [start_from, start_to] = startDateRange;
+  const [archivation_from, archivation_to] = archivationDateRange;
   return {
-    date_after: from ? format(from, "yyyy-MM-dd") : undefined,
-    date_before: to ? format(to, "yyyy-MM-dd") : undefined,
+    start_date_after: start_from ? format(start_from, "yyyy-MM-dd") : undefined,
+    start_date_before: start_to ? format(start_to, "yyyy-MM-dd") : undefined,
+    archivation_date_after: archivation_from ? format(archivation_from, "yyyy-MM-dd") : undefined,
+    archivation_date_before: archivation_to ? format(archivation_to, "yyyy-MM-dd") : undefined,
     archivation: archivation ?? undefined,
     q: searchTerm || undefined,
   };

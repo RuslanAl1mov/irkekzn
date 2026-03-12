@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 export const parseFormattedNumber = (
   value?: string | number | null,
 ): number | null => {
@@ -84,3 +86,6 @@ export const formatPhoneNumber = (phone: string) => {
   }
   return phone;
 };
+
+
+export const toApiDate = (d: Date) => format(d, "yyyy-MM-dd");

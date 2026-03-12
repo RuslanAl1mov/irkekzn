@@ -2,17 +2,21 @@ import cls from "./Clients.module.css";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import type { AxiosError } from "axios";
+import { toast } from "react-toastify";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getUsers } from "@/entities/user/api/getUsers.api";
+import { useFiltersStore } from "@/entities/filters";
+import { getUsers, type UsersListGetParams } from "@/entities/user/api/getUsers.api";
 
 import { type IUser } from "@/entities/user";
 import type { HeaderCell } from "@/shared/ui/virtual-table/table";
 import type { RowItem } from "@/shared/ui/virtual-table/row";
 import type { ContextMenuItem } from "@/shared/ui/virtual-table/context-menu";
 
-import { formatDateTime, formatPhoneNumber } from "@/shared/lib/formater";
+import { formatDateTime, formatPhoneNumber, toApiDate } from "@/shared/lib/formater";
 import { VirtualTable } from "@/shared/ui/virtual-table/table";
 import { VirtualCell } from "@/shared/ui/virtual-table/cell";
+import { FiltersBlock } from "@/shared/ui/filters-block";
 
 import EditIcon from "@/assets/icons/edit.svg?react";
 import EyeIcon from "@/assets/icons/eye_open.svg?react";
@@ -21,10 +25,6 @@ import { Loader } from "@/widgets/loader";
 import { Title } from "@/widgets/title";
 import { useClientEditStore } from "@/features/client-edit";
 import { useClientInfoStore } from "@/features/client-info";
-import type { AxiosError } from "axios";
-import { toast } from "react-toastify";
-import { FiltersBlock } from "@/shared/ui/filters-block";
-import { useFiltersStore } from "@/entities/filters";
 
 
 export const Clients = () => {
@@ -34,7 +34,8 @@ export const Clients = () => {
 
     // Глобавльные фильтры
     const searchTerm = useFiltersStore((s) => s.searchTerm);
-
+    const [start_date_after, start_date_before] = useFiltersStore((s) => s.startDateRange);
+    const [archivation_date_after, archivation_date_before] = useFiltersStore((s) => s.archivationDateRange);
 
     // Дебаунс сортировки
     const orderingDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(
@@ -53,15 +54,24 @@ export const Clients = () => {
 
     // Параметры запроса
     const { params } = useMemo(() => {
-        const p = {
+        const p: UsersListGetParams = {
             ...(searchTerm?.trim() ? { search: searchTerm.trim() } : {}),
             ...(ordering.length ? { ordering } : {}),
+            ...(start_date_after ? { date_joined_after: toApiDate(start_date_after) } : {}),
+            ...(start_date_before ? { date_joined_before: toApiDate(start_date_before) } : {}),
+            ...(archivation_date_after ? { date_archived_after: toApiDate(archivation_date_after) } : {}),
+            ...(archivation_date_before ? { date_archived_before: toApiDate(archivation_date_before) } : {}),
             ...({ is_staff: false }),
+
         };
         return { params: p };
     }, [
         ordering,
         searchTerm,
+        start_date_after,
+        start_date_before,
+        archivation_date_after,
+        archivation_date_before,
     ]);
 
     // запрос с пагинацией

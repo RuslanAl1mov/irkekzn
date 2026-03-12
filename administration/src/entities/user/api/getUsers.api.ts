@@ -3,11 +3,13 @@ import $api from "@/api/base";
 import type { AxiosRequestConfig } from "axios";
 import type { IUsersListResponse } from "../model/type";
 
-export type ClientsListGetParams = {
+export type UsersListGetParams = {
   date_joined_after?: string;
   date_joined_before?: string;
   last_login_after?: string;
   last_login_before?: string;
+  date_archived_after?: string;
+  date_archived_before?: string;
 
   is_active?: boolean;
   is_staff?: boolean;
@@ -19,7 +21,7 @@ export type ClientsListGetParams = {
 };
 
 export const getUsers = (
-  params: ClientsListGetParams,
+  params: UsersListGetParams,
   config?: AxiosRequestConfig,
 ) =>
   $api.get<IUsersListResponse>("/administration/users/", {

@@ -1,6 +1,6 @@
 import cls from "./FiltersBlock.module.css";
 import cn from "classnames";
-import { Search } from "@/features/filters";
+import { DateFilter, Search } from "@/features/filters";
 
 
 type FiltersBlockProps = {
@@ -23,6 +23,8 @@ export const FiltersBlock: React.FC<FiltersBlockProps> = ({
 
             <div className={cn(cls.rightBlock, rightBlockClassName)}>
                 {["client", "employee"].includes(filtersObject) && <Search />}
+                <DateFilter type="start" />
+                <DateFilter type="archivation" />
             </div>
         </div>
     );

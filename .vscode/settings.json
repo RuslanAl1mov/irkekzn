@@ -22,5 +22,6 @@
         "PYTHONPATH": "${workspaceFolder}/backend"
     },
     
-    "python.terminal.activateEnvironment": true
+    "python.terminal.activateEnvironment": true,
+    "python.languageServer": "Pylance"
 }
