@@ -1,4 +1,5 @@
 from rest_framework import generics, filters
+from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from django.contrib.auth.models import Group, Permission
@@ -18,12 +19,16 @@ from users.serializers import (
 )
 
 from .pagination import UsersListPagination
-from .filters import UsersListFilter
+from .filters import UsersListFilter, ShopListFilter
+from .models import Shop
+from .serializers import ShopSerializer
 
 
 class GroupListView(generics.ListAPIView):
     """
-    Эндпоинт для получения списка групп (только GET)
+    api: api/v1/administration/users/groups/
+    Представление для:
+    - GET: список всех групп
     """
 
     permission_classes = [IsAuthenticated, IsEmployee, GetListPermissions]
@@ -51,6 +56,12 @@ class GroupListView(generics.ListAPIView):
 
 
 class PermissionListView(generics.ListAPIView):
+    """
+    api: api/v1/administration/users/permissions/
+    Представление для:
+    - GET: список всех прав
+    """
+
     permission_classes = [IsAuthenticated, IsEmployee, GetListPermissions]
     queryset = Permission.objects.select_related("content_type").all()
     serializer_class = PermissionSerializer
@@ -80,6 +91,12 @@ class PermissionListView(generics.ListAPIView):
 
 
 class UsersListView(generics.ListAPIView):
+    """
+    api: api/v1/administration/users/
+    Представление для:
+    - GET: список всех пользователей
+    """
+
     permission_classes = [IsAuthenticated, IsEmployee, GetListPermissions]
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -136,6 +153,12 @@ class UsersListView(generics.ListAPIView):
 
 
 class UserDetailView(generics.RetrieveAPIView):
+    """
+    api: api/v1/administration/users/<int:pk>/
+    Представление для:
+    - GET: получение информации о сотруднике
+    """
+
     permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
     queryset = User.objects.all()
 
@@ -145,12 +168,96 @@ class UserDetailView(generics.RetrieveAPIView):
 
 
 class EmployeeUpdateView(LoggedUpdateAPIView):
+    """
+    api: api/v1/administration/users/employee/update/<int:pk>/
+    Представление для:
+    - PUT: обновление информации о сотруднике
+    - PATCH: обновление информации о сотруднике
+    """
+
     permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
     queryset = User.objects.all()
     serializer_class = EmployeeSerializer
 
 
 class EmployeeCreateView(LoggedCreateAPIView):
+    """
+    api: api/v1/administration/users/employee/create/
+    Представление для:
+    - POST: создание нового сотрудника
+    """
+
     permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
     queryset = User.objects.all()
     serializer_class = EmployeeCreateSerializer
+
+
+class ShopListView(generics.ListAPIView):
+    """
+    api: api/v1/administration/shops/
+    Представление для:
+    - GET: список всех магазинов
+    """
+
+    queryset = Shop.objects.all()
+    serializer_class = ShopSerializer
+    permission_classes = [IsAuthenticated, IsEmployee, GetListPermissions]
+
+    # Фильтрация, поиск и сортировка
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+    
+    filterset_class = UsersListFilter
+    filterset_fields = ["is_main_office"]
+    search_fields = [
+        "name",
+        "address",
+        "city",
+        "phone_first",
+        "phone_second",
+        "phone_third",
+        "email",
+    ]
+
+    ordering_fields = ["name", "city"]
+    ordering = ["name"]
+
+
+class ShopDetailView(generics.RetrieveAPIView):
+    """
+    api: api/v1/administration/shops/<int:pk>/
+    Представление для:
+    - GET: получение информации о магазине
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    queryset = Shop.objects.all()
+    serializer_class = ShopSerializer
+
+
+class ShopUpdateView(LoggedUpdateAPIView):
+    """
+    api: api/v1/administration/shops/<int:pk>/update/
+    Представление для:
+    - PUT: обновление информации о магазине
+    - PATCH: обновление информации о магазине
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    queryset = Shop.objects.all()
+    serializer_class = ShopSerializer   
+    
+
+class ShopCreateView(LoggedCreateAPIView):
+    """
+    api: api/v1/administration/shops/create/
+    Представление для:
+    - POST: создание нового магазина
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    queryset = Shop.objects.all()
+    serializer_class = ShopSerializer

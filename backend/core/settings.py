@@ -34,7 +34,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
+    # Библиотеки
     "django_filters",
+    "simple_history",
     "modeltranslation",
     "rest_framework",
     "rest_framework_simplejwt",
@@ -56,6 +58,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # Стороннее
+    "simple_history.middleware.HistoryRequestMiddleware"
 ]
 
 ROOT_URLCONF = "core.urls"

@@ -58,15 +58,16 @@ JAZZMIN_SETTINGS = {
     "icons": {
         "auth": "fas fa-users-cog",  # иконка для приложения "auth"
         "auth.group": "fas fa-people-roof",  # для модели Group
+        "administration.Shop": "fas fa-store",  # для модели Shop
         "users.User": "fas fa-users",  # для модели User
         "users.RequestLog": "fa-solid fa-rectangle-list",  # для модели RequestLog
     },
-    "order_with_respect_to": ["users.User"],
+    "order_with_respect_to": ["users", "users.RequestLog", "administration.Shop"],
     "show_sidebar": True,
     "navigation_expanded": True,
-    "hide_apps": [],
+    "hide_apps": ["token_blacklist"],
     "hide_models": [],
-    "custom_css": None,
+    "custom_css": "",
     "custom_js": None,
     "use_google_fonts_cdn": True,
     "show_ui_builder": False,
