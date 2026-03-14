@@ -23,9 +23,9 @@ from users.serializers import (
 )
 
 from .pagination import UsersListPagination
-from .filters import UsersListFilter, ShopListFilter
-from .models import Shop, Size
-from .serializers import ShopSerializer, SizeSerializer
+from .filters import UsersListFilter, ShopListFilter, ColorPaletteListFilter
+from .models import Shop, Size, ColorPalette
+from .serializers import ShopSerializer, SizeSerializer, ColorPaletteSerializer
 
 
 class GroupListView(generics.ListAPIView):
@@ -230,11 +230,11 @@ class ShopListView(generics.ListAPIView):
     ordering = ["name"]
 
 
-class ShopDetailView(generics.RetrieveAPIView):
+class ShopCreateView(LoggedCreateAPIView):
     """
-    api: api/v1/administration/shops/<int:pk>/
+    api: api/v1/administration/shops/create/
     Представление для:
-    - GET: получение информации о магазине
+    - POST: создание нового магазина
     """
 
     permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
@@ -255,17 +255,29 @@ class ShopUpdateView(LoggedUpdateAPIView):
     serializer_class = ShopSerializer
 
 
-class ShopCreateView(LoggedCreateAPIView):
+class ShopDetailView(generics.RetrieveAPIView):
     """
-    api: api/v1/administration/shops/create/
+    api: api/v1/administration/shops/<int:pk>/
     Представление для:
-    - POST: создание нового магазина
+    - GET: получение информации о магазине
     """
 
     permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
 
+
+class ShopDeleteView(LoggedDestroyAPIView):
+    """
+    api: api/v1/administration/shops/<int:pk>/delete/
+    Представление для:
+    - DELETE: удаление магазина
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    queryset = Shop.objects.all()
+    serializer_class = ShopSerializer
+    
 
 class SizeListView(generics.ListAPIView):
     """
@@ -314,3 +326,63 @@ class SizeDeleteView(LoggedDestroyAPIView):
     permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
     queryset = Size.objects.all()
     serializer_class = SizeSerializer
+
+
+class ColorPaletteListView(generics.ListAPIView):
+    """
+    api: api/v1/administration/color-palettes/
+    Представление для:
+    - GET: список всех цветов палитры
+    """
+
+    queryset = ColorPalette.objects.all()
+    serializer_class = ColorPaletteSerializer
+    permission_classes = [IsAuthenticated, IsEmployee, GetListPermissions]
+
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+
+    filterset_class = ColorPaletteListFilter
+    search_fields = ["name", "color"]
+    ordering_fields = ["name", "color"]
+    ordering = ["name"]
+
+
+class ColorPaletteCreateView(LoggedCreateAPIView):
+    """
+    api: api/v1/administration/color-palettes/create/
+    Представление для:
+    - POST: создание нового цвета палитры
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    queryset = ColorPalette.objects.all()
+    serializer_class = ColorPaletteSerializer
+
+
+class ColorPaletteUpdateView(LoggedUpdateAPIView):
+    """
+    api: api/v1/administration/color-palettes/<int:pk>/update/
+    Представление для:
+    - PUT: обновление информации о цвете палитры
+    - PATCH: обновление информации о цвете палитры
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    queryset = ColorPalette.objects.all()
+    serializer_class = ColorPaletteSerializer
+
+
+class ColorPaletteDeleteView(LoggedDestroyAPIView):
+    """
+    api: api/v1/administration/color-palettes/<int:pk>/delete/
+    Представление для:
+    - DELETE: удаление цвета палитры
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    queryset = ColorPalette.objects.all()
+    serializer_class = ColorPaletteSerializer

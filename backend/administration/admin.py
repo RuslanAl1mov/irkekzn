@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from simple_history.admin import SimpleHistoryAdmin
-from .models import Shop, Size
+from .models import Shop, Size, ColorPalette
 
 
 @admin.register(Shop)
@@ -73,3 +73,16 @@ class SizeAdmin(SimpleHistoryAdmin):
         "order"
     ]
     list_display_links = ["id", "russian"]
+
+
+@admin.register(ColorPalette)
+class ColorPaletteAdmin(SimpleHistoryAdmin):
+    """
+    Админка для ColorPalette с поддержкой истории изменений
+    """
+
+    list_display = ["id", "name", "color", "is_active"]
+    search_fields = ["name", "color"]
+    list_filter = ["is_active"]
+    list_display_links = ["id", "name"]
+    

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Shop, Size
+from .models import Shop, Size, ColorPalette
 from services.validators import phone_number_ru_validator
 
 
@@ -115,3 +115,20 @@ class SizeSerializer(serializers.ModelSerializer):
         ):
             raise serializers.ValidationError("Порядок должен быть уникальным")
         return value
+
+
+class ColorPaletteSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для модели ColorPalette без валидаций
+    """
+
+    class Meta:
+        model = ColorPalette
+        fields = [
+            "id",
+            "name",
+            "color",
+            "is_active",
+        ]
+
+        read_only_fields = ["id"]

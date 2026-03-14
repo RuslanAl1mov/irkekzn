@@ -62,6 +62,7 @@ JAZZMIN_SETTINGS = {
         "users.RequestLog": "fa-solid fa-rectangle-list",  # для модели RequestLog
         "administration.Shop": "fas fa-store",  # для модели Shop
         "administration.Size": "fas fa-ruler",  # для модели Size
+        "administration.ColorPalette": "fas fa-palette",  # для модели ColorPalette
     },
     "order_with_respect_to": ["users", "users.RequestLog", "administration.Shop"],
     "show_sidebar": True,

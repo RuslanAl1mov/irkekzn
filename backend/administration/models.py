@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 
 from simple_history.models import HistoricalRecords
 
@@ -121,14 +121,64 @@ class Size(models.Model):
     hip_circumference = models.CharField(
         max_length=8, verbose_name="Обхват бедер (см)", help_text="От 86 до 112"
     )
-    
+
     order = models.PositiveIntegerField(verbose_name="Порядок", unique=True)
 
     class Meta:
         verbose_name = "Размер"
         verbose_name_plural = "Размеры"
-        
+
         permissions = (("view_size_list", "Can see Sizes list"),)
 
     def __str__(self):
         return f"{self.id}"
+
+
+class ColorPalette(models.Model):
+    """
+    Модель для цветовой палитры
+    """
+
+    name = models.CharField(
+        max_length=100,
+        unique=True,
+        verbose_name="Название",
+        help_text="Например: Основные цвета, Пастельные тона и т.д.",
+    )
+
+    color = models.CharField(
+        max_length=7,  # 7 символов включая #
+        verbose_name="HEX-код",
+        unique=True,
+        validators=[
+            RegexValidator(
+                regex=r"^#([A-Fa-f0-9]{6})$",  # Только 6 символов!
+                message="Введите корректный 6-значный HEX-код цвета (например: #FF5733)",
+            )
+        ],
+        help_text="Формат: #RRGGBB (например: #FF5733)"
+    )
+
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Активен",
+        help_text="Отображать ли этот цвет в палитре",
+    )
+
+    class Meta:
+        verbose_name = "Цвет палитры"
+        verbose_name_plural = "Цвета палитры"
+        
+        permissions = (("view_colorpalette_list", "Can see ColorPalettes list"),)
+
+    def __str__(self):
+        return f"{self.name} ({self.color})"
+
+    def save(self, *args, **kwargs):
+        """
+        Автоматическое преобразование HEX-кода к верхнему регистру
+        """
+        if self.color:
+            # Приводим HEX к верхнему регистру (опционально)
+            self.color = self.color.upper()
+        super().save(*args, **kwargs)

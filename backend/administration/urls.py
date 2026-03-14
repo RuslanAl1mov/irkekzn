@@ -14,11 +14,17 @@ from .views import (
     ShopDetailView,
     ShopUpdateView,
     ShopCreateView,
+    ShopDeleteView,
     # Размеры
     SizeListView,
     SizeUpdateView,
     SizeCreateView,
     SizeDeleteView,
+    # Цвета палитры
+    ColorPaletteListView,
+    ColorPaletteCreateView,
+    ColorPaletteUpdateView,
+    ColorPaletteDeleteView,
 )
 
 
@@ -36,12 +42,19 @@ urlpatterns = [
     path("shops/", ShopListView.as_view(), name="shops-list"),
     path("shops/<int:pk>/", ShopDetailView.as_view(), name="shops-detail"),
     path("shops/<int:pk>/update/", ShopUpdateView.as_view(), name="shops-update"),
+    path("shops/<int:pk>/delete/", ShopDeleteView.as_view(), name="shops-delete"),
     
     # Размеры
     path("sizes/create/", SizeCreateView.as_view(), name="sizes-create"),
     path("sizes/", SizeListView.as_view(), name="sizes-list"),
     path("sizes/<int:pk>/update/", SizeUpdateView.as_view(), name="sizes-update"),
     path("sizes/<int:pk>/delete/", SizeDeleteView.as_view(), name="sizes-delete"),
+    
+    # Цвета палитры
+    path("color-palettes/create/", ColorPaletteCreateView.as_view(), name="color-palettes-create"),
+    path("color-palettes/", ColorPaletteListView.as_view(), name="color-palettes-list"),
+    path("color-palettes/<int:pk>/update/", ColorPaletteUpdateView.as_view(), name="color-palettes-update"),
+    path("color-palettes/<int:pk>/delete/", ColorPaletteDeleteView.as_view(), name="color-palettes-delete"),
 ]
 
 if settings.DEBUG:
