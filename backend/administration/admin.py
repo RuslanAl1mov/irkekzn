@@ -1,7 +1,46 @@
 from django.contrib import admin
 
 from simple_history.admin import SimpleHistoryAdmin
-from .models import Shop, Size, ColorPalette
+from .models import Shop, Size, ColorPalette, Settings
+
+
+@admin.register(Settings)
+class SettingsAdmin(SimpleHistoryAdmin):
+    """
+    Админка для Settings с поддержкой истории изменений
+    """
+
+    list_display = [
+        "id",
+        "set_custom_product_settings",
+        "is_all_colors_same_name",
+        "is_all_colors_same_price",
+        "is_all_colors_same_description",
+        "is_all_colors_same_model",
+    ]
+    search_fields = [
+        "set_custom_product_settings",
+        "is_all_colors_same_name",
+        "is_all_colors_same_price",
+        "is_all_colors_same_description",
+        "is_all_colors_same_model",
+    ]
+    list_filter = [
+        "set_custom_product_settings",
+        "is_all_colors_same_name",
+        "is_all_colors_same_price",
+        "is_all_colors_same_description",
+        "is_all_colors_same_model",
+    ]
+    list_display_links = ["id"]
+    
+    list_editable = [
+        "set_custom_product_settings",
+        "is_all_colors_same_name",
+        "is_all_colors_same_price",
+        "is_all_colors_same_description",
+        "is_all_colors_same_model",
+    ]
 
 
 @admin.register(Shop)
@@ -52,7 +91,7 @@ class SizeAdmin(SimpleHistoryAdmin):
         "chest_circumference",
         "waist_circumference",
         "hip_circumference",
-        "order"
+        "order",
     ]
     search_fields = [
         "russian",
@@ -61,7 +100,7 @@ class SizeAdmin(SimpleHistoryAdmin):
         "chest_circumference",
         "waist_circumference",
         "hip_circumference",
-        "order"
+        "order",
     ]
     list_filter = [
         "russian",
@@ -70,7 +109,7 @@ class SizeAdmin(SimpleHistoryAdmin):
         "chest_circumference",
         "waist_circumference",
         "hip_circumference",
-        "order"
+        "order",
     ]
     list_display_links = ["id", "russian"]
 
@@ -85,4 +124,3 @@ class ColorPaletteAdmin(SimpleHistoryAdmin):
     search_fields = ["name", "color"]
     list_filter = ["is_active"]
     list_display_links = ["id", "name"]
-    

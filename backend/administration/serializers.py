@@ -1,6 +1,17 @@
 from rest_framework import serializers
-from .models import Shop, Size, ColorPalette
+from .models import Shop, Size, ColorPalette, Settings
 from services.validators import phone_number_ru_validator
+
+
+class SettingsSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для модели Settings
+    """
+
+    class Meta:
+        model = Settings
+        fields = "__all__"
+        read_only_fields = ["id"]
 
 
 class ShopSerializer(serializers.ModelSerializer):
@@ -92,17 +103,7 @@ class SizeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Size
-        fields = [
-            "id",
-            "russian",
-            "international",
-            "european",
-            "chest_circumference",
-            "waist_circumference",
-            "hip_circumference",
-            "order",
-        ]
-
+        fields = "__all__"
         read_only_fields = ["id"]
 
     def validate_order(self, value):
@@ -124,11 +125,5 @@ class ColorPaletteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ColorPalette
-        fields = [
-            "id",
-            "name",
-            "color",
-            "is_active",
-        ]
-
+        fields = "__all__"
         read_only_fields = ["id"]

@@ -21,11 +21,15 @@ from users.serializers import (
     EmployeeSerializer,
     EmployeeCreateSerializer,
 )
-
 from .pagination import UsersListPagination
 from .filters import UsersListFilter, ShopListFilter, ColorPaletteListFilter
-from .models import Shop, Size, ColorPalette
-from .serializers import ShopSerializer, SizeSerializer, ColorPaletteSerializer
+from .models import Shop, Size, ColorPalette, Settings
+from .serializers import (
+    ShopSerializer,
+    SizeSerializer,
+    ColorPaletteSerializer,
+    SettingsSerializer,
+)
 
 
 class GroupListView(generics.ListAPIView):
@@ -94,6 +98,49 @@ class PermissionListView(generics.ListAPIView):
     ordering = ["content_type__app_label", "codename"]
 
 
+# Настройки
+class SettingsDetailView(generics.RetrieveAPIView):
+    """
+    api: api/v1/administration/settings/<int:pk>/
+    Представление для:
+    - GET: получение информации о настройке
+    """
+
+    queryset = Settings.objects.filter(id=1)
+    serializer_class = SettingsSerializer
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+
+    def get_object(self):
+        """
+        Всегда возвращаем настройки с id=1.
+        Если их нет - создаем автоматически.
+        """
+        settings, created = Settings.objects.get_or_create(id=1)
+        return settings
+
+
+class SettingsUpdateView(LoggedUpdateAPIView):
+    """
+    api: api/v1/administration/settings/<int:pk>/update/
+    Представление для:
+    - PUT: обновление информации о настройке
+    - PATCH: обновление информации о настройке
+    """
+
+    queryset = Settings.objects.filter(id=1)
+    serializer_class = SettingsSerializer
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+
+    def get_object(self):
+        """
+        Всегда возвращаем настройки с id=1.
+        Если их нет - создаем автоматически.
+        """
+        settings, created = Settings.objects.get_or_create(id=1)
+        return settings
+
+
+# Пользователи
 class UsersListView(generics.ListAPIView):
     """
     api: api/v1/administration/users/
@@ -196,6 +243,7 @@ class EmployeeCreateView(LoggedCreateAPIView):
     serializer_class = EmployeeCreateSerializer
 
 
+# Магазины
 class ShopListView(generics.ListAPIView):
     """
     api: api/v1/administration/shops/
@@ -277,8 +325,9 @@ class ShopDeleteView(LoggedDestroyAPIView):
     permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
-    
 
+
+# Размеры
 class SizeListView(generics.ListAPIView):
     """
     api: api/v1/administration/sizes/
@@ -328,6 +377,7 @@ class SizeDeleteView(LoggedDestroyAPIView):
     serializer_class = SizeSerializer
 
 
+# Цвета палитры
 class ColorPaletteListView(generics.ListAPIView):
     """
     api: api/v1/administration/color-palettes/

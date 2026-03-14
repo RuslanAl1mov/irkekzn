@@ -9,6 +9,9 @@ from .views import (
     UserDetailView,
     EmployeeUpdateView,
     EmployeeCreateView,
+    # Настройки
+    SettingsDetailView,
+    SettingsUpdateView,
     # Магазины
     ShopListView,
     ShopDetailView,
@@ -36,6 +39,10 @@ urlpatterns = [
     path("users/<int:pk>/", UserDetailView.as_view(), name="users-detail"),
     path("users/<int:pk>/update/", EmployeeUpdateView.as_view(), name="users-update"),
     path("users/employee/create/", EmployeeCreateView.as_view(), name="users-create"),
+    
+    # Настройки
+    path("settings/", SettingsDetailView.as_view(), name="settings-detail"),
+    path("settings/update/", SettingsUpdateView.as_view(), name="settings-update"),
     
     # Магазины
     path("shops/create/", ShopCreateView.as_view(), name="shops-create"),

@@ -1,11 +1,71 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
 
 from simple_history.models import HistoricalRecords
 
 
 User = get_user_model()
+
+
+class Settings(models.Model):
+    """
+    Singleton модель для хранения глобальных настроек.
+    Может существовать только одна запись.
+    """
+
+    set_custom_product_settings = models.BooleanField(
+        default=True, verbose_name="Использовать кастомные настройки товаров"
+    )
+
+    is_all_colors_same_name = models.BooleanField(
+        default=False, verbose_name="Все цвета имеют одинаковое название"
+    )
+
+    is_all_colors_same_price = models.BooleanField(
+        default=False, verbose_name="Все цвета имеют одинаковую цену"
+    )
+
+    is_all_colors_same_description = models.BooleanField(
+        default=False, verbose_name="Все цвета имеют одинаковое описание"
+    )
+
+    is_all_colors_same_model = models.BooleanField(
+        default=False, verbose_name="Все цвета имеют одинаковую модель"
+    )
+
+    # Метаданные
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
+
+    class Meta:
+        verbose_name = "Настройки"
+        verbose_name_plural = "Настройки"
+        # Запрещаем создание более одной записи на уровне БД
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(id__lte=1), name="single_settings_record"
+            )
+        ]
+
+    def __str__(self):
+        return "Глобальные настройки системы"
+
+    @classmethod
+    def get_settings(cls):
+        """
+        Получить настройки. Создает запись по умолчанию, если её нет.
+        """
+        settings, created = cls.objects.get_or_create(
+            defaults={
+                "set_custom_product_settings": True,
+                "is_all_colors_same_name": False,
+                "is_all_colors_same_price": False,
+                "is_all_colors_same_description": False,
+                "is_all_colors_same_model": False,
+            }
+        )
+        return settings
 
 
 class Shop(models.Model):
@@ -156,7 +216,7 @@ class ColorPalette(models.Model):
                 message="Введите корректный 6-значный HEX-код цвета (например: #FF5733)",
             )
         ],
-        help_text="Формат: #RRGGBB (например: #FF5733)"
+        help_text="Формат: #RRGGBB (например: #FF5733)",
     )
 
     is_active = models.BooleanField(
@@ -168,11 +228,11 @@ class ColorPalette(models.Model):
     class Meta:
         verbose_name = "Цвет палитры"
         verbose_name_plural = "Цвета палитры"
-        
+
         permissions = (("view_colorpalette_list", "Can see ColorPalettes list"),)
 
     def __str__(self):
-        return f"{self.name} ({self.color})"
+        return f"{self.id} ({self.name} - {self.color})"
 
     def save(self, *args, **kwargs):
         """

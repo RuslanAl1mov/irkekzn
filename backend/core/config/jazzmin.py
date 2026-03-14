@@ -63,8 +63,9 @@ JAZZMIN_SETTINGS = {
         "administration.Shop": "fas fa-store",  # для модели Shop
         "administration.Size": "fas fa-ruler",  # для модели Size
         "administration.ColorPalette": "fas fa-palette",  # для модели ColorPalette
+        "administration.Settings": "fas fa-cog",  # для модели Settings
     },
-    "order_with_respect_to": ["users", "users.RequestLog", "administration.Shop"],
+    "order_with_respect_to": ["users", "administration"],
     "show_sidebar": True,
     "navigation_expanded": True,
     "hide_apps": ["token_blacklist"],
