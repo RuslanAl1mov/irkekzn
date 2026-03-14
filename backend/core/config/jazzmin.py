@@ -58,9 +58,10 @@ JAZZMIN_SETTINGS = {
     "icons": {
         "auth": "fas fa-users-cog",  # иконка для приложения "auth"
         "auth.group": "fas fa-people-roof",  # для модели Group
-        "administration.Shop": "fas fa-store",  # для модели Shop
         "users.User": "fas fa-users",  # для модели User
         "users.RequestLog": "fa-solid fa-rectangle-list",  # для модели RequestLog
+        "administration.Shop": "fas fa-store",  # для модели Shop
+        "administration.Size": "fas fa-ruler",  # для модели Size
     },
     "order_with_respect_to": ["users", "users.RequestLog", "administration.Shop"],
     "show_sidebar": True,

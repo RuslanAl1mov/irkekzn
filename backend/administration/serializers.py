@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Shop
+from .models import Shop, Size
 from services.validators import phone_number_ru_validator
 
 
@@ -81,3 +81,37 @@ class ShopSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Телефонные номера не должны повторяться")
 
         return data
+
+
+class SizeSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для модели Size без валидаций
+    """
+
+    order = serializers.IntegerField(required=True)
+
+    class Meta:
+        model = Size
+        fields = [
+            "id",
+            "russian",
+            "international",
+            "european",
+            "chest_circumference",
+            "waist_circumference",
+            "hip_circumference",
+            "order",
+        ]
+
+        read_only_fields = ["id"]
+
+    def validate_order(self, value):
+        if value < 0:
+            raise serializers.ValidationError("Порядок должен быть больше 0")
+        if (
+            Size.objects.filter(order=value)
+            .exclude(pk=self.instance.pk if self.instance else None)
+            .exists()
+        ):
+            raise serializers.ValidationError("Порядок должен быть уникальным")
+        return value

@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
+
 from simple_history.models import HistoricalRecords
-from simple_history import register
+
 
 User = get_user_model()
 
@@ -92,3 +94,41 @@ class Shop(models.Model):
             Shop.objects.exclude(pk=self.pk).update(is_main_office=False)
 
         super().save(*args, **kwargs)
+
+
+class Size(models.Model):
+    """
+    Модель для хранения размеров одежды
+    """
+
+    russian = models.CharField(
+        max_length=8, verbose_name="Российский размер", help_text="От 40 до 52"
+    )
+    international = models.CharField(
+        max_length=8,
+        verbose_name="Международный размер",
+        help_text="Например: XXS, XS, S, M, L, XL, XXL",
+    )
+    european = models.CharField(
+        max_length=8, verbose_name="Европейский размер", help_text="От 34 до 46"
+    )
+    chest_circumference = models.CharField(
+        max_length=8, verbose_name="Обхват груди (см)", help_text="От 80 до 104"
+    )
+    waist_circumference = models.CharField(
+        max_length=8, verbose_name="Обхват талии (см)", help_text="От 60 до 86"
+    )
+    hip_circumference = models.CharField(
+        max_length=8, verbose_name="Обхват бедер (см)", help_text="От 86 до 112"
+    )
+    
+    order = models.PositiveIntegerField(verbose_name="Порядок", unique=True)
+
+    class Meta:
+        verbose_name = "Размер"
+        verbose_name_plural = "Размеры"
+        
+        permissions = (("view_size_list", "Can see Sizes list"),)
+
+    def __str__(self):
+        return f"{self.id}"

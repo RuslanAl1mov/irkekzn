@@ -5,7 +5,11 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import Group, Permission
 from django_filters.rest_framework import DjangoFilterBackend
 
-from services.mixin.logged_api_views import LoggedUpdateAPIView, LoggedCreateAPIView
+from services.mixin.logged_api_views import (
+    LoggedUpdateAPIView,
+    LoggedCreateAPIView,
+    LoggedDestroyAPIView,
+)
 
 from core.permissions import IsEmployee, CRUDPermissions, GetListPermissions
 
@@ -20,8 +24,8 @@ from users.serializers import (
 
 from .pagination import UsersListPagination
 from .filters import UsersListFilter, ShopListFilter
-from .models import Shop
-from .serializers import ShopSerializer
+from .models import Shop, Size
+from .serializers import ShopSerializer, SizeSerializer
 
 
 class GroupListView(generics.ListAPIView):
@@ -209,8 +213,8 @@ class ShopListView(generics.ListAPIView):
         filters.SearchFilter,
         filters.OrderingFilter,
     ]
-    
-    filterset_class = UsersListFilter
+
+    filterset_class = ShopListFilter
     filterset_fields = ["is_main_office"]
     search_fields = [
         "name",
@@ -248,8 +252,8 @@ class ShopUpdateView(LoggedUpdateAPIView):
 
     permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
     queryset = Shop.objects.all()
-    serializer_class = ShopSerializer   
-    
+    serializer_class = ShopSerializer
+
 
 class ShopCreateView(LoggedCreateAPIView):
     """
@@ -261,3 +265,52 @@ class ShopCreateView(LoggedCreateAPIView):
     permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
+
+
+class SizeListView(generics.ListAPIView):
+    """
+    api: api/v1/administration/sizes/
+    Представление для:
+    - GET: список всех размеров
+    """
+
+    queryset = Size.objects.all()
+    serializer_class = SizeSerializer
+    permission_classes = [IsAuthenticated, IsEmployee, GetListPermissions]
+
+
+class SizeUpdateView(LoggedUpdateAPIView):
+    """
+    api: api/v1/administration/sizes/<int:pk>/update/
+    Представление для:
+    - PUT: обновление информации о размере
+    - PATCH: обновление информации о размере
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    queryset = Size.objects.all()
+    serializer_class = SizeSerializer
+
+
+class SizeCreateView(LoggedCreateAPIView):
+    """
+    api: api/v1/administration/sizes/create/
+    Представление для:
+    - POST: создание нового размера
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    queryset = Size.objects.all()
+    serializer_class = SizeSerializer
+
+
+class SizeDeleteView(LoggedDestroyAPIView):
+    """
+    api: api/v1/administration/sizes/<int:pk>/delete/
+    Представление для:
+    - DELETE: удаление размера
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    queryset = Size.objects.all()
+    serializer_class = SizeSerializer

@@ -9,10 +9,16 @@ from .views import (
     UserDetailView,
     EmployeeUpdateView,
     EmployeeCreateView,
+    # Магазины
     ShopListView,
     ShopDetailView,
     ShopUpdateView,
     ShopCreateView,
+    # Размеры
+    SizeListView,
+    SizeUpdateView,
+    SizeCreateView,
+    SizeDeleteView,
 )
 
 
@@ -30,6 +36,12 @@ urlpatterns = [
     path("shops/", ShopListView.as_view(), name="shops-list"),
     path("shops/<int:pk>/", ShopDetailView.as_view(), name="shops-detail"),
     path("shops/<int:pk>/update/", ShopUpdateView.as_view(), name="shops-update"),
+    
+    # Размеры
+    path("sizes/create/", SizeCreateView.as_view(), name="sizes-create"),
+    path("sizes/", SizeListView.as_view(), name="sizes-list"),
+    path("sizes/<int:pk>/update/", SizeUpdateView.as_view(), name="sizes-update"),
+    path("sizes/<int:pk>/delete/", SizeDeleteView.as_view(), name="sizes-delete"),
 ]
 
 if settings.DEBUG:
