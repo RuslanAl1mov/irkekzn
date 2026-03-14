@@ -14,6 +14,7 @@ logger = logging.getLogger("project")
 class UserLoggingMixin:
     """
     Класс-миксин создания лога пользователя
+    Поддерживает CREATE, UPDATE и DELETE операции
     """
 
     METHODS_TO_LOG = ("POST", "PUT", "PATCH", "DELETE")
@@ -87,7 +88,7 @@ class UserLoggingMixin:
         """
         Функция создания лога
 
-        :param instance: Объект моделаи
+        :param instance: Объект модели
         :param serializer_classname: Название класса сериализатора модели
         :type serializer_classname: str
         :param new_data: Новые сериализованные данные объекта
@@ -101,21 +102,36 @@ class UserLoggingMixin:
         new_values = []
         old_values = []
         
-        if old_data:
+        # Обработка CREATE (нет old_data)
+        if old_data is None:
+            # Для CREATE - логируем все новые значения
+            for key, value in new_data.items():
+                if key in self.SENSITIVE_FIELDS:
+                    continue
+                
+                try:
+                    verbose_name = str(instance_class._meta.get_field(key).verbose_name)
+                except FieldDoesNotExist:
+                    verbose_name = self._get_foreign_key_verbose(instance_class, key)
+
+                new_values.append({
+                    "field_name": key,
+                    "value": value,
+                    "verbose_name": verbose_name,
+                })
+        
+        # Обработка UPDATE (есть и old_data и new_data)
+        elif old_data and new_data:
             for key, value in new_data.items():
                 if key in self.SENSITIVE_FIELDS:
                     continue
                     
                 if value != (old_value := old_data.get(key)):
                     try:
-                        # Принудительно преобразуем verbose_name в строку
                         verbose_name = str(instance_class._meta.get_field(key).verbose_name)
                     except FieldDoesNotExist:
-                        verbose_name = self._get_foreign_key_verbose(
-                            instance_class, key
-                        )
+                        verbose_name = self._get_foreign_key_verbose(instance_class, key)
 
-                    # Добавляем значения (они уже обработаны)
                     new_values.append({
                         "field_name": key,
                         "value": value,
@@ -127,9 +143,28 @@ class UserLoggingMixin:
                         "value": old_value,
                         "verbose_name": verbose_name,
                     })
+        
+        # Обработка DELETE (есть только old_data, new_data пустой)
+        elif old_data and not new_data:
+            for key, value in old_data.items():
+                if key in self.SENSITIVE_FIELDS:
+                    continue
+                
+                try:
+                    verbose_name = str(instance_class._meta.get_field(key).verbose_name)
+                except FieldDoesNotExist:
+                    verbose_name = self._get_foreign_key_verbose(instance_class, key)
 
-            if not new_values:
-                return
+                old_values.append({
+                    "field_name": key,
+                    "value": value,
+                    "verbose_name": verbose_name,
+                })
+
+        # Для CREATE и DELETE не проверяем new_values
+        # Для UPDATE проверяем, есть ли изменения
+        if old_data is not None and new_data and not new_values:
+            return
 
         content_type = ContentType.objects.get_for_model(instance)
 
@@ -154,7 +189,7 @@ class UserLoggingMixin:
             )
         except Exception as e:
             logger.exception("Failed to write RequestLog: %s", e)
-
+        
     def perform_create(self, serializer):
         """
         Функция, отслеживающая создание объекта
@@ -185,3 +220,25 @@ class UserLoggingMixin:
             old_data=old_data,
         )
         return instance
+
+    def perform_destroy(self, instance):
+        """
+        Функция, отслеживающая удаление объекта
+        ВАЖНО: вызывается ДО фактического удаления, чтобы получить данные объекта
+
+        :param instance: Объект модели для удаления
+        """
+        # Получаем данные объекта до удаления
+        serializer = self.get_serializer(instance)
+        old_data = serializer.data
+        
+        # Логируем удаление
+        self._log_action(
+            instance=instance,
+            serializer_classname=str(serializer.__class__),
+            new_data={},  # при удалении новых данных нет
+            old_data=old_data,
+        )
+        
+        # Выполняем фактическое удаление
+        instance.delete()

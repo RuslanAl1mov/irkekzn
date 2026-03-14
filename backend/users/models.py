@@ -89,6 +89,7 @@ class RequestLog(models.Model):
         POST = "POST", "POST"
         PUT = "PUT", "PUT"
         PATCH = "PATCH", "PATCH"
+        DELETE = "DELETE", "DELETE"
 
     user = models.ForeignKey(
         User, verbose_name="Пользователь", on_delete=models.CASCADE, related_name="logs"
