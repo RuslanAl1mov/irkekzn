@@ -112,9 +112,8 @@ class Shop(models.Model):
     is_main_office = models.BooleanField(default=False, verbose_name="Главный офис")
     city = models.CharField(max_length=250, verbose_name="Город")
     address = models.TextField(verbose_name="Адрес", unique=True)
-    map_location = models.CharField(
-        max_length=200,
-        verbose_name="Координаты на карте",
+    map_location = models.TextField(
+        verbose_name="Ссылка на карту",
         blank=True,
         null=True,
     )

@@ -1,9 +1,9 @@
 import cls from "./Dashboard.module.css";
 import { motion } from "framer-motion";
-import { StatisticCard } from "@/shared/ui/statisticCard/StatisticCard";
+import { StatisticCard } from "@/shared/ui/statisticCard";
 
 
-const DashboardPage = () => {
+export const Dashboard = () => {
 
   return (
     <main className="main">
@@ -30,5 +30,3 @@ const DashboardPage = () => {
     </main>
   );
 };
-
-export default DashboardPage;

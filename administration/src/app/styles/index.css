@@ -8,8 +8,13 @@
     /* Светлая тема по умолчанию */
     --white: #fff;
     --black: #364153;
-    --green: #00B77F;
-    --green2: #009C88;
+    --green: #0F8A44;
+    --green2: #1FB259;
+    --green3: #3FCB7A;
+    --green4: #2ECC71;
+    --green5: #6CDB9C;
+    --green6: #C0F0D8;
+    --green7: #E8F8F0;
     --gray: #50617c;
     --gray2: rgb(108, 122, 146);
     --gray2--rgb: 108, 122, 146;
@@ -28,6 +33,7 @@
     --purple3: #d4a0ff;
     --purple4: #F3E3FF;
     --pink: #E10C85;
+    --pink2: #e03c99;
     --red: #d70000;
     --red2: #e02424;
     --red3: #ec4b4b;
@@ -45,7 +51,7 @@
     --blue6--rgb: 220, 231, 239;
     --blue7: rgb(240, 245, 249);
     --blue7--rgb: 240, 245, 249;
-    --orange: #ffca69;
+    --orange: #ffa600;
     --glass-bg-color: 255, 255, 255;
 
     /* Семантические алиасы */
@@ -151,8 +157,13 @@
 :root[data-theme="dark"] {
     --white: #141718;
     --black: #ffffff;
-    --green: #00d891;
-    --green2: #009C88;
+    --green: oklch(62.7% .194 149.214);
+    --green2: oklch(95% .052 163.051);
+    --green3: oklch(90.5% .093 164.15);
+    --green4: oklch(76.5% .177 163.223);
+    --green5: oklch(69.6% .17 162.48);
+    --green6: oklch(59.6% .145 163.225);
+    --green7: oklch(50.8% .118 165.612);
     --gray: #f3f2ef;
     --gray2: #cecccb;
     --gray2--rgb: 237, 227, 213;
@@ -201,8 +212,8 @@
         0px 35px 21px rgba(163, 159, 193, 0.03),
         0px 16px 16px rgba(163, 159, 193, 0.06),
         0px 4px 9px rgba(163, 159, 193, 0.07);
-    --shadow-icon: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --shadow-glass: 0 4px 15px rgba(0, 0, 0, 0.1);
+    --shadow-icon: 0 4px 6px -1px rgba(255, 255, 255, 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-glass: 0 1px 3px rgba(207, 190, 168, 0.1);
     --border-modal: 1px solid var(--gray6);
 
     --glass-border: 1px solid rgba(var(--glass-bg-color), var(--glass-border-opacity));
@@ -385,7 +396,7 @@ button {
     font: var(--body1) !important;
     color: var(--gray) !important;
     font-weight: 550 !important;
-    
+
 }
 
 .fcb-date-calendar .react-datepicker {

@@ -2,9 +2,9 @@ import cn from "classnames";
 import cls from "./Title.module.css";
 
 interface Props {
-    title?: string;
-    subTitle?: string;
-    size?: "h1" | "h2" | "h3";
+    title?: string | null;
+    subTitle?: string | null;
+    size?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
     className?: string;
     titleClassName?: string;
     subTitleClassName?: string;
@@ -20,12 +20,16 @@ export const Title = ({
 }: Props) => {
     return (
         <div className={cn(cls.root, className)}>
-            <h1 className={cn(cls.title, cls[size], titleClassName)}>
-                {title}
-            </h1>
-            <p className={cn(cls.subTitle, subTitleClassName)}>
-                {subTitle}
-            </p>
+            {title && (
+                <h1 className={cn(cls.title, cls[size], titleClassName)}>
+                    {title}
+                </h1>
+            )}
+            {subTitle && (
+                <p className={cn(cls.subTitle, subTitleClassName)}>
+                    {subTitle}
+                </p>
+            )}
         </div>
     );
 };

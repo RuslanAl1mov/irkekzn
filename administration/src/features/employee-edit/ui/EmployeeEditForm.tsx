@@ -29,7 +29,6 @@ export const EmployeeEditForm = (): JSX.Element | null => {
     const [permissionIds, setPermissionIds] = useState<number[]>([]);
     const userId = user?.id ?? null;
 
-
     const { data: userDetails, isLoading } = useQuery<IUser>({
         queryKey: userId !== null ? queryKeys.userDetail(userId) : ["user", null],
         queryFn: async (): Promise<IUser> => {

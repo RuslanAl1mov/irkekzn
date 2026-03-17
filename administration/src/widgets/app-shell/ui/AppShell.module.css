@@ -9,6 +9,8 @@
 .allContent {
 	width: 100%;
 	max-width: 2000px;
+	max-height: 100vh;
+	overflow-y: hidden;
 	padding: var(--page-top-padding) var(--page-right-padding) var(--page-bottom-padding) var(--page-left-padding);
 	padding-left: calc(var(--aside-min-width) + var(--page-left-padding));
 	transition: padding 0.4s;

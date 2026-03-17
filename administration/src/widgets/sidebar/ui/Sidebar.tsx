@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import { useLogout } from "@/features/auth/logout";
 import { useThemeState } from "@/app/providers/theme";
-import { Switch } from "@/shared/ui/switch/Switch";
+import { Switch } from "@/shared/ui/switch";
 import { useSidebarState } from "@/widgets/sidebar";
 
 import Logo from "@/assets/logo/logo.svg?react";
@@ -16,6 +16,8 @@ import EmployessIcon from "@/assets/icons/employee.svg?react";
 import DoubleArrowIcon from "@/assets/icons/arrow.svg?react";
 import UserImage from "@/assets/app/user.jpg";
 import ExitIcon from "@/assets/icons/exit.svg?react";
+import SettingsIcon from "@/assets/icons/settings.svg?react";
+import ShopsIcon from "@/assets/icons/house.svg?react";
 
 
 type GetLinkClass = {
@@ -86,6 +88,24 @@ export const Sidebar: React.FC = () => {
                 <EmployessIcon className={cls.menuListIcon} />
                 <p className={cn(cls.menuListTitle, isMenuWide && cls.menuListTitle__visible)}>
                   Сотрудники
+                </p>
+              </NavLink>
+            </li>
+
+            <li>
+              <NavLink to="/shops" className={getLinkClass}>
+                <ShopsIcon className={cls.menuListIcon} />
+                <p className={cn(cls.menuListTitle, isMenuWide && cls.menuListTitle__visible)}>
+                  Бутики
+                </p>
+              </NavLink>
+            </li>
+
+            <li>
+              <NavLink to="/settings" className={getLinkClass}>
+                <SettingsIcon className={cls.menuListIcon} />
+                <p className={cn(cls.menuListTitle, isMenuWide && cls.menuListTitle__visible)}>
+                  Настройки
                 </p>
               </NavLink>
             </li>

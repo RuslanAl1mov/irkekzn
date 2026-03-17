@@ -1,6 +1,6 @@
-export { Input } from './input/Input';
-export { Button } from './button/Button';
-export { DateInput } from './date-input/DateInput';
-export { PhoneInput } from './phone-input/PhoneInput';
-export { Switch } from './switch/Switch';
-export { StatisticCard } from './statisticCard/StatisticCard';
+export { Input } from './input/ui/Input';
+export { Button } from './button/ui/Button';
+export { DateInput } from './date-input/ui/DateInput';
+export { PhoneInput } from './phone-input/ui/PhoneInput';
+export { Switch } from './switch/ui/Switch';
+export { StatisticCard } from './statisticCard/ui/StatisticCard';

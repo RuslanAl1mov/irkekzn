@@ -1,4 +1,4 @@
-from rest_framework import generics, filters
+from rest_framework import generics, filters, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
@@ -21,7 +21,7 @@ from users.serializers import (
     EmployeeSerializer,
     EmployeeCreateSerializer,
 )
-from .pagination import UsersListPagination
+from .pagination import UsersListPagination, ShopsListPagination
 from .filters import UsersListFilter, ShopListFilter, ColorPaletteListFilter
 from .models import Shop, Size, ColorPalette, Settings
 from .serializers import (
@@ -251,9 +251,10 @@ class ShopListView(generics.ListAPIView):
     - GET: список всех магазинов
     """
 
+    permission_classes = [IsAuthenticated, IsEmployee, GetListPermissions]
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
-    permission_classes = [IsAuthenticated, IsEmployee, GetListPermissions]
+    pagination_class = ShopsListPagination
 
     # Фильтрация, поиск и сортировка
     filter_backends = [
@@ -275,7 +276,26 @@ class ShopListView(generics.ListAPIView):
     ]
 
     ordering_fields = ["name", "city"]
-    ordering = ["name"]
+    ordering = ["-is_main_office", "-id"]
+    
+    
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # Сохраняем доп статистику в request для пагинатора
+        request.stats = {
+            "total_count": queryset.count(),
+            "inactive_count": queryset.filter(is_active=False).count(),
+        }
+
+        # Стандартная пагинация
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class ShopCreateView(LoggedCreateAPIView):
@@ -285,7 +305,7 @@ class ShopCreateView(LoggedCreateAPIView):
     - POST: создание нового магазина
     """
 
-    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    # permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
 
@@ -325,6 +345,19 @@ class ShopDeleteView(LoggedDestroyAPIView):
     permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
+    
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        
+        # Запрет на удаление главного офиса
+        if instance.is_main_office:
+            return Response(
+                {"detail": "Нельзя удалить главный офис. Сначала назначьте другой магазин главным."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # Размеры

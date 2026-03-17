@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 
-import { Input, type InputProps } from "@/shared/ui/input/Input";
+import { Input, type InputProps } from "@/shared/ui/input/ui/Input";
 
 const PHONE_PLACEHOLDER = "+7 (___) ___-__-__";
 

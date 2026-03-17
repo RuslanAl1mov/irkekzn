@@ -35,6 +35,7 @@ class ShopSerializer(serializers.ModelSerializer):
             "instagram_link",
             "instagram_name",
             "is_main_office",
+            "is_active",
             "city",
             "address",
             "map_location",
@@ -90,7 +91,6 @@ class ShopSerializer(serializers.ModelSerializer):
         phones = [data[f] for f in phone_fields if f in data and data[f]]
         if len(phones) != len(set(phones)):
             raise serializers.ValidationError("Телефонные номера не должны повторяться")
-
         return data
 
 

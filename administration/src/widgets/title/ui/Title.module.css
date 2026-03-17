@@ -20,8 +20,21 @@
     font: var(--header3);
 }
 
+.h4 {
+    font: var(--body6);
+}
+
+.h5 {
+    font: var(--body5);
+}
+
+.h6 {
+    font: var(--body4);
+}
+
 .subTitle {
     margin: 0;
     font: var(--body0);
     color: var(--gray3);
+    line-height: 14px;
 }

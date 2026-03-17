@@ -1,0 +1,108 @@
+.overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99;
+    border-left: var(--glass-border);
+    backdrop-filter: blur(1px);
+    overflow: hidden !important;
+}
+
+.modal {
+    position: relative;
+    width: min(100%, 460px);
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    background: rgba(var(--glass-bg-color), 0.8);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: var(--glass-border);
+    box-shadow: var(--shadow-modal);
+    border-radius: 8px;
+    overflow: hidden;
+    animation: slideUp 0.18s ease;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(16px) scale(0.98);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+.header {
+    width: 100%;
+    border-bottom: 1px solid var(--gray6);
+    display: grid;
+    gap: 12px;
+    padding: 20px 22px;
+}
+
+.header.success {
+    background-color: var(--green2);
+}
+
+.header.warn {
+    background-color: color-mix(in srgb, var(--orange) 20%, transparent);
+}
+
+.header.error,
+.header.deletion_confirm {
+    background-color: color-mix(in srgb, var(--red5) 70%, transparent);
+}
+
+.header.save_confirm {
+    background-color: var(--blue7);
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 100%;
+    overflow-y: auto;
+    padding: 15px 20px;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 0 22px 20px 22px;
+}
+
+.titleBlock {
+    gap: 6px;
+}
+
+.title {
+    color: var(--black);
+}
+
+.subTitle {
+    color: var(--gray);
+    margin: 0;
+    font: var(--body1);
+    line-height: 16px;
+}
+
+@media (max-width: 640px) {
+    .overlay {
+        padding: 16px;
+    }
+
+    .actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+}

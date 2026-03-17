@@ -2,11 +2,10 @@ import LoginPage from '@/pages/loginPage/ui/LoginPage';
 import { Route, Routes, Navigate } from 'react-router';
 import { RequireAuth } from '../../session';
 import { AppShell } from '@/widgets/app-shell';
-import DashboardPage from '@/pages/dashboard/ui/Dashboard';
+import { Dashboard } from '@/pages/dashboard';
 import { Clients } from '@/pages/clients';
-import { Employees } from '@/pages/employees/ui/Employees';
-// import { AppShell } from '@/widgets/app-shell';
-// import DashboardPage from '@/pages/dashboard/ui/Dashboard';
+import { Employees } from '@/pages/employees';
+import { Shops } from '@/pages/shops';
 
 
 export const AppRouter = () => {
@@ -19,7 +18,7 @@ export const AppRouter = () => {
 
 				<Route path="dashboard/" element={
 					<RequireAuth>
-						<DashboardPage />
+						<Dashboard />
 					</RequireAuth >
 				} />
 
@@ -35,7 +34,13 @@ export const AppRouter = () => {
 					</RequireAuth>
 				} />
 
-			</Route>
-		</Routes>
-	);
+				<Route path="shops/" element={
+					<RequireAuth>
+						<Shops />
+                    </RequireAuth>
+                } />
+
+            </Route>
+        </Routes>
+    );
 };

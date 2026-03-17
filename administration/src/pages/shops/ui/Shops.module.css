@@ -1,0 +1,81 @@
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+    width: 100%;
+    height: 100%;
+}
+
+.titleBlock {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.addButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 15px;
+    background: var(--gray2);
+}
+
+.addButton:hover {
+    background: var(--gray);
+}
+
+.addButtonIcon {
+    width: 18px;
+    height: 18px;
+}
+
+.addButtonText {
+    font: var(--body1);
+    font-weight: 500;
+    color: var(--white);
+}
+
+.content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0;
+    overflow: hidden;
+    margin: 10px -20px -20px -20px;
+    padding: 10px 20px 20px 20px;
+}
+
+.summaryBlock {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+}
+
+.summaryText {
+    font: var(--body-1);
+    color: var(--gray4);
+}
+
+.tableBlock {
+    flex: 1;
+    margin: 0 -20px -20px -20px;
+    padding: 10px 20px 20px 20px;
+    overflow-y: auto;
+    overflow-x: visible !important;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+}
+
+.tableBlock::-webkit-scrollbar {
+    display: none;
+}
+
+.tableBlock::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.tableBlock::-webkit-scrollbar-thumb {
+    background: transparent;
+}

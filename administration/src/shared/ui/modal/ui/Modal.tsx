@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import cls from "./Modal.module.css";
 import { Title } from "@/widgets/title";
-import { Button } from "../../button/Button";
+import { Button } from "@/shared/ui/button";
 
 type ModalProps = {
     title?: string;
