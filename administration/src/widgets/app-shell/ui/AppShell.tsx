@@ -12,6 +12,7 @@ import { EmployeeInfoForm } from '@/features/employee-info';
 import { EmployeeCreateForm } from '@/features/employee-create';
 import { ShopCreateForm } from '@/features/shop-create';
 import { ShopEditForm } from '@/features/shop-edit';
+import { ShopInfoForm } from '@/features/shop-info';
 import { ConfirmationModal } from '@/widgets/confirmation';
 
 
@@ -37,6 +38,7 @@ export const AppShell = () => {
 			{/* Магазины */}
 			<ShopCreateForm />
 			<ShopEditForm />
+			<ShopInfoForm />
 		</div>
 	);
 };

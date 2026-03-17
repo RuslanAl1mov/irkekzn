@@ -1,4 +1,5 @@
 export type { ShopsListGetParams } from "./api/getShops.api";
+export { getShop } from "./api/getShop.api";
 export { getShops } from "./api/getShops.api";
 export { createShop } from "./api/createShop.api";
 export { updateShop } from "./api/updateShop.api";

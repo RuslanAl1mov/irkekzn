@@ -1,0 +1,35 @@
+.infoSection {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    padding: 0 15px;
+}
+
+.infoRow {
+    display: grid;
+    grid-template-columns: minmax(140px, 180px) 1fr;
+    gap: 12px;
+    align-items: start;
+}
+
+.infoLabel {
+    font: var(--body0);
+    font-weight: 550;
+    color: var(--gray);
+}
+
+.infoValue {
+    font: var(--body0);
+    color: var(--gray);
+    word-break: break-word;
+}
+
+.field {
+    display: flex;
+    gap: 10px;
+}
+
+.label {
+    font: var(--body2);
+    color: var(--gray3);
+}

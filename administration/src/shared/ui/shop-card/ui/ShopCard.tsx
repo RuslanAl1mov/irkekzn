@@ -16,9 +16,12 @@ import { Switch } from "@/shared/ui/switch/";
 import OfficeIcon from "@/assets/icons/office.svg?react";
 import HouseIcon from "@/assets/icons/house.svg?react";
 import EditIcon from "@/assets/icons/edit.svg?react";
+import EyeIcon from "@/assets/icons/eye_open.svg?react";
+
 import DeleteIcon from "@/assets/icons/trash-bin.svg?react";
 import type { AxiosError } from "axios";
 import { useConfirmationStore } from "@/widgets/confirmation";
+import { useShopInfoStore } from "@/features/shop-info/model/store";
 
 
 type ShopCardProps = {
@@ -27,6 +30,7 @@ type ShopCardProps = {
 
 export const ShopCard = ({ shop }: ShopCardProps) => {
     const { open: openShopEdit } = useShopEditStore();
+    const { open: openShopInfo } = useShopInfoStore();
     const queryClient = useQueryClient();
     const { open: openConfirmation } = useConfirmationStore();
     const [isActive, setIsActive] = useState<boolean>(shop.is_active);
@@ -124,6 +128,9 @@ export const ShopCard = ({ shop }: ShopCardProps) => {
                     size="h6"
                     className={cls.headerTitle} />
                 <div className={cls.actionsBlock}>
+                    <Button type="button" variant="default" className={cls.actionButton} onClick={() => openShopInfo(shop)}>
+                        <EyeIcon className={cn(cls.buttonIcon, cls.eyeButtonIcon)} />
+                    </Button>
                     <Button type="button" variant="default" className={cls.actionButton} onClick={() => openShopEdit(shop)}>
                         <EditIcon className={cn(cls.buttonIcon, cls.editButtonIcon)} />
                     </Button>

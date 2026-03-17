@@ -11,7 +11,7 @@ import { FiltersBlock } from "@/shared/ui/filters-block";
 import { Button } from "@/shared/ui/button";
 import { Title } from "@/widgets/title";
 import { Loader } from "@/widgets/loader";
-import { ShopCard } from "@/widgets/shop-card";
+import { ShopCard } from "@/shared/ui/shop-card";
 
 import { useShopCreateStore } from "@/features/shop-create/model/store";
 import { useFiltersStore } from "@/entities/filters";
