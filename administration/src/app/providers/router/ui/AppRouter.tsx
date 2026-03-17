@@ -6,6 +6,7 @@ import { Dashboard } from '@/pages/dashboard';
 import { Clients } from '@/pages/clients';
 import { Employees } from '@/pages/employees';
 import { Shops } from '@/pages/shops';
+import { Settings } from '@/pages/settings';
 
 
 export const AppRouter = () => {
@@ -39,6 +40,12 @@ export const AppRouter = () => {
 						<Shops />
                     </RequireAuth>
                 } />
+
+				<Route path="settings/" element={
+					<RequireAuth>
+						<Settings />
+					</RequireAuth>
+				} />
 
             </Route>
         </Routes>
