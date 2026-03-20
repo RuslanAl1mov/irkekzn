@@ -6,6 +6,7 @@
 }
 
 .label {
+	width: fit-content;
 	font: var(--body1);
 	color: var(--black);
 	padding-left: 3px;

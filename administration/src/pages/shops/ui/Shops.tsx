@@ -2,21 +2,23 @@ import cls from "./Shops.module.css";
 
 import { useEffect, useMemo } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import type { AxiosError } from "axios";
 import { toast } from "react-toastify";
+import type { AxiosError } from "axios";
 
-import PlusIcon from "@/assets/icons/plus.svg?react";
+import { getShops } from "@/entities/shop";
+import type { IShop, ShopsListGetParams } from "@/entities/shop";
+import { useFiltersStore } from "@/entities/filters";
 
+import { queryKeys } from "@/shared/lib/react-query/queryKeys";
 import { FiltersBlock } from "@/shared/ui/filters-block";
 import { Button } from "@/shared/ui/button";
+import { ShopCard } from "@/shared/ui/shop-card";
 import { Title } from "@/widgets/title";
 import { Loader } from "@/widgets/loader";
-import { ShopCard } from "@/shared/ui/shop-card";
 
-import { useShopCreateStore } from "@/features/shop-create/model/store";
-import { useFiltersStore } from "@/entities/filters";
-import { getShops, type IShop, type ShopsListGetParams } from "@/entities/shop";
-import { queryKeys } from "@/shared/lib/react-query/queryKeys";
+import { useShopCreateStore } from "@/features/shop";
+
+import PlusIcon from "@/assets/icons/plus.svg?react";
 
 
 export const Shops = () => {

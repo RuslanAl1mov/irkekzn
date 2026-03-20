@@ -120,7 +120,7 @@ class ColorPaletteAdmin(SimpleHistoryAdmin):
     Админка для ColorPalette с поддержкой истории изменений
     """
 
-    list_display = ["id", "name", "color", "is_active"]
-    search_fields = ["name", "color"]
+    list_display = ["id", "name", "hex", "is_active"]
+    search_fields = ["name", "hex"]
     list_filter = ["is_active"]
     list_display_links = ["id", "name"]

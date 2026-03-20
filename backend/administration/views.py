@@ -21,7 +21,7 @@ from users.serializers import (
     EmployeeSerializer,
     EmployeeCreateSerializer,
 )
-from .pagination import UsersListPagination, ShopsListPagination
+from .pagination import UsersListPagination, ShopsListPagination, ColorPaletteListPagination
 from .filters import UsersListFilter, ShopListFilter, ColorPaletteListFilter
 from .models import Shop, Size, ColorPalette, Settings
 from .serializers import (
@@ -421,6 +421,7 @@ class ColorPaletteListView(generics.ListAPIView):
     queryset = ColorPalette.objects.all()
     serializer_class = ColorPaletteSerializer
     permission_classes = [IsAuthenticated, IsEmployee, GetListPermissions]
+    pagination_class = ColorPaletteListPagination
 
     filter_backends = [
         DjangoFilterBackend,
@@ -429,9 +430,27 @@ class ColorPaletteListView(generics.ListAPIView):
     ]
 
     filterset_class = ColorPaletteListFilter
-    search_fields = ["name", "color"]
-    ordering_fields = ["name", "color"]
-    ordering = ["name"]
+    search_fields = ["name", "hex"]
+    ordering_fields = ["name", "hex", "is_active"]
+    ordering = ["-id"]
+    
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # Сохраняем доп статистику в request для пагинатора
+        request.stats = {
+            "total_count": queryset.count(),
+            "inactive_count": queryset.filter(is_active=False).count(),
+        }
+
+        # Стандартная пагинация
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class ColorPaletteCreateView(LoggedCreateAPIView):

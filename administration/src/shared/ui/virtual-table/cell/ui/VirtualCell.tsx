@@ -28,6 +28,7 @@ type VirtualCellProps = {
   coloredBlockStyle?: CSSProperties;
   textColor?: string;
   functions?: CellFunctionProps[];
+  children?: React.ReactNode;
 };
 
 export const VirtualCell = ({
@@ -40,6 +41,7 @@ export const VirtualCell = ({
   coloredBlockStyle,
   textColor,
   functions,
+  children,
 }: VirtualCellProps) => {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const [isOpenCopyMenu, setIsOpenCopyMenu] = useState(false);
@@ -148,6 +150,8 @@ export const VirtualCell = ({
 
       {/* Круглая картинка */}
       {img && <img className={cls.img} src={img} onError={handleImageError} />}
+
+      {children && children}
 
       {/* Заголовок и подзаголовок */}
       {(title || secTitle) && (

@@ -1,33 +1,34 @@
 import cls from "./Employees.module.css";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getUsers, type UsersListGetParams } from "@/entities/user/api/getUsers.api";
+import { toast } from "react-toastify";
+import type { AxiosError } from "axios";
 
-import { useAuthStore, type IUser } from "@/entities/user";
+import { getUsers } from "@/entities/user/api/getUsers.api";
+import { useAuthStore } from "@/entities/user";
+import type { UsersListGetParams, IUser } from "@/entities/user";
+import { useFiltersStore } from "@/entities/filters";
+
+import { Loader } from "@/widgets/loader";
+import { Title } from "@/widgets/title";
+import { queryKeys } from "@/shared/lib/react-query/queryKeys";
+import { formatDateTime, formatPhoneNumber, formatDate, toApiDate } from "@/shared/lib/formater";
+import { FiltersBlock } from "@/shared/ui/filters-block";
+import { Button } from "@/shared/ui";
+import { VirtualTable } from "@/shared/ui/virtual-table/table";
+import { VirtualCell } from "@/shared/ui/virtual-table/cell";
 import type { HeaderCell } from "@/shared/ui/virtual-table/table";
 import type { RowItem } from "@/shared/ui/virtual-table/row";
 import type { ContextMenuItem } from "@/shared/ui/virtual-table/context-menu";
 
-import { formatDateTime, formatPhoneNumber, formatDate, toApiDate } from "@/shared/lib/formater";
-import { VirtualTable } from "@/shared/ui/virtual-table/table";
-import { VirtualCell } from "@/shared/ui/virtual-table/cell";
+import { useEmployeeEditStore } from "@/features/employee/ui/employee-edit";
+import { useEmployeeInfoStore } from "@/features/employee/ui/employee-info";
+import { useEmployeeCreateStore } from "@/features/employee/ui/employee-create/model/store";
 
 import EyeIcon from "@/assets/icons/eye_open.svg?react";
 import EditIcon from "@/assets/icons/edit.svg?react";
 import PlusIcon from "@/assets/icons/plus.svg?react";
-
-import { Loader } from "@/widgets/loader";
-import { Title } from "@/widgets/title";
-import { useEmployeeEditStore } from "@/features/employee-edit";
-import { useEmployeeInfoStore } from "@/features/employee-info";
-import type { AxiosError } from "axios";
-import { toast } from "react-toastify";
-import { Button } from "@/shared/ui";
-import { useEmployeeCreateStore } from "@/features/employee-create/model/store";
-import { FiltersBlock } from "@/shared/ui/filters-block";
-import { useFiltersStore } from "@/entities/filters";
 
 
 export const Employees = () => {
@@ -88,7 +89,7 @@ export const Employees = () => {
         fetchNextPage,
         isFetchingNextPage,
     } = useInfiniteQuery({
-        queryKey: ["users", params],
+        queryKey: queryKeys.users(params),
         initialPageParam: 1,
         queryFn: async ({ pageParam }) => {
             const page = typeof pageParam === "number" ? pageParam : 1;
@@ -236,7 +237,10 @@ export const Employees = () => {
             return row;
         });
     }, [
-        flatList
+        flatList,
+        openEditModal,
+        openInfoModal,
+        user?.id,
     ]);
 
     return (

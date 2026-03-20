@@ -1,0 +1,66 @@
+.form {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 10px;
+    gap: 16px;
+}
+
+.dataList {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    padding-right: 10px;
+    max-height: 99%;
+}
+
+.inputSection {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 16px;
+    border: 1px solid var(--gray6);
+    border-radius: 12px;
+    background: var(--blue7);
+}
+
+.infoLabel {
+    font: var(--body0);
+    font-weight: 550;
+    color: var(--gray);
+}
+
+.infoValue {
+    font: var(--body0);
+    color: var(--gray);
+    word-break: break-word;
+}
+
+.infoRow {
+    display: grid;
+    grid-template-columns: minmax(140px, 180px) 1fr;
+    gap: 12px;
+    align-items: start;
+}
+
+.field {
+    display: flex;
+    gap: 10px;
+}
+
+.colorField {
+    width: 100px;
+}
+
+.label {
+    font: var(--body2);
+    color: var(--gray3);
+}
+
+.colorInput {
+    padding: 5px;
+}

@@ -127,3 +127,33 @@ class ColorPaletteSerializer(serializers.ModelSerializer):
         model = ColorPalette
         fields = "__all__"
         read_only_fields = ["id"]
+
+    def validate(self, data):
+        """
+        Валидация на уровне объекта (если нужно проверить комбинацию полей)
+        """
+        # Если это обновление, исключаем текущий объект из проверки уникальности
+        if self.instance:
+            # Проверяем, что name не конфликтует с другими записями
+            if (
+                ColorPalette.objects.filter(name=data.get("name", self.instance.name))
+                .exclude(id=self.instance.id)
+                .exists()
+            ):
+                raise serializers.ValidationError(
+                    {"name": "Цвет с таким названием уже существует"}
+                )
+
+            # Проверяем, что hex не конфликтует с другими записями
+            if (
+                ColorPalette.objects.filter(
+                    hex=data.get("hex", self.instance.hex).upper()
+                )
+                .exclude(id=self.instance.id)
+                .exists()
+            ):
+                raise serializers.ValidationError(
+                    {"hex": "Цвет с таким HEX-кодом уже существует"}
+                )
+
+        return data

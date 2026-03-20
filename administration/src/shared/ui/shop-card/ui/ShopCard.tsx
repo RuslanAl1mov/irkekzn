@@ -1,12 +1,15 @@
 import cls from "./ShopCard.module.css"
 import cn from "classnames";
 
+import type { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { queryKeys } from "@/shared/lib/react-query/queryKeys";
 import { useEffect, useState } from "react";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useShopEditStore } from "@/features/shop-edit/model/store";
+import { useShopEditStore } from "@/features/shop";
+import { useConfirmationStore } from "@/widgets/confirmation";
+import { useShopInfoStore } from "@/features/shop";
 import { deleteShop, updateShop, type IShop, type IShopPayload } from "@/entities/shop";
 
 import { Title } from "@/widgets/title";
@@ -17,11 +20,7 @@ import OfficeIcon from "@/assets/icons/office.svg?react";
 import HouseIcon from "@/assets/icons/house.svg?react";
 import EditIcon from "@/assets/icons/edit.svg?react";
 import EyeIcon from "@/assets/icons/eye_open.svg?react";
-
 import DeleteIcon from "@/assets/icons/trash-bin.svg?react";
-import type { AxiosError } from "axios";
-import { useConfirmationStore } from "@/widgets/confirmation";
-import { useShopInfoStore } from "@/features/shop-info/model/store";
 
 
 type ShopCardProps = {
@@ -62,7 +61,7 @@ export const ShopCard = ({ shop }: ShopCardProps) => {
         },
         onSuccess: async (updatedShop) => {
             queryClient.setQueryData(queryKeys.shopDetail(shopId), updatedShop);
-            queryClient.invalidateQueries({ queryKey: ['shops'] });
+            queryClient.invalidateQueries({ queryKey: queryKeys.shopLists() });
             toast.success("Обновлено!", { toastId: shopId.toString() });
         },
         onError: (error) => {
@@ -90,7 +89,7 @@ export const ShopCard = ({ shop }: ShopCardProps) => {
         mutationFn: (shopId: number) => deleteShop(shopId),
         onSuccess: async (_, shopId) => {
             queryClient.removeQueries({ queryKey: queryKeys.shopDetail(shopId) });
-            await queryClient.invalidateQueries({ queryKey: ["shops"] });
+            await queryClient.invalidateQueries({ queryKey: queryKeys.shopLists() });
             toast.success("Бутик успешно удален");
         },
         onError: (mutationError) => {

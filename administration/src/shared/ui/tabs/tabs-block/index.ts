@@ -1,0 +1,1 @@
+export { TabsBlock } from "./ui/TabsBlock";

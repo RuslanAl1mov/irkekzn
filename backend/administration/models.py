@@ -205,9 +205,9 @@ class ColorPalette(models.Model):
         help_text="Например: Основные цвета, Пастельные тона и т.д.",
     )
 
-    color = models.CharField(
+    hex = models.CharField(
         max_length=7,  # 7 символов включая #
-        verbose_name="HEX-код",
+        verbose_name="HEX код",
         unique=True,
         validators=[
             RegexValidator(
@@ -231,13 +231,13 @@ class ColorPalette(models.Model):
         permissions = (("view_colorpalette_list", "Can see ColorPalettes list"),)
 
     def __str__(self):
-        return f"{self.id} ({self.name} - {self.color})"
+        return f"{self.id} ({self.name} - {self.hex})"
 
     def save(self, *args, **kwargs):
         """
         Автоматическое преобразование HEX-кода к верхнему регистру
         """
-        if self.color:
+        if self.hex:
             # Приводим HEX к верхнему регистру (опционально)
-            self.color = self.color.upper()
+            self.hex = self.hex.upper()
         super().save(*args, **kwargs)

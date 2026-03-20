@@ -1,30 +1,30 @@
 import cls from "./Clients.module.css";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-
-import type { AxiosError } from "axios";
-import { toast } from "react-toastify";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useFiltersStore } from "@/entities/filters";
-import { getUsers, type UsersListGetParams } from "@/entities/user/api/getUsers.api";
+import { toast } from "react-toastify";
+import type { AxiosError } from "axios";
 
-import { type IUser } from "@/entities/user";
+import { useFiltersStore } from "@/entities/filters";
+import { getUsers } from "@/entities/user";
+import type { UsersListGetParams, IUser } from "@/entities/user";
+
+import { queryKeys } from "@/shared/lib/react-query/queryKeys";
+import { formatDateTime, formatPhoneNumber, toApiDate } from "@/shared/lib/formater";
+import { FiltersBlock } from "@/shared/ui/filters-block";
+import { VirtualTable } from "@/shared/ui/virtual-table/table";
+import { VirtualCell } from "@/shared/ui/virtual-table/cell";
 import type { HeaderCell } from "@/shared/ui/virtual-table/table";
 import type { RowItem } from "@/shared/ui/virtual-table/row";
 import type { ContextMenuItem } from "@/shared/ui/virtual-table/context-menu";
 
-import { formatDateTime, formatPhoneNumber, toApiDate } from "@/shared/lib/formater";
-import { VirtualTable } from "@/shared/ui/virtual-table/table";
-import { VirtualCell } from "@/shared/ui/virtual-table/cell";
-import { FiltersBlock } from "@/shared/ui/filters-block";
-
-import EditIcon from "@/assets/icons/edit.svg?react";
-import EyeIcon from "@/assets/icons/eye_open.svg?react";
+import { useClientEditStore, useClientInfoStore } from "@/features/client";
 
 import { Loader } from "@/widgets/loader";
 import { Title } from "@/widgets/title";
-import { useClientEditStore } from "@/features/client-edit";
-import { useClientInfoStore } from "@/features/client-info";
+
+import EditIcon from "@/assets/icons/edit.svg?react";
+import EyeIcon from "@/assets/icons/eye_open.svg?react";
 
 
 export const Clients = () => {
@@ -84,7 +84,7 @@ export const Clients = () => {
         fetchNextPage,
         isFetchingNextPage,
     } = useInfiniteQuery({
-        queryKey: ["users", params],
+        queryKey: queryKeys.users(params),
         initialPageParam: 1,
         queryFn: async ({ pageParam }) => {
             const page = typeof pageParam === "number" ? pageParam : 1;
@@ -224,6 +224,7 @@ export const Clients = () => {
     }, [
         flatList,
         openEditModal,
+        openInfoModal,
     ]);
 
     return (

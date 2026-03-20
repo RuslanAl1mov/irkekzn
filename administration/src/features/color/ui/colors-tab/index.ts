@@ -1,0 +1,1 @@
+export { ColorsTab } from "./ui/ColorsTab";

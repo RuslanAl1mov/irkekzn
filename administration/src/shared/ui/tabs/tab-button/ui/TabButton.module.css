@@ -1,0 +1,33 @@
+.tabButton {
+    width: 100%;
+    height: 100%;
+    border-radius: 40px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font: var(--body0);
+    font-weight: 550;
+    color: var(--gray);
+
+    transition: background-color 0.3s ease;
+}
+
+.tabButton:hover {
+    background-color: var(--blue6);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+
+.tabButton__active {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+
+.tabButton__active:hover {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
