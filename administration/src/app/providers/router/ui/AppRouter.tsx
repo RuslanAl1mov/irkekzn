@@ -1,4 +1,4 @@
-import LoginPage from '@/pages/loginPage/ui/LoginPage';
+import { LoginPage } from '@/pages/loginPage';
 import { Route, Routes, Navigate } from 'react-router';
 import { RequireAuth } from '../../session';
 import { AppShell } from '@/widgets/app-shell';

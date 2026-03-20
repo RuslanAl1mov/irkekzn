@@ -9,7 +9,7 @@ import { Title } from "@/widgets/title";
 import { Loader } from "@/widgets/loader";
 import { Button } from "@/shared/ui/button";
 import { Switch } from "@/shared/ui";
-import { VirtualTable } from "@/shared/ui/virtual-table/table/ui/VirtualTable";
+import { VirtualTable } from "@/shared/ui/virtual-table/table";
 import { VirtualCell } from "@/shared/ui/virtual-table/cell";
 
 import PlusIcon from "@/assets/icons/plus.svg?react";
@@ -24,7 +24,7 @@ import { useColorEditStore } from "@/features/color";
 import { useConfirmationStore } from "@/widgets/confirmation";
 
 import { queryKeys } from "@/shared/lib/react-query/queryKeys";
-import type { HeaderCell } from "@/shared/ui/virtual-table/table/model/types";
+import type { HeaderCell } from "@/shared/ui/virtual-table/table";
 import type { ContextMenuItem } from "@/shared/ui/virtual-table/context-menu";
 import type { RowItem } from "@/shared/ui/virtual-table/row";
 

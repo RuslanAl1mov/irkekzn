@@ -1,9 +1,8 @@
 import { Title } from "@/widgets/title";
 import cls from "./Settings.module.css";
-import { TabButton } from "@/shared/ui/tabs/tab-button/ui/TabButton";
-import { TabsBlock } from "@/shared/ui/tabs/tabs-block/ui/TabsBlock";
 import { useState } from "react";
 import { ColorsTab } from "@/features/color";
+import { TabButton, TabsBlock } from "@/shared/ui/tabs";
 
 
 export const Settings = () => {

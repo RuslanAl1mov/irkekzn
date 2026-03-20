@@ -14,7 +14,7 @@ import { deleteShop, updateShop, type IShop, type IShopPayload } from "@/entitie
 
 import { Title } from "@/widgets/title";
 import { Button } from "@/shared/ui/button";
-import { Switch } from "@/shared/ui/switch/";
+import { Switch } from "@/shared/ui/switch";
 
 import OfficeIcon from "@/assets/icons/office.svg?react";
 import HouseIcon from "@/assets/icons/house.svg?react";

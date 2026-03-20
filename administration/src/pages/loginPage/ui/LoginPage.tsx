@@ -3,7 +3,7 @@ import cls from "./LoginPage.module.css";
 import cn from "classnames";
 
 
-export default function LoginPage() {
+export const LoginPage = () => {
   return (
     <main className={cn("main", cls.main)}>
       <div className={cn("mainBlock", cls.mainBlock)}>

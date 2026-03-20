@@ -1,8 +1,8 @@
 import type { ColorsListGetParams } from "@/entities/color";
 import type { ShopsListGetParams } from "@/entities/shop";
 import type { UsersListGetParams } from "@/entities/user";
-import type { UserGroupsListGetParams } from "@/entities/user-group/api/getUserGroups.api";
-import type { UserPermissionsListGetParams } from "@/entities/user-permission/api/getUserPermissions.api";
+import type { UserGroupsListGetParams } from "@/entities/user-group";
+import type { UserPermissionsListGetParams } from "@/entities/user-permission";
 
 export const queryKeys = {
   checkAuth: () => ["auth", "me"] as const,

@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/shared/lib/react-query/queryKeys";
 
 import { useShopInfoStore } from "../model/store";
-import { formatPhoneNumber } from "@/shared/lib/formater/";
+import { formatPhoneNumber } from "@/shared/lib/formater";
 import { Modal } from "@/shared/ui/modal";
 import { type IShop, getShop } from "@/entities/shop";
 

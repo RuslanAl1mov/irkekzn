@@ -4,7 +4,7 @@ import { useEffect, useState, type JSX } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
-import { updateShop } from "@/entities/shop";
+import { getShop, updateShop } from "@/entities/shop";
 import type { IShop, IShopPayload } from "@/entities/shop";
 import { queryKeys } from "@/shared/lib/react-query/queryKeys";
 
@@ -12,7 +12,6 @@ import { Input, PhoneInput, Switch } from "@/shared/ui";
 
 import { useShopEditStore } from "../model/store";
 import { Modal } from "@/shared/ui/modal";
-import { getShop } from "@/entities/shop/api/getShop.api";
 
 
 export const ShopEditForm = (): JSX.Element | null => {

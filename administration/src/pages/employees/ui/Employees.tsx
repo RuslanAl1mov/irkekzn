@@ -5,8 +5,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import type { AxiosError } from "axios";
 
-import { getUsers } from "@/entities/user/api/getUsers.api";
-import { useAuthStore } from "@/entities/user";
+import { getUsers, useAuthStore } from "@/entities/user";
 import type { UsersListGetParams, IUser } from "@/entities/user";
 import { useFiltersStore } from "@/entities/filters";
 
@@ -22,9 +21,11 @@ import type { HeaderCell } from "@/shared/ui/virtual-table/table";
 import type { RowItem } from "@/shared/ui/virtual-table/row";
 import type { ContextMenuItem } from "@/shared/ui/virtual-table/context-menu";
 
-import { useEmployeeEditStore } from "@/features/employee/ui/employee-edit";
-import { useEmployeeInfoStore } from "@/features/employee/ui/employee-info";
-import { useEmployeeCreateStore } from "@/features/employee/ui/employee-create/model/store";
+import {
+    useEmployeeCreateStore,
+    useEmployeeEditStore,
+    useEmployeeInfoStore,
+} from "@/features/employee";
 
 import EyeIcon from "@/assets/icons/eye_open.svg?react";
 import EditIcon from "@/assets/icons/edit.svg?react";

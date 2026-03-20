@@ -9,7 +9,7 @@ import { formatDateTime } from "@/shared/lib/formater";
 import { queryKeys } from "@/shared/lib/react-query/queryKeys";
 
 import { useClientInfoStore } from "../model/store";
-import { formatPhoneNumber } from "@/shared/lib/formater/";
+import { formatPhoneNumber } from "@/shared/lib/formater";
 import { Modal } from "@/shared/ui/modal";
 
 
