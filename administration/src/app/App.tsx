@@ -1,12 +1,14 @@
+import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from 'react-toastify';
 import { AppRouter } from './providers/router';
 import { setupCustomToastUI } from '@/shared/config/toast';
-import "react-toastify/dist/ReactToastify.css";
+import { useThemeState } from './providers/theme';
 
 
 setupCustomToastUI();
 
 function App() {
+  const { theme } = useThemeState();
   return (
     <div className="App">
       <AppRouter />
@@ -18,6 +20,7 @@ function App() {
         pauseOnFocusLoss
         pauseOnHover
         newestOnTop
+        theme={theme}
         closeButton={false}
         hideProgressBar
       />
