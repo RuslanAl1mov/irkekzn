@@ -1,4 +1,5 @@
 from rest_framework import serializers
+import django.db.models as models
 from .models import Shop, Size, ColorPalette, Settings
 from services.validators import phone_number_ru_validator
 
@@ -99,23 +100,49 @@ class SizeSerializer(serializers.ModelSerializer):
     Сериализатор для модели Size без валидаций
     """
 
-    order = serializers.IntegerField(required=True)
+    order = serializers.IntegerField(required=False)
 
     class Meta:
         model = Size
         fields = "__all__"
         read_only_fields = ["id"]
 
-    def validate_order(self, value):
-        if value < 0:
-            raise serializers.ValidationError("Порядок должен быть больше 0")
-        if (
-            Size.objects.filter(order=value)
-            .exclude(pk=self.instance.pk if self.instance else None)
-            .exists()
-        ):
-            raise serializers.ValidationError("Порядок должен быть уникальным")
-        return value
+    def validate(self, attrs):
+        # При обновлении проверяем наличие order
+        if self.instance and "order" not in attrs:
+            raise serializers.ValidationError(
+                {"order": "При обновлении размера поле order обязательно"}
+            )
+        elif self.instance and "order" in attrs:
+            if attrs["order"] < 0:
+                raise serializers.ValidationError(
+                    {"order": "Порядок должен быть больше 0"}
+                )
+            if (
+                Size.objects.filter(order=attrs["order"])
+                .exclude(pk=self.instance.pk)
+                .exists()
+            ):
+                raise serializers.ValidationError(
+                    {"order": "Порядок должен быть уникальным"}
+                )
+        return attrs
+
+    def create(self, validated_data):
+        max_order = Size.objects.aggregate(models.Max("order"))["order__max"]
+        validated_data["order"] = (max_order or 0) + 1
+        return super().create(validated_data)
+
+
+class SizeUpdateSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для модели Size с валидацией
+    """
+
+    class Meta:
+        model = Size
+        fields = "__all__"
+        read_only_fields = ["id"]
 
 
 class ColorPaletteSerializer(serializers.ModelSerializer):

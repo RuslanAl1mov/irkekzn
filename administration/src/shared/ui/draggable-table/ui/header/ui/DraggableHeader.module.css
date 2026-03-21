@@ -1,0 +1,19 @@
+.headerRow {
+  display: flex;
+  border-bottom: 2px solid var(--gray6);
+  background: var(--glass-bg);
+  position: sticky;
+  top: 0;
+}
+
+.sizesHeader {
+  flex: 1;
+}
+  
+.headerContent {
+  display: flex;
+  flex: 1;
+  box-sizing: border-box;
+  min-width: max-content;
+}
+  

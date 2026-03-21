@@ -16,6 +16,8 @@ import { ShopInfoForm } from '@/features/shop/ui/shop-info';
 import { ConfirmationModal } from '@/widgets/confirmation';
 import { ColorCreateForm } from '@/features/color';
 import { ColorEditForm } from '@/features/color';
+import { SizeCreateForm } from '@/features/size';
+import { SizeEditForm } from '@/features/size';
 
 export const AppShell = () => {
 	const { isOpen: isSidebarOpen } = useSidebarState();
@@ -43,6 +45,9 @@ export const AppShell = () => {
 			{/* Цвета */}
 			<ColorCreateForm />
 			<ColorEditForm />
+			{/* Размеры */}
+			<SizeCreateForm />
+			<SizeEditForm />
 		</div>
 	);
 };

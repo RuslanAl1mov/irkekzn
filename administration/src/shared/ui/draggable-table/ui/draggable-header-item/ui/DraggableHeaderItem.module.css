@@ -1,0 +1,53 @@
+
+.headerCell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    background: var(--glass-bg);
+    border-right: 1px solid var(--gray6);
+    cursor: grab;
+    user-select: none;
+    transition: all 0.2s ease;
+  }
+    
+  .headerCell:active {
+    cursor: grabbing;
+  }
+    
+  .headerCell.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+  }
+    
+  .dragHandle {
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+  }
+    
+  .dragHandle:hover {
+    opacity: 1;
+  }
+    
+  .dragHandle:active {
+    cursor: grabbing;
+  }
+    
+  .dragIcon {
+    width: 18px;
+    height: 18px;
+    color: var(--gray3);
+  }
+  
+  .title {
+    width: fit-content;
+    font: var(--body2);
+    font-weight: 550;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+    

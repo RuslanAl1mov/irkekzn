@@ -55,6 +55,10 @@ class ShopsListPagination(DefaultPagination):
                 "result": data,
             }
         )
+        
+        
+class SizesListPagination(DefaultPagination):
+    pass
 
 
 class ColorPaletteListPagination(DefaultPagination):

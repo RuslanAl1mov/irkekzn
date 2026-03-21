@@ -40,12 +40,6 @@
   border-color: var(--blue);
 }
 
-.triggerLabel {
-  font: var(--body1);
-  width: 100%;
-  color: inherit;
-}
-
 .triggerSelected {
   color: var(--black);
   padding: 7px 12px;

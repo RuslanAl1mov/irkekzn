@@ -1,4 +1,5 @@
 import type { ColorsListGetParams } from "@/entities/color";
+import type { SizesListGetParams } from "@/entities/size";
 import type { ShopsListGetParams } from "@/entities/shop";
 import type { UsersListGetParams } from "@/entities/user";
 import type { UserGroupsListGetParams } from "@/entities/user-group";
@@ -22,4 +23,8 @@ export const queryKeys = {
   colors: (params?: ColorsListGetParams | null) =>
     ["colors", "list", params ?? null] as const,
   colorDetail: (id: number | null) => ["colors", "detail", id] as const,
+  sizeLists: () => ["sizes", "list"] as const,
+  sizes: (params?: SizesListGetParams | null) =>
+    ["sizes", "list", params ?? null] as const,
+  sizeDetail: (id: number | null) => ["sizes", "detail", id] as const,
 };

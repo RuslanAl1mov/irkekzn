@@ -2,6 +2,7 @@ import { Title } from "@/widgets/title";
 import cls from "./Settings.module.css";
 import { useState } from "react";
 import { ColorsTab } from "@/features/color";
+import { SizesTab } from "@/features/size";
 import { TabButton, TabsBlock } from "@/shared/ui/tabs";
 
 
@@ -27,6 +28,7 @@ export const Settings = () => {
                     <TabButton text="Цветовая палитра" onClick={() => { setActiveTab("color-palette") }} isActive={activeTab === "color-palette"} />
                 </TabsBlock>
 
+                {activeTab === "sizes-table" && <SizesTab />}
                 {activeTab === "color-palette" && <ColorsTab />}
             </div>
         </section>

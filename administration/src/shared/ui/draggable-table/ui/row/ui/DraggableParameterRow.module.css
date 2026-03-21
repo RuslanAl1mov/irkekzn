@@ -1,0 +1,33 @@
+.row {
+    flex: 1;
+    display: flex;
+    min-height: 52px;
+
+    border-bottom: 1px solid var(--gray6);
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+
+.row:hover {
+    background: var(--gray7);
+}
+
+.label {
+    width: 150px;
+    min-width: 150px;
+    padding: 12px;
+    font-weight: 500;
+    background: var(--glass-bg);
+    border-right: 1px solid var(--gray6);
+    font: var(--body1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: inherit;
+}
+
+.cells {
+    flex: 1;
+    display: flex;
+}

@@ -66,20 +66,3 @@
     gap: 12px;
     padding: 0 22px 20px 22px;
 }
-
-.cancelBtn {
-    font: var(--button);
-    font-weight: 500;
-    color: var(--gray3);
-    padding: 12px 20px;
-    border-radius: 8px;
-    background: var(--gray7);
-    border: none;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-}
-
-.cancelBtn:hover {
-    background: var(--gray6);
-    color: var(--black);
-}

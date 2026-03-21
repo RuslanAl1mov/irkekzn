@@ -21,7 +21,12 @@ from users.serializers import (
     EmployeeSerializer,
     EmployeeCreateSerializer,
 )
-from .pagination import UsersListPagination, ShopsListPagination, ColorPaletteListPagination
+from .pagination import (
+    UsersListPagination,
+    ShopsListPagination,
+    SizesListPagination,
+    ColorPaletteListPagination,
+)
 from .filters import UsersListFilter, ShopListFilter, ColorPaletteListFilter
 from .models import Shop, Size, ColorPalette, Settings
 from .serializers import (
@@ -277,8 +282,7 @@ class ShopListView(generics.ListAPIView):
 
     ordering_fields = ["name", "city"]
     ordering = ["-is_main_office", "-id"]
-    
-    
+
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
 
@@ -345,17 +349,19 @@ class ShopDeleteView(LoggedDestroyAPIView):
     permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
-    
+
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        
+
         # Запрет на удаление главного офиса
         if instance.is_main_office:
             return Response(
-                {"detail": "Нельзя удалить главный офис. Сначала назначьте другой магазин главным."},
-                status=status.HTTP_400_BAD_REQUEST
+                {
+                    "detail": "Нельзя удалить главный офис. Сначала назначьте другой магазин главным."
+                },
+                status=status.HTTP_400_BAD_REQUEST,
             )
-        
+
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -371,6 +377,56 @@ class SizeListView(generics.ListAPIView):
     queryset = Size.objects.all()
     serializer_class = SizeSerializer
     permission_classes = [IsAuthenticated, IsEmployee, GetListPermissions]
+    pagination_class = SizesListPagination
+
+    filter_backends = [
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+    search_fields = [
+        "russian",
+        "international",
+        "european",
+        "chest_circumference",
+        "waist_circumference",
+        "hip_circumference",
+    ]
+    ordering_fields = [
+        "order",
+        "russian",
+        "international",
+        "european",
+        "chest_circumference",
+        "waist_circumference",
+        "hip_circumference",
+    ]
+    ordering = ["order"]
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        request.stats = {
+            "total_count": queryset.count(),
+        }
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class SizeDetailView(generics.RetrieveAPIView):
+    """
+    api: api/v1/administration/sizes/<int:pk>/
+    Представление для:
+    - GET: получение информации о размере
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    queryset = Size.objects.all()
+    serializer_class = SizeSerializer
 
 
 class SizeUpdateView(LoggedUpdateAPIView):
@@ -433,7 +489,7 @@ class ColorPaletteListView(generics.ListAPIView):
     search_fields = ["name", "hex"]
     ordering_fields = ["name", "hex", "is_active"]
     ordering = ["-id"]
-    
+
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
 

@@ -33,14 +33,6 @@
   white-space: nowrap;
 }
 
-.triggerLabelActive {
-  font: var(--body1);
-  font-weight: 550;
-  transition: color 0.3s;
-  white-space: nowrap;
-  color: var(--gray4);
-}
-
 .triggerSelected {
   background: rgba(var(--gray7--rgb), 0.3);
   box-shadow: var(--shadow-icon);
@@ -117,15 +109,6 @@
   user-select: none;
   transition: background-color 0.2s;
   color: var(--gray);
-}
-
-.presetItemActive {
-  background-color: var(--blue);
-  color: var(--static-white);
-}
-
-.presetItemActive:hover {
-  background-color: var(--blue) !important;
 }
 
 .presetItem:hover {

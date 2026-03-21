@@ -20,6 +20,7 @@ from .views import (
     ShopDeleteView,
     # Размеры
     SizeListView,
+    SizeDetailView,
     SizeUpdateView,
     SizeCreateView,
     SizeDeleteView,
@@ -54,6 +55,7 @@ urlpatterns = [
     # Размеры
     path("sizes/create/", SizeCreateView.as_view(), name="sizes-create"),
     path("sizes/", SizeListView.as_view(), name="sizes-list"),
+    path("sizes/<int:pk>/", SizeDetailView.as_view(), name="sizes-detail"),
     path("sizes/<int:pk>/update/", SizeUpdateView.as_view(), name="sizes-update"),
     path("sizes/<int:pk>/delete/", SizeDeleteView.as_view(), name="sizes-delete"),
     

@@ -70,29 +70,6 @@
   border-radius: 100%;
 }
 
-.iconsGalery {
-  display: flex;
-  gap: 10px;
-}
-
-.iconsGaleryIcon {
-  height: 16px;
-  width: 16px;
-  cursor: pointer;
-}
-
-.roundedNum {
-  height: 22px;
-  width: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 100%;
-  font: var(--body0);
-  color: var(--red);
-  background-color: var(--border-accent);
-}
-
 .status {
   height: 12px;
   width: 12px;
@@ -144,18 +121,6 @@
   transition: fill 0.3s;
 }
 
-.copyMenu {
-  position: absolute;
-  left: 30px;
-  height: 40px;
-  width: 200px;
-  display: none;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: start;
-  padding: 3px 0;
-}
-
 .copyTitleMenyBtn {
   width: fit-content;
   padding: 1px 0px;
@@ -189,10 +154,6 @@
 
 .copySecTitleMenyBtn:hover {
   background-color: var(--blue7);
-}
-
-.copyMenu_Open {
-  display: flex;
 }
 
 .functionBlock {
