@@ -17,6 +17,7 @@ class SettingsAdmin(SimpleHistoryAdmin):
         "is_all_colors_same_price",
         "is_all_colors_same_description",
         "is_all_colors_same_model",
+        "date_updated",
     ]
     search_fields = [
         "set_custom_product_settings",

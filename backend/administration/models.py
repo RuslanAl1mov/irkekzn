@@ -36,7 +36,7 @@ class Settings(models.Model):
     )
 
     # Метаданные
-    updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
+    date_updated = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
 
     class Meta:
         verbose_name = "Настройки"

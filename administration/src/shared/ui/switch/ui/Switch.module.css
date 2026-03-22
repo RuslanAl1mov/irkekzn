@@ -9,7 +9,7 @@
 .label {
   font: var(--body1);
   color: var(--gray);
-  padding-left: 3px;
+  transition: opacity 0.3s ease;
 }
 
 .switcher {
@@ -70,10 +70,13 @@
 
 .disabled {
   opacity: 0.6;
+  transition: opacity 0.3s ease;
 }
 
 .disabled .label {
   cursor: not-allowed;
+  transition: opacity 0.3s ease;
+
 }
 
 .disabled .switcher {

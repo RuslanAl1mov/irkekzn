@@ -1,0 +1,121 @@
+.wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    gap: 10px;
+    background: rgba(var(--glass-bg-color), 0.5);
+    border: 1px solid var(--gray6);
+    border-radius: 10px;
+    box-shadow: var(--shadow-icon);
+
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+
+.header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 25px;
+    background: var(--blue7);
+    border-bottom: 1px solid var(--gray6);
+}
+
+.addButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 15px;
+    background: var(--gray2);
+}
+
+.addButton:hover {
+    background: var(--gray);
+}
+
+.addButtonIcon {
+    width: 18px;
+    height: 18px;
+}
+
+.addButtonText {
+    font: var(--body1);
+    font-weight: 500;
+    color: var(--white);
+}
+
+
+.content {
+    width: 100%;
+    height: 100%;
+    padding: 15px 25px 25px 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.loaderErrorBlock {
+    width: 100%;
+    height: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.settingsBlock {
+    padding: 20px;
+    border-radius: 10px;
+    background-color: var(--blue7);
+    border: 1px solid var(--gray6);
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.settingsContentBlock {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.settingsRow {
+    display: flex;
+}
+
+.settingsSubRow {
+    position: relative;
+    padding-left: 35px;
+}
+
+.settingsSubRow__first::before {
+    height: 20px !important;
+}
+
+.settingsSubRow::before {
+    content: "";
+
+    position: absolute;
+
+    left: 3px;
+    bottom: 50%;
+    
+    height: 43px;
+    min-width: 25px;
+    border-left: 1px solid var(--blue3);
+    border-bottom: 1px solid var(--blue3);
+    border-bottom-left-radius: 7px;
+    
+    display: block;
+    /* или inline-block */
+
+    transition: border-color 0.3s ease;
+}
+
+.settingsSubRow__disabled::before {
+    border-color: var(--gray6);
+}

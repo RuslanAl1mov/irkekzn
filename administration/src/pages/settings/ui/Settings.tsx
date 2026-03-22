@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ColorsTab } from "@/features/color";
 import { SizesTab } from "@/features/size";
 import { TabButton, TabsBlock } from "@/shared/ui/tabs";
+import { SettingsTab } from "@/features/settings";
 
 
 export const Settings = () => {
@@ -30,6 +31,7 @@ export const Settings = () => {
 
                 {activeTab === "sizes-table" && <SizesTab />}
                 {activeTab === "color-palette" && <ColorsTab />}
+                {activeTab === "general" && <SettingsTab />}
             </div>
         </section>
     );

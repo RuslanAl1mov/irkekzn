@@ -7,6 +7,7 @@ import type { UserPermissionsListGetParams } from "@/entities/user-permission";
 
 export const queryKeys = {
   checkAuth: () => ["auth", "me"] as const,
+  settings: () => ["settings"] as const,
   userLists: () => ["users", "list"] as const,
   users: (params?: UsersListGetParams | null) =>
     ["users", "list", params ?? null] as const,
