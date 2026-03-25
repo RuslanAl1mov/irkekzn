@@ -1,7 +1,19 @@
 from rest_framework import serializers
 import django.db.models as models
+from users.models import RequestLog
 from .models import Shop, Size, ColorPalette, Settings
 from services.validators import phone_number_ru_validator
+
+
+class RequestLogSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для модели RequestLog
+    """
+
+    class Meta:
+        model = RequestLog
+        fields = "__all__"
+        read_only_fields = ["id"]
 
 
 class SettingsSerializer(serializers.ModelSerializer):

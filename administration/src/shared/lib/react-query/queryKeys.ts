@@ -12,6 +12,7 @@ export const queryKeys = {
   users: (params?: UsersListGetParams | null) =>
     ["users", "list", params ?? null] as const,
   userDetail: (id: number | null) => ["users", "detail", id] as const,
+  userLogs: (userId: number | null) => ["users", "logs", userId] as const,
   userGroups: (params: UserGroupsListGetParams) =>
     ["user-groups", "list", params] as const,
   userPermissions: (params: UserPermissionsListGetParams) =>

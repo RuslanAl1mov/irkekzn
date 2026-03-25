@@ -13,7 +13,7 @@ from services.mixin.logged_api_views import (
 
 from core.permissions import IsEmployee, CRUDPermissions, GetListPermissions
 
-from users.models import User
+from users.models import User, RequestLog
 from users.serializers import (
     GroupSerializer,
     PermissionSerializer,
@@ -22,6 +22,7 @@ from users.serializers import (
     EmployeeCreateSerializer,
 )
 from .pagination import (
+    RequestLogsListPagination,
     UsersListPagination,
     ShopsListPagination,
     SizesListPagination,
@@ -34,6 +35,7 @@ from .serializers import (
     SizeSerializer,
     ColorPaletteSerializer,
     SettingsSerializer,
+    RequestLogSerializer,
 )
 
 
@@ -101,6 +103,23 @@ class PermissionListView(generics.ListAPIView):
     )
 
     ordering = ["content_type__app_label", "codename"]
+
+
+# Логи пользователей
+class UserLogsListView(generics.ListAPIView):
+    """
+    api: api/v1/administration/users/logs/<int:user_id>/
+    Представление для:
+    - GET: список логов пользователя
+    """
+
+    queryset = RequestLog.objects.select_related("user").all()
+    serializer_class = RequestLogSerializer
+    permission_classes = [IsAuthenticated, IsEmployee, GetListPermissions]
+    pagination_class = RequestLogsListPagination
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.kwargs["user_id"])
 
 
 # Настройки

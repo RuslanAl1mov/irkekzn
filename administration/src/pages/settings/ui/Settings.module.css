@@ -9,7 +9,11 @@
 .titleBlock {
     display: flex; 
     justify-content: space-between;
-    align-items: center;
+    align-items: end;
+}
+
+.tabsBlock {
+    width: 100%;
 }
 
 .content {

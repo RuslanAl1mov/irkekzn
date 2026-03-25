@@ -9,6 +9,8 @@ from .views import (
     UserDetailView,
     EmployeeUpdateView,
     EmployeeCreateView,
+    # Логи пользователей
+    UserLogsListView,
     # Настройки
     SettingsDetailView,
     SettingsUpdateView,
@@ -34,6 +36,7 @@ from .views import (
 
 urlpatterns = [
     # Пользователи
+    path("users/logs/<int:user_id>/", UserLogsListView.as_view(), name="users-logs-list"),
     path("users/groups/", GroupListView.as_view(), name="groups-list"),
     path("users/permissions/", PermissionListView.as_view(), name="permissions-list"),
     path("users/", UsersListView.as_view(), name="users-list"),

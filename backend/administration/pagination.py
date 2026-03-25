@@ -19,6 +19,10 @@ class DefaultPagination(PageNumberPagination):
         )
 
 
+class RequestLogsListPagination(DefaultPagination):
+    pass
+
+
 class UsersListPagination(DefaultPagination):
     def get_paginated_response(self, data):
         # Получаем статистику из request
@@ -36,7 +40,7 @@ class UsersListPagination(DefaultPagination):
                 "result": data,
             }
         )
-        
+
 
 class ShopsListPagination(DefaultPagination):
     def get_paginated_response(self, data):
@@ -55,8 +59,8 @@ class ShopsListPagination(DefaultPagination):
                 "result": data,
             }
         )
-        
-        
+
+
 class SizesListPagination(DefaultPagination):
     pass
 

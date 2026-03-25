@@ -102,7 +102,7 @@ export const Sidebar: React.FC = () => {
             </li>
 
             <li>
-              <NavLink to="/settings" className={getLinkClass}>
+              <NavLink to="/settings?tab=general" className={getLinkClass}>
                 <SettingsIcon className={cls.menuListIcon} />
                 <p className={cn(cls.menuListTitle, isMenuWide && cls.menuListTitle__visible)}>
                   Настройки
@@ -134,16 +134,18 @@ export const Sidebar: React.FC = () => {
         </div>
 
         <div className={cls.userBlock}>
-          <div className={cls.userInfoBlock}>
-            <img src={UserImage} alt="User photo" className={cls.userPhoto} />
-            {isMenuWide && (
+          <NavLink to="/profile">
+            <div className={cls.userInfoBlock}>
+              <img src={UserImage} alt="User photo" className={cls.userPhoto} />
+              {isMenuWide && (
 
-              <div className={cls.userNameBlock}>
-                <p className={cls.userName} title="Ruslan Alimov">Ruslan Alimov</p>
-                <p className={cls.userEmail} title="ruslan.alimov@irkekzn.com">ruslan.alimov@.com</p>
-              </div>
-            )}
-          </div>
+                <div className={cls.userNameBlock}>
+                  <p className={cls.userName} title="Ruslan Alimov">Ruslan Alimov</p>
+                  <p className={cls.userEmail} title="ruslan.alimov@irkekzn.com">ruslan.alimov@.com</p>
+                </div>
+              )}
+            </div>
+          </NavLink>
 
           {isMenuWide && (
             <div className={cls.exitBlock} title="Выйти из системы" onClick={() => logout()}>

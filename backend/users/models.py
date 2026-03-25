@@ -83,8 +83,9 @@ class User(AbstractUser):
 
 class RequestLog(models.Model):
     """
-        Модель для лонирования запросов пользователей методами POST, PUT, PATCH, DELETE
+    Модель для лонирования запросов пользователей методами POST, PUT, PATCH, DELETE
     """
+
     class RequestMethod(models.TextChoices):
         POST = "POST", "POST"
         PUT = "PUT", "PUT"
@@ -113,3 +114,5 @@ class RequestLog(models.Model):
     class Meta:
         verbose_name = "Лог"
         verbose_name_plural = "Логи"
+
+        permissions = (("view_requestlog_list", "Can see Request log list"),)
