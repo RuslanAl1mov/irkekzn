@@ -12,35 +12,35 @@ class SettingsAdmin(SimpleHistoryAdmin):
 
     list_display = [
         "id",
-        "set_custom_product_settings",
-        "is_all_colors_same_name",
-        "is_all_colors_same_price",
-        "is_all_colors_same_description",
-        "is_all_colors_same_model",
+        "set_custom_product_card_settings",
+        "is_all_products_same_name",
+        "is_all_products_same_price",
+        "is_all_products_same_description",
+        "is_all_products_same_model",
         "date_updated",
     ]
     search_fields = [
-        "set_custom_product_settings",
-        "is_all_colors_same_name",
-        "is_all_colors_same_price",
-        "is_all_colors_same_description",
-        "is_all_colors_same_model",
+        "set_custom_product_card_settings",
+        "is_all_products_same_name",
+        "is_all_products_same_price",
+        "is_all_products_same_description",
+        "is_all_products_same_model",
     ]
     list_filter = [
-        "set_custom_product_settings",
-        "is_all_colors_same_name",
-        "is_all_colors_same_price",
-        "is_all_colors_same_description",
-        "is_all_colors_same_model",
+        "set_custom_product_card_settings",
+        "is_all_products_same_name",
+        "is_all_products_same_price",
+        "is_all_products_same_description",
+        "is_all_products_same_model",
     ]
     list_display_links = ["id"]
     
     list_editable = [
-        "set_custom_product_settings",
-        "is_all_colors_same_name",
-        "is_all_colors_same_price",
-        "is_all_colors_same_description",
-        "is_all_colors_same_model",
+        "set_custom_product_card_settings",
+        "is_all_products_same_name",
+        "is_all_products_same_price",
+        "is_all_products_same_description",
+        "is_all_products_same_model",
     ]
 
 
