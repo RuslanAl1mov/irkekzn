@@ -14,7 +14,7 @@ import { Loader } from "@/widgets/loader";
 import { Title } from "@/widgets/title";
 
 const DEFAULT_SETTINGS: ISettingsPayload = {
-    set_custom_product_card_settings: false,
+    set_global_product_card_settings: false,
     is_all_products_same_name: false,
     is_all_products_same_price: false,
     is_all_products_same_description: false,
@@ -22,7 +22,7 @@ const DEFAULT_SETTINGS: ISettingsPayload = {
 };
 
 const toSettingsPayload = (settings: ISettings | ISettingsPayload): ISettingsPayload => ({
-    set_custom_product_card_settings: settings.set_custom_product_card_settings,
+    set_global_product_card_settings: settings.set_global_product_card_settings,
     is_all_products_same_name: settings.is_all_products_same_name,
     is_all_products_same_price: settings.is_all_products_same_price,
     is_all_products_same_description: settings.is_all_products_same_description,
@@ -105,9 +105,9 @@ export const SettingsTab = () => {
                             <div className={cls.settingsContentBlock}>
                                 <div className={cls.settingsRow}>
                                     <Switch
-                                        label="Ручная настройка модификаций товара при создании"
-                                        value={settings.set_custom_product_card_settings}
-                                        setValue={(value) => updateSetting("set_custom_product_card_settings", value)}
+                                        label="Использовать общие настройки карточкек товаров"
+                                        value={settings.set_global_product_card_settings}
+                                        setValue={(value) => updateSetting("set_global_product_card_settings", value)}
                                         disabled={isLoading}
                                     />
                                 </div>
@@ -116,56 +116,56 @@ export const SettingsTab = () => {
                                         cls.settingsRow,
                                         cls.settingsSubRow,
                                         cls.settingsSubRow__first,
-                                        { [cls.settingsSubRow__disabled]: isLoading || !settings.set_custom_product_card_settings },
+                                        { [cls.settingsSubRow__disabled]: isLoading || !settings.set_global_product_card_settings },
                                     )}
                                 >
                                     <Switch
                                         label="Все модификации товаров имеют одинаковое название"
                                         value={settings.is_all_products_same_name}
                                         setValue={(value) => updateSetting("is_all_products_same_name", value)}
-                                        disabled={isLoading || !settings.set_custom_product_card_settings}
+                                        disabled={isLoading || !settings.set_global_product_card_settings}
                                     />
                                 </div>
                                 <div
                                     className={cn(
                                         cls.settingsRow,
                                         cls.settingsSubRow,
-                                        { [cls.settingsSubRow__disabled]: isLoading || !settings.set_custom_product_card_settings },
+                                        { [cls.settingsSubRow__disabled]: isLoading || !settings.set_global_product_card_settings },
                                     )}
                                 >
                                     <Switch
                                         label="Все модификации товаров имеют одинаковую цену"
                                         value={settings.is_all_products_same_price}
                                         setValue={(value) => updateSetting("is_all_products_same_price", value)}
-                                        disabled={isLoading || !settings.set_custom_product_card_settings}
+                                        disabled={isLoading || !settings.set_global_product_card_settings}
                                     />
                                 </div>
                                 <div
                                     className={cn(
                                         cls.settingsRow,
                                         cls.settingsSubRow,
-                                        { [cls.settingsSubRow__disabled]: isLoading || !settings.set_custom_product_card_settings },
+                                        { [cls.settingsSubRow__disabled]: isLoading || !settings.set_global_product_card_settings },
                                     )}
                                 >
                                     <Switch
                                         label="Все модификации товаров имеют одинаковое описание"
                                         value={settings.is_all_products_same_description}
                                         setValue={(value) => updateSetting("is_all_products_same_description", value)}
-                                        disabled={isLoading || !settings.set_custom_product_card_settings}
+                                        disabled={isLoading || !settings.set_global_product_card_settings}
                                     />
                                 </div>
                                 <div
                                     className={cn(
                                         cls.settingsRow,
                                         cls.settingsSubRow,
-                                        { [cls.settingsSubRow__disabled]: isLoading || !settings.set_custom_product_card_settings },
+                                        { [cls.settingsSubRow__disabled]: isLoading || !settings.set_global_product_card_settings },
                                     )}
                                 >
                                     <Switch
                                         label="Все модификации товаров имеют одинаковую модель"
                                         value={settings.is_all_products_same_model}
                                         setValue={(value) => updateSetting("is_all_products_same_model", value)}
-                                        disabled={isLoading || !settings.set_custom_product_card_settings}
+                                        disabled={isLoading || !settings.set_global_product_card_settings}
                                     />
                                 </div>
                             </div>

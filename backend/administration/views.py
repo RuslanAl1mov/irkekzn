@@ -29,6 +29,7 @@ from .pagination import (
     SizesListPagination,
     ColorPaletteListPagination,
     ProductCategoryListPagination,
+    ProductCardListPagination,
 )
 from .filters import UsersListFilter, ShopListFilter, ColorPaletteListFilter
 from .models import (
@@ -38,6 +39,7 @@ from .models import (
     Settings,
     ProductCategory,
     ProductCategoryCover,
+    ProductCard,
 )
 from .serializers import (
     ShopSerializer,
@@ -47,6 +49,7 @@ from .serializers import (
     RequestLogSerializer,
     ProductCategorySerializer,
     ProductCategoryCoverSerializer,
+    ProductCardSerializer,
 )
 
 User = get_user_model()
@@ -579,8 +582,6 @@ class ColorPaletteDeleteView(LoggedDestroyAPIView):
 
 
 # Категории товаров
-
-
 class ProductCategoryCoverCreateView(LoggedCreateAPIView):
     """
     api: api/v1/administration/product-categories/covers/create/
@@ -671,3 +672,84 @@ class ProductCategoryDeleteView(LoggedDestroyAPIView):
     permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
     queryset = ProductCategory.objects.all()
     serializer_class = ProductCategorySerializer
+
+
+# Карточки товаров
+class ProductCardListView(generics.ListAPIView):
+    """
+    api: api/v1/administration/product-cards/
+    Представление для:
+    - GET: список всех карточек товаров
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, GetListPermissions]
+    queryset = ProductCard.objects.all()
+    serializer_class = ProductCardSerializer
+    pagination_class = ProductCardListPagination
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # Сохраняем доп статистику в request для пагинатора
+        request.stats = {
+            "total_count": queryset.count(),
+            "inactive_count": queryset.filter(is_active=False).count(),
+        }
+
+        # Стандартная пагинация
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class ProductCardDetailView(generics.RetrieveAPIView):
+    """
+    api: api/v1/administration/product-cards/<int:pk>/
+    Представление для:
+    - GET: получение информации о карточке товара
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    queryset = ProductCard.objects.all()
+    serializer_class = ProductCardSerializer
+
+
+class ProductCardCreateView(LoggedCreateAPIView):
+    """
+    api: api/v1/administration/product-cards/create/
+    Представление для:
+    - POST: создание новой карточки товара
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    queryset = ProductCard.objects.all()
+    serializer_class = ProductCardSerializer
+
+
+class ProductCardUpdateView(LoggedUpdateAPIView):
+    """
+    api: api/v1/administration/product-cards/<int:pk>/update/
+    Представление для:
+    - PUT: обновление информации о карточке товара
+    - PATCH: обновление информации о карточке товара
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    queryset = ProductCard.objects.all()
+    serializer_class = ProductCardSerializer
+
+
+class ProductCardDeleteView(LoggedDestroyAPIView):
+    """
+    api: api/v1/administration/product-cards/<int:pk>/delete/
+    Представление для:
+    - DELETE: удаление карточки товара
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    queryset = ProductCard.objects.all()
+    serializer_class = ProductCardSerializer

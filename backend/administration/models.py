@@ -20,8 +20,8 @@ class Settings(models.Model):
     Может существовать только одна запись.
     """
 
-    set_custom_product_card_settings = models.BooleanField(
-        default=True, verbose_name="Использовать кастомные настройки карточки товаров"
+    set_global_product_card_settings = models.BooleanField(
+        default=True, verbose_name="Использовать общие настройки карточки товаров"
     )
 
     is_all_products_same_name = models.BooleanField(
@@ -63,7 +63,7 @@ class Settings(models.Model):
         """
         settings, created = cls.objects.get_or_create(
             defaults={
-                "set_custom_product_card_settings": True,
+                "set_global_product_card_settings": True,
                 "is_all_products_same_name": False,
                 "is_all_products_same_price": False,
                 "is_all_products_same_description": False,
@@ -260,7 +260,7 @@ class ProductCategory(models.Model):
         verbose_name="Родительская категория",
         null=True,
         blank=True,
-        default=None
+        default=None,
     )
 
     date_created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
@@ -368,6 +368,18 @@ class ProductCard(models.Model):
     """
 
     categories = models.ManyToManyField(ProductCategory, verbose_name="Категории")
+    is_all_products_same_name = models.BooleanField(
+        default=True, verbose_name="Все товары имеют одинаковое название"
+    )
+    is_all_products_same_price = models.BooleanField(
+        default=True, verbose_name="Все товары имеют одинаковую цену"
+    )
+    is_all_products_same_description = models.BooleanField(
+        default=True, verbose_name="Все товары имеют одинаковое описание"
+    )
+    is_all_products_same_model = models.BooleanField(
+        default=True, verbose_name="Все товары имеют одинаковую модель"
+    )
     date_created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     creator = models.ForeignKey(
         User, on_delete=models.PROTECT, verbose_name="Создатель"
@@ -387,40 +399,6 @@ class ProductCard(models.Model):
 
     def __str__(self):
         return f"{self.id}"
-
-    def save(self, *args, **kwargs):
-        ProductCardSettings.objects.create(product_card=self)
-        super().save(*args, **kwargs)
-
-
-class ProductCardSettings(models.Model):
-    """
-    Модель для настроек карточки товара
-    """
-
-    product_card = models.ForeignKey(
-        ProductCard, on_delete=models.CASCADE, verbose_name="Карточка товара"
-    )
-    is_all_products_same_name = models.BooleanField(
-        default=True, verbose_name="Все товары имеют одинаковое название"
-    )
-    is_all_products_same_price = models.BooleanField(
-        default=True, verbose_name="Все товары имеют одинаковую цену"
-    )
-    is_all_products_same_description = models.BooleanField(
-        default=True, verbose_name="Все товары имеют одинаковое описание"
-    )
-    is_all_products_same_model = models.BooleanField(
-        default=True, verbose_name="Все товары имеют одинаковую модель"
-    )
-
-    class Meta:
-        verbose_name = "Настройки карточки товара"
-        verbose_name_plural = "Настройки карточек товаров"
-
-        permissions = (
-            ("view_productcardsettings_list", "Can see Product Card Settings list"),
-        )
 
 
 class Product(models.Model):

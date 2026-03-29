@@ -14,6 +14,7 @@ from .models import (
     ProductImage,
     ProductStock,
     ProductCategoryCover,
+    ProductCard,
 )
 from services.validators import phone_number_ru_validator
 from services.default_creator import CurrentUserDefault
@@ -240,7 +241,7 @@ class ProductCategoryCoverSerializer(serializers.ModelSerializer):
             "is_active",
             "date_created",
         ]
-        read_only_fields = ["id"]
+        read_only_fields = ["id", "date_created", "creator"]
 
     def validate_image(self, value):
         # Проверка размера файла (10 MB)
@@ -281,7 +282,7 @@ class ProductCategorySerializer(serializers.ModelSerializer):
         required=False,
         source="parent",
         allow_null=True,
-        write_only=True
+        write_only=True,
     )
     covers = ProductCategoryCoverSerializer(many=True, read_only=True)
     covers_ids = serializers.PrimaryKeyRelatedField(
@@ -307,7 +308,7 @@ class ProductCategorySerializer(serializers.ModelSerializer):
             "creator_id",
             "date_created",
         ]
-        read_only_fields = ["id", "creator"]
+        read_only_fields = ["id", "date_created", "creator"]
 
     def get_parent(self, obj):
         """
@@ -319,15 +320,15 @@ class ProductCategorySerializer(serializers.ModelSerializer):
                 "name": obj.parent.name,
             }
         return None
-    
+
     def validate_parent_id(self, parent_id):
         """
         Проверяем, что parent_id не привязана уже к другой категории
         """
         if parent_id and self.instance and parent_id.pk == self.instance.pk:
-                raise serializers.ValidationError(
-                    "Родительская категория не может быть привязана к самой себе."
-                )
+            raise serializers.ValidationError(
+                "Родительская категория не может быть привязана к самой себе."
+            )
         return parent_id
 
     def validate_covers_ids(self, covers):
@@ -374,3 +375,82 @@ class ProductCategorySerializer(serializers.ModelSerializer):
                 )
 
         return attrs
+
+
+class ProductCardSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для модели ProductCard
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Проверяем глобавльные настройки системы
+        self.global_settings = Settings.objects.first()
+
+        # Если используем глобальные настройки карточки товаров, то скрываем поля настроек карточки товара
+        # Берём значения из глобальных настроек системы
+        if self.global_settings.set_global_product_card_settings:
+            self.fields["is_all_products_same_name"] = serializers.HiddenField(
+                default=self.global_settings.is_all_products_same_name
+            )
+            self.fields["is_all_products_same_price"] = serializers.HiddenField(
+                default=self.global_settings.is_all_products_same_price
+            )
+            self.fields["is_all_products_same_description"] = serializers.HiddenField(
+                default=self.global_settings.is_all_products_same_description
+            )
+            self.fields["is_all_products_same_model"] = serializers.HiddenField(
+                default=self.global_settings.is_all_products_same_model
+            )
+            
+        # Если не используем глобальные настройки карточки товаров, 
+        # то делаем поля настроек карточки товара обязательными
+        if not self.global_settings.set_global_product_card_settings:
+            self.fields["is_all_products_same_name"].required = True
+            self.fields["is_all_products_same_price"].required = True
+            self.fields["is_all_products_same_description"].required = True
+            self.fields["is_all_products_same_model"].required = True
+            
+            self.fields["name"].required = True
+            self.fields["price"].required = True
+            self.fields["description"].required = True
+            self.fields["model"].required = True
+
+    creator = UserSerializer(
+        read_only=True, fields=["id", "first_name", "last_name", "email", "is_active"]
+    )
+    creator_id = serializers.HiddenField(default=CurrentUserDefault(), source="creator")
+    categories = ProductCategorySerializer(many=True, read_only=True)
+    categories_ids = serializers.PrimaryKeyRelatedField(
+        many=True,
+        write_only=True,
+        queryset=ProductCategory.objects.all(),
+        source="categories",
+        required=True,
+    )
+    
+    name = serializers.CharField(required=False, max_length=255, write_only=True)
+    price = serializers.DecimalField(required=False, max_digits=10, decimal_places=2, write_only=True)
+    description = serializers.CharField(required=False, write_only=True)
+    model = serializers.CharField(required=False, write_only=True)
+
+    class Meta:
+        model = ProductCard
+        fields = [
+            "id",
+            "categories",
+            "categories_ids",
+            "is_all_products_same_name",
+            "is_all_products_same_price",
+            "is_all_products_same_description",
+            "is_all_products_same_model",
+            "name",
+            "price",
+            "description",
+            "model",
+            "creator",
+            "creator_id",
+            "is_active",
+            "date_created",
+        ]
+        read_only_fields = ["id", "date_created", "creator"]

@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django import forms
 from django.utils.html import format_html
 
 from simple_history.admin import SimpleHistoryAdmin
@@ -9,6 +10,7 @@ from .models import (
     Settings,
     ProductCategory,
     ProductCategoryCover,
+    ProductCard,
 )
 
 
@@ -20,7 +22,7 @@ class SettingsAdmin(SimpleHistoryAdmin):
 
     list_display = [
         "id",
-        "set_custom_product_card_settings",
+        "set_global_product_card_settings",
         "is_all_products_same_name",
         "is_all_products_same_price",
         "is_all_products_same_description",
@@ -28,14 +30,14 @@ class SettingsAdmin(SimpleHistoryAdmin):
         "date_updated",
     ]
     search_fields = [
-        "set_custom_product_card_settings",
+        "set_global_product_card_settings",
         "is_all_products_same_name",
         "is_all_products_same_price",
         "is_all_products_same_description",
         "is_all_products_same_model",
     ]
     list_filter = [
-        "set_custom_product_card_settings",
+        "set_global_product_card_settings",
         "is_all_products_same_name",
         "is_all_products_same_price",
         "is_all_products_same_description",
@@ -44,7 +46,7 @@ class SettingsAdmin(SimpleHistoryAdmin):
     list_display_links = ["id"]
 
     list_editable = [
-        "set_custom_product_card_settings",
+        "set_global_product_card_settings",
         "is_all_products_same_name",
         "is_all_products_same_price",
         "is_all_products_same_description",
@@ -195,3 +197,79 @@ class ProductCategoryAdmin(SimpleHistoryAdmin):
         if not change:
             obj.creator = request.user
         super().save_model(request, obj, form, change)
+
+
+class ProductCardAdminForm(forms.ModelForm):
+    class Meta:
+        model = ProductCard
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        settings_obj = Settings.objects.first()
+
+        if settings_obj and not settings_obj.set_global_product_card_settings:
+            self.fields["is_all_products_same_name"].disabled = True
+            self.fields["is_all_products_same_price"].disabled = True
+            self.fields["is_all_products_same_description"].disabled = True
+            self.fields["is_all_products_same_model"].disabled = True
+
+
+@admin.register(ProductCard)
+class ProductCardAdmin(admin.ModelAdmin):
+    form = ProductCardAdminForm
+
+    list_display = (
+        "id",
+        "get_categories",
+        "is_all_products_same_name",
+        "is_all_products_same_price",
+        "is_all_products_same_description",
+        "is_all_products_same_model",
+        "date_created",
+        "creator",
+        "is_active",
+    )
+    list_display_links = ("id", "get_categories")
+    list_filter = (
+        "is_all_products_same_name",
+        "is_all_products_same_price",
+        "is_all_products_same_description",
+        "is_all_products_same_model",
+        "is_active",
+        "date_created",
+        "creator",
+    )
+    list_editable = (
+        "is_all_products_same_name",
+        "is_all_products_same_price",
+        "is_all_products_same_description",
+        "is_all_products_same_model",
+        "is_active",
+    )
+    search_fields = (
+        "id",
+        "categories__name",
+        "creator__email",
+        "creator__first_name",
+        "creator__last_name",
+    )
+    filter_horizontal = ("categories",)
+    autocomplete_fields = ("creator",)
+    readonly_fields = ("date_created",)
+    ordering = ("-date_created",)
+
+    def get_categories(self, obj):
+        return ", ".join(obj.categories.values_list("name", flat=True)) or "—"
+
+    get_categories.short_description = "Категории"
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.creator = request.user
+        super().save_model(request, obj, form, change)
+
+    def get_changelist_form(self, request, **kwargs):
+        kwargs["form"] = ProductCardAdminForm
+        return super().get_changelist_form(request, **kwargs)

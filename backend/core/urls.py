@@ -23,7 +23,10 @@ urlpatterns = [
     path("api/v1/auth/me/", MeView.as_view(), name="me"),
     path("api/v1/auth/token/refresh/", RefreshJWTView.as_view(), name="refresh-token"),
     path("api/v1/auth/logout/", LogoutView.as_view(), name="logout"),
-    
+
+    # Документация API (ручная OpenAPI + Swagger / Redoc)
+    path("api/v1/docs/", include("documentation.urls")),
+
     # Эндпоинты приложений
     path("api/v1/marketplace/", include("marketplace.urls")),  # Магазин/Вебсайт
     path("api/v1/administration/", include("administration.urls")),  # Администратор

@@ -66,15 +66,21 @@ JAZZMIN_SETTINGS = {
         "administration.Settings": "fas fa-cog",  # для модели Settings
         "administration.ProductCategory": "fas fa-layer-group",  # для модели ProductCategory
         "administration.ProductCategoryCover": "fas fa-images",  # для модели ProductCategoryCover
+        "administration.ProductCard": "fas fa-sitemap",  # для модели ProductCard
     },
     "order_with_respect_to": [
+        # --- Пользователи ---
+        "users",
+        "users.User",
+        "users.RequestLog",
+        # --- Администрация ---
         "administration",
         # --- Категории ---
-        "JazzminSeparator",
         "administration.productcategory",
         "administration.productcategorycover",
+        # --- Товары ---
+        "administration.ProductCard",
         # --- Атрибуты ---
-        "JazzminSeparator",
         "administration.shop",
         "administration.colorpalette",
         "administration.size",

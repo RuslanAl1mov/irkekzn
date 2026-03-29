@@ -12,7 +12,8 @@
 }
 
 .nav-item-separator[data-next="Shop"],
-.nav-item-separator[data-next="Settings"] {
+.nav-item-separator[data-next="Settings"],
+.nav-item-separator[data-next="ProductCard"] {
     background: #4e575f;
     height: 1px;
     width: calc(100% - 1rem);

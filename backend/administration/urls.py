@@ -38,6 +38,12 @@ from .views import (
     ProductCategoryCreateView,
     ProductCategoryUpdateView,
     ProductCategoryDeleteView,
+    # Карточки товаров
+    ProductCardListView,
+    ProductCardDetailView,
+    ProductCardCreateView,
+    ProductCardUpdateView,
+    ProductCardDeleteView,
 )
 
 
@@ -82,6 +88,13 @@ urlpatterns = [
     path("product-categories/<int:pk>/", ProductCategoryDetailView.as_view(), name="product-categories-detail"),
     path("product-categories/<int:pk>/update/", ProductCategoryUpdateView.as_view(), name="product-categories-update"),
     path("product-categories/<int:pk>/delete/", ProductCategoryDeleteView.as_view(), name="product-categories-delete"),
+    
+    # Карточки товаров
+    path("product-cards/", ProductCardListView.as_view(), name="product-cards-list"),
+    path("product-cards/<int:pk>/", ProductCardDetailView.as_view(), name="product-cards-detail"),
+    path("product-cards/create/", ProductCardCreateView.as_view(), name="product-cards-create"),
+    path("product-cards/<int:pk>/update/", ProductCardUpdateView.as_view(), name="product-cards-update"),
+    path("product-cards/<int:pk>/delete/", ProductCardDeleteView.as_view(), name="product-cards-delete"),
 ]
 
 if settings.DEBUG:
