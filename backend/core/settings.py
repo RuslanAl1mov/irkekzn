@@ -63,11 +63,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "core.urls"
-
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR.parent / "administration/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -199,8 +198,8 @@ STATIC_DIR = os.path.join(BASE_DIR, "static")
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATIC_ROOT = os.path.join(BASE_DIR.parent, "staticfiles")
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR.parent, "")
+MEDIA_URL = "/staticmedia/"
+MEDIA_ROOT = os.path.join(BASE_DIR.parent, "staticmedia/")
 
 
 # Default primary key field type

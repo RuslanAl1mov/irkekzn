@@ -1,0 +1,21 @@
+.sidebar-mini.sidebar-collapse .nav-sidebar .nav-header {
+    opacity: 1;
+    display: block;
+    overflow: hidden;
+    padding: 0;
+    padding-top: 5px;
+    /* border-bottom: 1px solid #4e575f; */
+    height: 1px;
+    width: calc(100% - 1rem);
+    margin: 12px auto;
+    box-sizing: border-box;
+}
+
+.nav-item-separator[data-next="Shop"],
+.nav-item-separator[data-next="Settings"] {
+    background: #4e575f;
+    height: 1px;
+    width: calc(100% - 1rem);
+    box-sizing: border-box;
+    margin: 12px auto;
+}

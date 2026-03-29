@@ -13,7 +13,7 @@ JAZZMIN_UI_TWEAKS = {
     "footer_fixed": False,
     "sidebar_fixed": True,
     "sidebar_nav_small_text": True,
-    "sidebar_disable_expand": True,
+    "sidebar_disable_expand": False,
     "sidebar_nav_child_indent": False,
     "sidebar_nav_compact_style": True,
     "sidebar_nav_legacy_style": False,
@@ -64,13 +64,28 @@ JAZZMIN_SETTINGS = {
         "administration.Size": "fas fa-ruler",  # для модели Size
         "administration.ColorPalette": "fas fa-palette",  # для модели ColorPalette
         "administration.Settings": "fas fa-cog",  # для модели Settings
+        "administration.ProductCategory": "fas fa-layer-group",  # для модели ProductCategory
+        "administration.ProductCategoryCover": "fas fa-images",  # для модели ProductCategoryCover
     },
-    "order_with_respect_to": ["users", "administration"],
+    "order_with_respect_to": [
+        "administration",
+        # --- Категории ---
+        "JazzminSeparator",
+        "administration.productcategory",
+        "administration.productcategorycover",
+        # --- Атрибуты ---
+        "JazzminSeparator",
+        "administration.shop",
+        "administration.colorpalette",
+        "administration.size",
+        # --- Системное ---
+        "administration.settings",
+    ],
     "show_sidebar": True,
     "navigation_expanded": True,
     "hide_apps": ["token_blacklist"],
     "hide_models": [],
-    "custom_css": "",
+    "custom_css": "css/admin_custom.css",
     "custom_js": None,
     "use_google_fonts_cdn": True,
     "show_ui_builder": False,

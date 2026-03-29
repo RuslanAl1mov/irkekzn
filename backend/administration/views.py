@@ -2,6 +2,7 @@ from rest_framework import generics, filters, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -13,7 +14,7 @@ from services.mixin.logged_api_views import (
 
 from core.permissions import IsEmployee, CRUDPermissions, GetListPermissions
 
-from users.models import User, RequestLog
+from users.models import RequestLog
 from users.serializers import (
     GroupSerializer,
     PermissionSerializer,
@@ -27,16 +28,28 @@ from .pagination import (
     ShopsListPagination,
     SizesListPagination,
     ColorPaletteListPagination,
+    ProductCategoryListPagination,
 )
 from .filters import UsersListFilter, ShopListFilter, ColorPaletteListFilter
-from .models import Shop, Size, ColorPalette, Settings
+from .models import (
+    Shop,
+    Size,
+    ColorPalette,
+    Settings,
+    ProductCategory,
+    ProductCategoryCover,
+)
 from .serializers import (
     ShopSerializer,
     SizeSerializer,
     ColorPaletteSerializer,
     SettingsSerializer,
     RequestLogSerializer,
+    ProductCategorySerializer,
+    ProductCategoryCoverSerializer,
 )
+
+User = get_user_model()
 
 
 class GroupListView(generics.ListAPIView):
@@ -563,3 +576,98 @@ class ColorPaletteDeleteView(LoggedDestroyAPIView):
     permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
     queryset = ColorPalette.objects.all()
     serializer_class = ColorPaletteSerializer
+
+
+# Категории товаров
+
+
+class ProductCategoryCoverCreateView(LoggedCreateAPIView):
+    """
+    api: api/v1/administration/product-categories/covers/create/
+    Представление для:
+    - POST: создание новой обложки категории товаров
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    queryset = ProductCategoryCover.objects.all()
+    serializer_class = ProductCategoryCoverSerializer
+
+
+class ProductCategoryListView(generics.ListAPIView):
+    """
+    api: api/v1/administration/product-categories/
+    Представление для:
+    - GET: список всех категорий товаров
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, GetListPermissions]
+    queryset = ProductCategory.objects.all()
+    serializer_class = ProductCategorySerializer
+    pagination_class = ProductCategoryListPagination
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # Сохраняем доп статистику в request для пагинатора
+        request.stats = {
+            "total_count": queryset.count(),
+            "inactive_count": queryset.filter(is_active=False).count(),
+        }
+
+        # Стандартная пагинация
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class ProductCategoryDetailView(generics.RetrieveAPIView):
+    """
+    api: api/v1/administration/product-categories/<int:pk>/
+    Представление для:
+    - GET: получение информации о категории товаров
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    queryset = ProductCategory.objects.all()
+    serializer_class = ProductCategorySerializer
+
+
+class ProductCategoryCreateView(LoggedCreateAPIView):
+    """
+    api: api/v1/administration/product-categories/create/
+    Представление для:
+    - POST: создание новой категории товаров
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    queryset = ProductCategory.objects.all()
+    serializer_class = ProductCategorySerializer
+
+
+class ProductCategoryUpdateView(LoggedUpdateAPIView):
+    """
+    api: api/v1/administration/product-categories/<int:pk>/update/
+    Представление для:
+    - PUT: обновление информации о категории товаров
+    - PATCH: обновление информации о категории товаров
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    queryset = ProductCategory.objects.all()
+    serializer_class = ProductCategorySerializer
+
+
+class ProductCategoryDeleteView(LoggedDestroyAPIView):
+    """
+    api: api/v1/administration/product-categories/<int:pk>/delete/
+    Представление для:
+    - DELETE: удаление категории товаров
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    queryset = ProductCategory.objects.all()
+    serializer_class = ProductCategorySerializer

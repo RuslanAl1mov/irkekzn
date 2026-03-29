@@ -1,8 +1,22 @@
+from PIL import Image
+
 from rest_framework import serializers
 import django.db.models as models
 from users.models import RequestLog
-from .models import Shop, Size, ColorPalette, Settings
+from users.serializers import UserSerializer
+from .models import (
+    Shop,
+    Size,
+    ColorPalette,
+    Settings,
+    ProductCategory,
+    Product,
+    ProductImage,
+    ProductStock,
+    ProductCategoryCover,
+)
 from services.validators import phone_number_ru_validator
+from services.default_creator import CurrentUserDefault
 
 
 class RequestLogSerializer(serializers.ModelSerializer):
@@ -196,3 +210,167 @@ class ColorPaletteSerializer(serializers.ModelSerializer):
                 )
 
         return data
+
+
+class ProductCategoryCoverSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для модели ProductCategoryCover
+    """
+
+    category_id = serializers.PrimaryKeyRelatedField(
+        queryset=ProductCategory.objects.all(),
+        write_only=True,
+        required=False,
+        source="category",
+    )
+    creator = UserSerializer(
+        read_only=True, fields=["id", "first_name", "last_name", "email", "is_active"]
+    )
+    creator_id = serializers.HiddenField(default=CurrentUserDefault(), source="creator")
+
+    class Meta:
+        model = ProductCategoryCover
+        fields = [
+            "id",
+            "category",
+            "category_id",
+            "image",
+            "creator",
+            "creator_id",
+            "is_active",
+            "date_created",
+        ]
+        read_only_fields = ["id"]
+
+    def validate_image(self, value):
+        # Проверка размера файла (10 MB)
+        max_size = 10 * 1024 * 1024
+
+        if value.size > max_size:
+            raise serializers.ValidationError(
+                "Размер изображения не должен превышать 10 MB."
+            )
+
+        # Проверка соотношения сторон
+        value.seek(0)
+        img = Image.open(value)
+        width, height = img.size
+
+        if height == 0 or width == 0:
+            raise serializers.ValidationError("Некорректное изображение.")
+
+        if not (1.76 <= width / height <= 1.79):
+            raise serializers.ValidationError("Изображение должно быть в формате 16:9.")
+
+        value.seek(0)
+        return value
+
+
+class ProductCategorySerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для модели ProductCategory
+    """
+
+    creator = UserSerializer(
+        read_only=True, fields=["id", "first_name", "last_name", "email", "is_active"]
+    )
+    creator_id = serializers.HiddenField(default=CurrentUserDefault(), source="creator")
+    parent = serializers.SerializerMethodField()
+    parent_id = serializers.PrimaryKeyRelatedField(
+        queryset=ProductCategory.objects.all(),
+        required=False,
+        source="parent",
+        allow_null=True,
+        write_only=True
+    )
+    covers = ProductCategoryCoverSerializer(many=True, read_only=True)
+    covers_ids = serializers.PrimaryKeyRelatedField(
+        many=True,
+        write_only=True,
+        queryset=ProductCategoryCover.objects.all(),
+        source="covers",
+        required=True,
+    )
+
+    class Meta:
+        model = ProductCategory
+        fields = [
+            "id",
+            "name",
+            "description",
+            "covers",
+            "covers_ids",
+            "parent",
+            "parent_id",
+            "is_active",
+            "creator",
+            "creator_id",
+            "date_created",
+        ]
+        read_only_fields = ["id", "creator"]
+
+    def get_parent(self, obj):
+        """
+        Сериализатор родительской категории
+        """
+        if obj.parent:
+            return {
+                "id": obj.parent.id,
+                "name": obj.parent.name,
+            }
+        return None
+    
+    def validate_parent_id(self, parent_id):
+        """
+        Проверяем, что parent_id не привязана уже к другой категории
+        """
+        if parent_id and self.instance and parent_id.pk == self.instance.pk:
+                raise serializers.ValidationError(
+                    "Родительская категория не может быть привязана к самой себе."
+                )
+        return parent_id
+
+    def validate_covers_ids(self, covers):
+        """
+        При создании/обновлении проверяем, что обложка не привязана уже к другой категории
+        """
+        for cover in covers:
+            if cover.category is not None and (
+                not self.instance or cover.category_id != self.instance.id
+            ):
+                raise serializers.ValidationError(
+                    f"Обложка с id={cover.id} уже привязана к другой категории."
+                )
+        return covers
+
+    def validate(self, attrs):
+        """
+        Проверяем, что name без parent дает уникальное значение в спика всех name без parent
+        Если parent есть, то проверям, что name является уникальным в этой родительской категории
+        """
+        name = attrs.get("name")
+        parent = attrs.get("parent")
+
+        if self.instance:
+            name = name if name is not None else self.instance.name
+            parent = parent if "parent" in attrs else self.instance.parent
+
+        if name:
+            qs = ProductCategory.objects.filter(name=name, parent=parent).exclude(
+                id=self.instance.pk if self.instance else None
+            )
+
+            if qs.exists():
+                if parent is None:
+                    raise serializers.ValidationError(
+                        {
+                            "name": "Категория с таким названием без родительской категории уже существует."
+                        }
+                    )
+                raise serializers.ValidationError(
+                    {
+                        "name": "Категория с таким названием в этой родительской категории уже существует."
+                    }
+                )
+
+        return attrs

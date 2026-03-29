@@ -1,6 +1,7 @@
 from decimal import Decimal
 import logging
 from django.db.models import ForeignKey
+from django.db.models.fields.reverse_related import ForeignObjectRel
 from django.utils.functional import cached_property, Promise
 from django.utils.encoding import force_str
 from django.contrib.contenttypes.models import ContentType
@@ -77,6 +78,30 @@ class UserLoggingMixin:
                     continue
         return ""
 
+    def _humanize_field_key(self, key: str) -> str:
+        return key.replace("_", " ").strip().title()
+
+    def _resolve_field_verbose_name(self, instance_class, key: str) -> str:
+        """
+        Подпись поля для лога: прямые поля модели, обратные связи (ManyToOneRel и т.д.),
+        вложенные/сериализаторные ключи без поля в Meta.
+        """
+        try:
+            field = instance_class._meta.get_field(key)
+        except FieldDoesNotExist:
+            verbose_name = self._get_foreign_key_verbose(instance_class, key)
+            if verbose_name:
+                return verbose_name
+            return self._humanize_field_key(key)
+
+        if isinstance(field, ForeignObjectRel):
+            meta = field.related_model._meta
+            if field.multiple:
+                return str(meta.verbose_name_plural)
+            return str(meta.verbose_name)
+
+        return str(field.verbose_name)
+
     def _log_action(
         self,
         *,
@@ -108,11 +133,8 @@ class UserLoggingMixin:
             for key, value in new_data.items():
                 if key in self.SENSITIVE_FIELDS:
                     continue
-                
-                try:
-                    verbose_name = str(instance_class._meta.get_field(key).verbose_name)
-                except FieldDoesNotExist:
-                    verbose_name = self._get_foreign_key_verbose(instance_class, key)
+
+                verbose_name = self._resolve_field_verbose_name(instance_class, key)
 
                 new_values.append({
                     "field_name": key,
@@ -127,10 +149,7 @@ class UserLoggingMixin:
                     continue
                     
                 if value != (old_value := old_data.get(key)):
-                    try:
-                        verbose_name = str(instance_class._meta.get_field(key).verbose_name)
-                    except FieldDoesNotExist:
-                        verbose_name = self._get_foreign_key_verbose(instance_class, key)
+                    verbose_name = self._resolve_field_verbose_name(instance_class, key)
 
                     new_values.append({
                         "field_name": key,
@@ -149,11 +168,8 @@ class UserLoggingMixin:
             for key, value in old_data.items():
                 if key in self.SENSITIVE_FIELDS:
                     continue
-                
-                try:
-                    verbose_name = str(instance_class._meta.get_field(key).verbose_name)
-                except FieldDoesNotExist:
-                    verbose_name = self._get_foreign_key_verbose(instance_class, key)
+
+                verbose_name = self._resolve_field_verbose_name(instance_class, key)
 
                 old_values.append({
                     "field_name": key,

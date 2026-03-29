@@ -1,7 +1,12 @@
+from io import BytesIO
+import uuid
+from PIL import Image
+
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
+from django.core.files.base import ContentFile
 
 from simple_history.models import HistoricalRecords
 
@@ -249,18 +254,13 @@ class ProductCategory(models.Model):
 
     name = models.CharField(max_length=250, verbose_name="Название")
     description = models.TextField(verbose_name="Описание", null=True, blank=True)
-    cover = models.ImageField(
-        upload_to="product_categories/covers/",
-        verbose_name="Обложка",
-        null=True,
-        blank=True,
-    )
     parent = models.ForeignKey(
         "self",
         on_delete=models.CASCADE,
         verbose_name="Родительская категория",
         null=True,
         blank=True,
+        default=None
     )
 
     date_created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
@@ -275,7 +275,6 @@ class ProductCategory(models.Model):
     )
 
     class Meta:
-        unique_together = ("name", "parent")
 
         verbose_name = "Категория товара"
         verbose_name_plural = "Категории товаров"
@@ -285,7 +284,82 @@ class ProductCategory(models.Model):
         )
 
     def __str__(self):
-        return self.name
+        return f"{self.name} (ID: {self.id})"
+
+
+class ProductCategoryCover(models.Model):
+    """
+    Картинки категории.
+    Одна категория может иметь несколько картинок.
+    """
+
+    category = models.ForeignKey(
+        ProductCategory,
+        on_delete=models.CASCADE,
+        related_name="covers",
+        verbose_name="Категория",
+        null=True,
+        blank=True,
+        default=None,
+    )
+    image = models.ImageField(
+        upload_to="product_categories/covers/",
+        verbose_name="Изображение",
+    )
+    creator = models.ForeignKey(
+        User, on_delete=models.PROTECT, verbose_name="Создатель"
+    )
+
+    is_active = models.BooleanField(default=True, verbose_name="Активно")
+    date_created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+
+    class Meta:
+
+        verbose_name = "Обложка категории"
+        verbose_name_plural = "Обложки категорий"
+
+        permissions = (
+            ("view_productcategorycover_list", "Can see Product Category Covers list"),
+        )
+
+    def __str__(self):
+        cat = self.category
+        if cat is None:
+            return f"Обложка #{self.id} (категория не задана)"
+        return f"Обложка #{self.id} для категории {cat.name}"
+
+    def _convert_to_webp(self, image_field):
+        img = Image.open(image_field)
+
+        if img.mode in ("RGBA", "LA", "P"):
+            img = img.convert("RGBA")
+        else:
+            img = img.convert("RGB")
+
+        output = BytesIO()
+        img.save(output, format="WEBP", quality=85)
+
+        new_name = f"{uuid.uuid4()}.webp"
+
+        return ContentFile(output.getvalue(), name=new_name)
+
+    def save(self, *args, **kwargs):
+        should_convert = False
+
+        if self.image:
+            if not self.pk:
+                # новый объект
+                should_convert = True
+            else:
+                # проверяем изменился ли файл
+                old = type(self).objects.filter(pk=self.pk).only("image").first()
+                if old and old.image != self.image:
+                    should_convert = True
+
+        if should_convert and not self.image.name.lower().endswith(".webp"):
+            self.image = self._convert_to_webp(self.image)
+
+        super().save(*args, **kwargs)
 
 
 class ProductCard(models.Model):

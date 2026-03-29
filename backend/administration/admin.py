@@ -1,7 +1,15 @@
 from django.contrib import admin
+from django.utils.html import format_html
 
 from simple_history.admin import SimpleHistoryAdmin
-from .models import Shop, Size, ColorPalette, Settings
+from .models import (
+    Shop,
+    Size,
+    ColorPalette,
+    Settings,
+    ProductCategory,
+    ProductCategoryCover,
+)
 
 
 @admin.register(Settings)
@@ -34,7 +42,7 @@ class SettingsAdmin(SimpleHistoryAdmin):
         "is_all_products_same_model",
     ]
     list_display_links = ["id"]
-    
+
     list_editable = [
         "set_custom_product_card_settings",
         "is_all_products_same_name",
@@ -125,3 +133,65 @@ class ColorPaletteAdmin(SimpleHistoryAdmin):
     search_fields = ["name", "hex"]
     list_filter = ["is_active"]
     list_display_links = ["id", "name"]
+
+
+@admin.register(ProductCategoryCover)
+class ProductCategoryCoverAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "preview",
+        "category",
+        "creator",
+        "is_active",
+        "date_created",
+    )
+    list_display_links = ("id",)
+    list_filter = ("is_active", "date_created", "creator")
+    search_fields = (
+        "category__name",
+        "creator__email",
+        "creator__first_name",
+        "creator__last_name",
+    )
+    autocomplete_fields = ("category", "creator")
+    readonly_fields = ("date_created", "preview")
+    ordering = ("-date_created",)
+
+    fieldsets = (
+        (
+            "Основное",
+            {"fields": ("category", "image", "preview", "creator", "is_active")},
+        ),
+        ("Системная информация", {"fields": ("date_created",)}),
+    )
+
+    def preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" style="height: 150px; border-radius: 6px;" />',
+                obj.image.url,
+            )
+        return "—"
+
+    preview.short_description = "Превью"
+
+
+@admin.register(ProductCategory)
+class ProductCategoryAdmin(SimpleHistoryAdmin):
+    """
+    Админка для ProductCategory
+    """
+
+    list_display = ("id", "name", "parent", "is_active", "creator", "date_created")
+    list_display_links = ("id", "name")
+    list_filter = ("is_active", "parent", "creator", "date_created")
+    search_fields = ("name", "description", "creator__username")
+    readonly_fields = ("date_created", "creator")
+    ordering = ("name",)
+    list_per_page = 50
+
+    def save_model(self, request, obj, form, change):
+        """Автоматическое заполнение поля creator при создании"""
+        if not change:
+            obj.creator = request.user
+        super().save_model(request, obj, form, change)

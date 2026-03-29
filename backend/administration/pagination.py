@@ -82,3 +82,22 @@ class ColorPaletteListPagination(DefaultPagination):
                 "result": data,
             }
         )
+
+
+class ProductCategoryListPagination(DefaultPagination):
+    def get_paginated_response(self, data):
+        # Получаем статистику из request
+        stats = getattr(self.request, "stats", {})
+        total_count = stats.get("total_count", self.page.paginator.count)
+        inactive_count = stats.get("inactive_count", 0)
+
+        return Response(
+            {
+                "pages": self.page.paginator.num_pages,
+                "count": total_count,
+                "active": total_count - inactive_count,
+                "next": self.get_next_link(),
+                "previous": self.get_previous_link(),
+                "result": data,
+            }
+        )
