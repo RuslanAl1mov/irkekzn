@@ -30,8 +30,14 @@ from .pagination import (
     ColorPaletteListPagination,
     ProductCategoryListPagination,
     ProductCardListPagination,
+    ProductListPagination,
 )
-from .filters import UsersListFilter, ShopListFilter, ColorPaletteListFilter
+from .filters import (
+    UsersListFilter,
+    ShopListFilter,
+    ColorPaletteListFilter,
+    ProductListFilter,
+)
 from .models import (
     Shop,
     Size,
@@ -40,6 +46,8 @@ from .models import (
     ProductCategory,
     ProductCategoryCover,
     ProductCard,
+    Product,
+    ProductImage,
 )
 from .serializers import (
     ShopSerializer,
@@ -49,7 +57,9 @@ from .serializers import (
     RequestLogSerializer,
     ProductCategorySerializer,
     ProductCategoryCoverSerializer,
+    ProductImageSerializer,
     ProductCardSerializer,
+    ProductSerializer,
 )
 
 User = get_user_model()
@@ -753,3 +763,123 @@ class ProductCardDeleteView(LoggedDestroyAPIView):
     permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
     queryset = ProductCard.objects.all()
     serializer_class = ProductCardSerializer
+
+
+# Товары
+class ProductImageCreateView(LoggedCreateAPIView):
+    """
+    api: api/v1/administration/products/images/create/
+    Представление для:
+    - POST: создание изображения товара (превью формируется на сервере)
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    queryset = ProductImage.objects.select_related("product", "creator").all()
+    serializer_class = ProductImageSerializer
+
+
+class ProductListView(generics.ListAPIView):
+    """
+    api: api/v1/administration/products/
+    Представление для:
+    - GET: список товаров
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, GetListPermissions]
+    serializer_class = ProductSerializer
+    pagination_class = ProductListPagination
+
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+    filterset_class = ProductListFilter
+    search_fields = [
+        "article",
+        "name",
+        "color_name",
+        "description",
+    ]
+    ordering_fields = [
+        "id",
+        "article",
+        "name",
+        "price",
+        "sale_price",
+        "date_created",
+        "is_active",
+    ]
+    ordering = ["-date_created"]
+
+    def get_queryset(self):
+        return Product.objects.select_related("product_card", "creator").all()
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        request.stats = {
+            "total_count": queryset.count(),
+            "inactive_count": queryset.filter(is_active=False).count(),
+        }
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class ProductDetailView(generics.RetrieveAPIView):
+    """
+    api: api/v1/administration/products/<int:pk>/
+    Представление для:
+    - GET: карточка товара
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        return Product.objects.select_related("product_card", "creator").all()
+
+
+class ProductCreateView(LoggedCreateAPIView):
+    """
+    api: api/v1/administration/products/create/
+    Представление для:
+    - POST: создание товара
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        return Product.objects.select_related("product_card", "creator").all()
+
+
+class ProductUpdateView(LoggedUpdateAPIView):
+    """
+    api: api/v1/administration/products/<int:pk>/update/
+    Представление для:
+    - PUT, PATCH: обновление товара
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        return Product.objects.select_related("product_card", "creator").all()
+
+
+class ProductDeleteView(LoggedDestroyAPIView):
+    """
+    api: api/v1/administration/products/<int:pk>/delete/
+    Представление для:
+    - DELETE: удаление товара
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, CRUDPermissions]
+    serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        return Product.objects.select_related("product_card", "creator").all()

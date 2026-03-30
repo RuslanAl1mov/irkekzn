@@ -33,6 +33,7 @@ from .views import (
     ColorPaletteDeleteView,
     # Категории товаров
     ProductCategoryCoverCreateView,
+    ProductImageCreateView,
     ProductCategoryListView,
     ProductCategoryDetailView,
     ProductCategoryCreateView,
@@ -44,6 +45,12 @@ from .views import (
     ProductCardCreateView,
     ProductCardUpdateView,
     ProductCardDeleteView,
+    # Товары
+    ProductListView,
+    ProductDetailView,
+    ProductCreateView,
+    ProductUpdateView,
+    ProductDeleteView,
 )
 
 
@@ -95,6 +102,14 @@ urlpatterns = [
     path("product-cards/create/", ProductCardCreateView.as_view(), name="product-cards-create"),
     path("product-cards/<int:pk>/update/", ProductCardUpdateView.as_view(), name="product-cards-update"),
     path("product-cards/<int:pk>/delete/", ProductCardDeleteView.as_view(), name="product-cards-delete"),
+
+    # Товары
+    path("products/images/create/", ProductImageCreateView.as_view(), name="product-images-create"),
+    path("products/", ProductListView.as_view(), name="products-list"),
+    path("products/<int:pk>/", ProductDetailView.as_view(), name="products-detail"),
+    path("products/create/", ProductCreateView.as_view(), name="products-create"),
+    path("products/<int:pk>/update/", ProductUpdateView.as_view(), name="products-update"),
+    path("products/<int:pk>/delete/", ProductDeleteView.as_view(), name="products-delete"),
 ]
 
 if settings.DEBUG:

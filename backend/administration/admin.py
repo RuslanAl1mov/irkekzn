@@ -11,6 +11,9 @@ from .models import (
     ProductCategory,
     ProductCategoryCover,
     ProductCard,
+    Product,
+    ProductImage,
+    ProductStock,
 )
 
 
@@ -273,3 +276,117 @@ class ProductCardAdmin(admin.ModelAdmin):
     def get_changelist_form(self, request, **kwargs):
         kwargs["form"] = ProductCardAdminForm
         return super().get_changelist_form(request, **kwargs)
+
+
+@admin.register(ProductImage)
+class ProductImageAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "preview_block",
+        "product",
+        "creator",
+        "is_active",
+        "date_created",
+    )
+    list_display_links = (
+        "id",
+        "preview_block",
+    )
+    list_filter = ("is_active", "date_created", "creator")
+    search_fields = (
+        "product__name",
+        "product__article",
+        "creator__email",
+        "creator__first_name",
+        "creator__last_name",
+    )
+    autocomplete_fields = ("product", "creator")
+    readonly_fields = ("date_created", "preview_block")
+    ordering = ("-date_created",)
+
+    fieldsets = (
+        (
+            "Основное",
+            {
+                "fields": (
+                    "product",
+                    "image",
+                    "preview",
+                    "preview_block",
+                    "creator",
+                    "is_active",
+                )
+            },
+        ),
+        ("Системная информация", {"fields": ("date_created",)}),
+    )
+
+    def preview_block(self, obj):
+        if obj.preview:
+            return format_html(
+                '<img src="{}" style="height: 150px; border-radius: 6px;" />',
+                obj.preview.url,
+            )
+        return "—"
+
+    preview_block.short_description = "Предпросмотр"
+
+
+@admin.register(ProductStock)
+class ProductStockAdmin(admin.ModelAdmin):
+    """
+    Админка для ProductStock
+
+
+    """
+    list_display = (
+        "id",
+        "product",
+        "size",
+        "shop",
+        "amount",
+    )
+
+
+
+
+@admin.register(Product)
+class ProductAdmin(SimpleHistoryAdmin):
+    """
+    Админка для Product с историей изменений
+    """
+
+    list_display = (
+        "id",
+        "product_card",
+        "article",
+        "name",
+        "color_name",
+        "price",
+        "sale_price",
+        "creator",
+        "date_created",
+        "is_active",
+    )
+    list_editable = ("is_active",)
+    list_display_links = ("id", "article")
+    list_filter = ("is_active", "product_card", "date_created", "creator")
+    search_fields = (
+        "article",
+        "name",
+        "color_name",
+        "color_code",
+        "description",
+        "creator__email",
+        "creator__first_name",
+        "creator__last_name",
+    )
+    autocomplete_fields = ("product_card",)
+    readonly_fields = ("date_created", "creator")
+    ordering = ("-date_created",)
+    history_list_display = ["history_user", "history_date"]
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.creator = request.user
+        super().save_model(request, obj, form, change)

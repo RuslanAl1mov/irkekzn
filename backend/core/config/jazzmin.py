@@ -67,6 +67,9 @@ JAZZMIN_SETTINGS = {
         "administration.ProductCategory": "fas fa-layer-group",  # для модели ProductCategory
         "administration.ProductCategoryCover": "fas fa-images",  # для модели ProductCategoryCover
         "administration.ProductCard": "fas fa-sitemap",  # для модели ProductCard
+        "administration.Product": "fas fa-boxes-packing",  # для модели Product
+        "administration.ProductImage": "fas fa-image",  # для модели ProductImage
+        "administration.ProductStock": "fas fa-clipboard-list",  # для модели ProductStock
     },
     "order_with_respect_to": [
         # --- Пользователи ---
@@ -80,8 +83,11 @@ JAZZMIN_SETTINGS = {
         "administration.productcategorycover",
         # --- Товары ---
         "administration.ProductCard",
+        "administration.Product",
+        "administration.ProductImage",
         # --- Атрибуты ---
         "administration.shop",
+        "administration.productstock",
         "administration.colorpalette",
         "administration.size",
         # --- Системное ---

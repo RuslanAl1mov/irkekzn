@@ -194,7 +194,7 @@ class Size(models.Model):
         permissions = (("view_size_list", "Can see Sizes list"),)
 
     def __str__(self):
-        return f"{self.id}"
+        return f"{self.russian} - {self.international} - {self.european}"
 
 
 class ColorPalette(models.Model):
@@ -256,7 +256,7 @@ class ProductCategory(models.Model):
     description = models.TextField(verbose_name="Описание", null=True, blank=True)
     parent = models.ForeignKey(
         "self",
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         verbose_name="Родительская категория",
         null=True,
         blank=True,
@@ -398,7 +398,8 @@ class ProductCard(models.Model):
         permissions = (("view_productcard_list", "Can see Product Cards list"),)
 
     def __str__(self):
-        return f"{self.id}"
+        text = self.categories.values_list("name", flat=True)
+        return f"ID: {self.id} ({', '.join(text)})"
 
 
 class Product(models.Model):
@@ -436,13 +437,21 @@ class Product(models.Model):
                 )
 
     product_card = models.ForeignKey(
-        ProductCard, on_delete=models.CASCADE, verbose_name="Карточка товара"
+        ProductCard, on_delete=models.PROTECT, verbose_name="Карточка товара"
     )
     article = models.CharField(max_length=250, verbose_name="Артикул", unique=True)
     name = models.CharField(max_length=250, verbose_name="Название")
+    is_custom_color = models.BooleanField(
+        default=False, verbose_name="Является ли цвет пользовательским (не из палитры)"
+    )
     color_name = models.CharField(max_length=250, verbose_name="Название цвета")
-    color_code = models.CharField(
-        max_length=250, verbose_name="Код цвета", null=True, blank=True
+    color = models.ForeignKey(
+        ColorPalette,
+        on_delete=models.PROTECT,
+        verbose_name="Цвет",
+        null=True,
+        blank=True,
+        default=None,
     )
     description = models.TextField(verbose_name="Описание", null=True, blank=True)
     model_params = models.JSONField(
@@ -477,10 +486,14 @@ class Product(models.Model):
     )
 
     class Meta:
-        unique_together = ("product_card", "color_name")
-
         verbose_name = "Товар"
         verbose_name_plural = "Товары"
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=["product_card", "color_name"], name="unique_product_color"
+            )
+        ]
 
         permissions = (("view_product_list", "Can see Products list"),)
 
@@ -493,9 +506,19 @@ class ProductImage(models.Model):
     Модель для изображений товара
     """
 
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Товар")
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="images",
+        verbose_name="Товар",
+        null=True,
+        blank=True,
+        default=None,
+    )
     image = models.ImageField(upload_to="products/images/", verbose_name="Изображение")
-    preview = models.ImageField(upload_to="products/previews/", verbose_name="Превью")
+    preview = models.ImageField(
+        upload_to="products/previews/", verbose_name="Превью", null=True, blank=True
+    )
     date_created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     creator = models.ForeignKey(
         User, on_delete=models.PROTECT, verbose_name="Создатель"
@@ -509,7 +532,75 @@ class ProductImage(models.Model):
         permissions = (("view_productimage_list", "Can see Product Images list"),)
 
     def __str__(self):
-        return f"{self.image.name} - {self.product.name} ({self.id})"
+        pr_article = self.product.article if self.product else ""
+        pr_name = self.product.name if self.product else ""
+        return f"(ID: {self.id}) Product: {pr_name} - {pr_article}"
+
+    def _convert_to_webp(self, image_field):
+        image_field.seek(0)
+        img = Image.open(image_field)
+
+        if img.mode in ("RGBA", "LA", "P"):
+            img = img.convert("RGBA")
+        else:
+            img = img.convert("RGB")
+
+        output = BytesIO()
+        img.save(output, format="WEBP", quality=100)
+
+        return ContentFile(output.getvalue(), name=f"{uuid.uuid4()}.webp")
+
+    def _build_preview_file(self, image_field):
+        image_field.seek(0)
+        img = Image.open(image_field)
+
+        if img.mode in ("RGBA", "LA", "P"):
+            img = img.convert("RGBA")
+        else:
+            img = img.convert("RGB")
+
+        # уменьшение
+        max_side = 400
+        resample = (
+            Image.Resampling.LANCZOS if hasattr(Image, "Resampling") else Image.LANCZOS
+        )
+
+        img.thumbnail((max_side, max_side), resample)
+
+        output = BytesIO()
+        img.save(
+            output,
+            format="WEBP",
+            quality=75,
+            method=6,
+            optimize=True,
+        )
+
+        return ContentFile(output.getvalue(), name=f"{uuid.uuid4()}.webp")
+
+    def save(self, *args, **kwargs):
+        should_convert = False
+
+        if self.image:
+            if not self.pk:
+                should_convert = True
+            else:
+                old = type(self).objects.filter(pk=self.pk).only("image").first()
+                if old and old.image != self.image:
+                    should_convert = True
+
+        if should_convert:
+            # сначала создаём preview из оригинала
+            preview_file = self._build_preview_file(self.image)
+
+            # потом конвертируем основное изображение
+            if not self.image.name.lower().endswith(".webp"):
+                self.image = self._convert_to_webp(self.image)
+
+            # сохраняем preview
+            self.preview = preview_file
+
+        super().save(*args, **kwargs)
 
 
 class ProductStock(models.Model):
@@ -517,15 +608,19 @@ class ProductStock(models.Model):
     Модель для учета остатков товара в магазинах
     """
 
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    size = models.ForeignKey(Size, on_delete=models.CASCADE)
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
-
-    number = models.IntegerField()
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="stocks",
+        verbose_name="Товар",
+    )
+    size = models.ForeignKey(Size, on_delete=models.PROTECT, verbose_name="Размер")
+    shop = models.ForeignKey(Shop, on_delete=models.PROTECT, verbose_name="Магазин")
+    amount = models.IntegerField(verbose_name="Количество", default=0)
 
     class Meta:
-        verbose_name = "Склад товара"
-        verbose_name_plural = "Склады товаров"
+        verbose_name = "Учет товара"
+        verbose_name_plural = "Учет товаров"
 
         constraints = [
             models.UniqueConstraint(
@@ -537,4 +632,4 @@ class ProductStock(models.Model):
         permissions = (("view_productstock_list", "Can see Product Stock list"),)
 
     def __str__(self):
-        return f"{self.shop.name} - {self.product.name} - {self.size.name} - {self.number} ({self.id})"
+        return f"{self.shop.name} - {self.product.name} - {self.size.european} - {self.amount} ({self.id})"

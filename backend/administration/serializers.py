@@ -1,4 +1,5 @@
 from PIL import Image
+from django.db import transaction
 
 from rest_framework import serializers
 import django.db.models as models
@@ -18,9 +19,10 @@ from .models import (
 )
 from services.validators import phone_number_ru_validator
 from services.default_creator import CurrentUserDefault
+from services.mixin.dynamic_fields_mixin import DynamicFieldsModelSerializer
 
 
-class RequestLogSerializer(serializers.ModelSerializer):
+class RequestLogSerializer(DynamicFieldsModelSerializer):
     """
     Сериализатор для модели RequestLog
     """
@@ -31,7 +33,7 @@ class RequestLogSerializer(serializers.ModelSerializer):
         read_only_fields = ["id"]
 
 
-class SettingsSerializer(serializers.ModelSerializer):
+class SettingsSerializer(DynamicFieldsModelSerializer):
     """
     Сериализатор для модели Settings
     """
@@ -42,7 +44,7 @@ class SettingsSerializer(serializers.ModelSerializer):
         read_only_fields = ["id"]
 
 
-class ShopSerializer(serializers.ModelSerializer):
+class ShopSerializer(DynamicFieldsModelSerializer):
     """
     Сериализатор для магазина
     """
@@ -122,7 +124,7 @@ class ShopSerializer(serializers.ModelSerializer):
         return data
 
 
-class SizeSerializer(serializers.ModelSerializer):
+class SizeSerializer(DynamicFieldsModelSerializer):
     """
     Сериализатор для модели Size без валидаций
     """
@@ -161,18 +163,7 @@ class SizeSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
-class SizeUpdateSerializer(serializers.ModelSerializer):
-    """
-    Сериализатор для модели Size с валидацией
-    """
-
-    class Meta:
-        model = Size
-        fields = "__all__"
-        read_only_fields = ["id"]
-
-
-class ColorPaletteSerializer(serializers.ModelSerializer):
+class ColorPaletteSerializer(DynamicFieldsModelSerializer):
     """
     Сериализатор для модели ColorPalette без валидаций
     """
@@ -213,7 +204,7 @@ class ColorPaletteSerializer(serializers.ModelSerializer):
         return data
 
 
-class ProductCategoryCoverSerializer(serializers.ModelSerializer):
+class ProductCategoryCoverSerializer(DynamicFieldsModelSerializer):
     """
     Сериализатор для модели ProductCategoryCover
     """
@@ -267,7 +258,7 @@ class ProductCategoryCoverSerializer(serializers.ModelSerializer):
         return value
 
 
-class ProductCategorySerializer(serializers.ModelSerializer):
+class ProductCategorySerializer(DynamicFieldsModelSerializer):
     """
     Сериализатор для модели ProductCategory
     """
@@ -335,6 +326,11 @@ class ProductCategorySerializer(serializers.ModelSerializer):
         """
         При создании/обновлении проверяем, что обложка не привязана уже к другой категории
         """
+        if len(covers) < 1:
+            raise serializers.ValidationError(
+                "Необходимо сохранить хотя бы одно изображение."
+            )
+
         for cover in covers:
             if cover.category is not None and (
                 not self.instance or cover.category_id != self.instance.id
@@ -377,7 +373,7 @@ class ProductCategorySerializer(serializers.ModelSerializer):
         return attrs
 
 
-class ProductCardSerializer(serializers.ModelSerializer):
+class ProductCardSerializer(DynamicFieldsModelSerializer):
     """
     Сериализатор для модели ProductCard
     """
@@ -402,15 +398,15 @@ class ProductCardSerializer(serializers.ModelSerializer):
             self.fields["is_all_products_same_model"] = serializers.HiddenField(
                 default=self.global_settings.is_all_products_same_model
             )
-            
-        # Если не используем глобальные настройки карточки товаров, 
+
+        # Если не используем глобальные настройки карточки товаров,
         # то делаем поля настроек карточки товара обязательными
         if not self.global_settings.set_global_product_card_settings:
             self.fields["is_all_products_same_name"].required = True
             self.fields["is_all_products_same_price"].required = True
             self.fields["is_all_products_same_description"].required = True
             self.fields["is_all_products_same_model"].required = True
-            
+
             self.fields["name"].required = True
             self.fields["price"].required = True
             self.fields["description"].required = True
@@ -428,9 +424,11 @@ class ProductCardSerializer(serializers.ModelSerializer):
         source="categories",
         required=True,
     )
-    
+
     name = serializers.CharField(required=False, max_length=255, write_only=True)
-    price = serializers.DecimalField(required=False, max_digits=10, decimal_places=2, write_only=True)
+    price = serializers.DecimalField(
+        required=False, max_digits=10, decimal_places=2, write_only=True
+    )
     description = serializers.CharField(required=False, write_only=True)
     model = serializers.CharField(required=False, write_only=True)
 
@@ -454,3 +452,305 @@ class ProductCardSerializer(serializers.ModelSerializer):
             "date_created",
         ]
         read_only_fields = ["id", "date_created", "creator"]
+
+
+class ProductStockSerializer(DynamicFieldsModelSerializer):
+    """
+    Сериализатор для модели ProductStock
+    """
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Если сериализатор используется как child где product_id подставляется автоматически,
+        # то делаем product_id необязательным
+        if self.context.get('is_product_id_known'):
+            self.fields['product_id'].required = False
+            self.fields['product_id'].allow_null = True
+            self.fields['product_id'].default = None
+    
+    product = serializers.SerializerMethodField()
+    product_id = serializers.PrimaryKeyRelatedField(
+        queryset=Product.objects.all(),
+        write_only=True,
+        source="product",
+        required=True,
+    )
+
+    size = SizeSerializer(read_only=True)
+    size_id = serializers.PrimaryKeyRelatedField(
+        queryset=Size.objects.all(),
+        write_only=True,
+        source="size",
+        required=True,
+    )   
+    shop = ShopSerializer(read_only=True)
+    shop_id = serializers.PrimaryKeyRelatedField(
+        queryset=Shop.objects.filter(is_active=True),
+        write_only=True,
+        source="shop",
+        required=True,
+    )
+
+    class Meta:
+        model = ProductStock
+        fields = [
+            "id",
+            "product",
+            "product_id",
+            "size",
+            "size_id",
+            "shop",
+            "shop_id",
+            "amount",
+        ]
+        read_only_fields = ["id", "size", "shop"]
+        
+    def get_product(self, obj):
+        return {
+            "id": obj.product.id,
+            "name": obj.product.name,
+            "article": obj.product.article,
+            "color_name": obj.product.color_name,
+            "is_custom_color": obj.product.is_custom_color,
+            "color": obj.product.color,
+            "description": obj.product.description,
+            "model_params": obj.product.model_params,
+            "material_and_care": obj.product.material_and_care,
+            "price": obj.product.price,
+            "sale_price": obj.product.sale_price,
+        }
+
+    def validate_amount(self, value):
+        if value < 0:
+            raise serializers.ValidationError(
+                "Количество товара не может быть отрицательным."
+            )
+        return value
+
+
+class ProductImageSerializer(DynamicFieldsModelSerializer):
+    """
+    Сериализатор для модели ProductImage
+    """
+
+    product_id = serializers.PrimaryKeyRelatedField(
+        queryset=Product.objects.all(),
+        write_only=True,
+        source="product",
+        required=False,
+    )
+    creator = UserSerializer(
+        read_only=True, fields=["id", "first_name", "last_name", "email", "is_active"]
+    )
+    creator_id = serializers.HiddenField(default=CurrentUserDefault(), source="creator")
+
+    class Meta:
+        model = ProductImage
+        fields = [
+            "id",
+            "product",
+            "product_id",
+            "image",
+            "preview",
+            "creator",
+            "creator_id",
+            "is_active",
+            "date_created",
+        ]
+        read_only_fields = ["id", "date_created", "creator", "product", "preview"]
+
+    def validate_image(self, value):
+        max_size = 10 * 1024 * 1024
+
+        if value.size > max_size:
+            raise serializers.ValidationError(
+                "Размер изображения не должен превышать 10 MB."
+            )
+
+        value.seek(0)
+        img = Image.open(value)
+        width, height = img.size
+
+        if width <= 0 or height <= 0:
+            raise serializers.ValidationError("Некорректное изображение.")
+
+        ratio = width / height
+        target_ratio = 520 / 738
+        tolerance = 0.02  # можно 0.01, если нужна строже
+
+        if abs(ratio - target_ratio) > tolerance:
+            raise serializers.ValidationError(
+                "Изображение должно быть в пропорции, близкой к 520×738."
+            )
+
+        value.seek(0)
+        return value
+
+
+class ProductSerializer(DynamicFieldsModelSerializer):
+    """
+    Сериализатор для модели Product
+    """
+
+    creator = UserSerializer(
+        read_only=True, fields=["id", "first_name", "last_name", "email", "is_active"]
+    )
+    creator_id = serializers.HiddenField(default=CurrentUserDefault(), source="creator")
+
+    product_card = ProductCardSerializer(read_only=True)
+    product_card_id = serializers.PrimaryKeyRelatedField(
+        queryset=ProductCard.objects.all(),
+        write_only=True,
+        source="product_card",
+        required=True,
+    )
+
+    images = ProductImageSerializer(many=True, read_only=True)
+    images_ids = serializers.PrimaryKeyRelatedField(
+        many=True,
+        write_only=True,
+        queryset=ProductImage.objects.all(),
+        source="images",
+        required=True,
+    )
+
+    stocks = ProductStockSerializer(many=True, read_only=True, fields=["id", "size", "shop", "amount"])
+    stocks_data = serializers.ListField(
+        child=ProductStockSerializer(context={"is_product_id_known": True}),
+        write_only=True,
+        required=True,
+    )
+    
+    class Meta:
+        model = Product
+        fields = [
+            "id",
+            "product_card",
+            "product_card_id",
+            "article",
+            "name",
+            "color_name",
+            "is_custom_color",
+            "color",
+            "description",
+            "model_params",
+            "material_and_care",
+            "price",
+            "sale_price",
+            "stocks",
+            "stocks_data",
+            "images",
+            "images_ids",
+            "date_created", 
+            "is_active",
+            "creator",
+            "creator_id",
+        ]
+        read_only_fields = ["id", "date_created", "creator"]
+        validators = []
+
+    def validate_article(self, value):
+        qs = Product.objects.filter(article=value)
+        if self.instance:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise serializers.ValidationError("Товар с таким артикулом уже существует.")
+        return value
+
+    def validate_color(self, value):
+        if not self.is_custom_color and value is None:
+            raise serializers.ValidationError(
+                "Цвет не может быть пустым, если вы не устанавливаете пользовательский цвет."
+            )
+        return value
+
+    def validate_images_ids(self, images):
+        """
+        При создании/обновлении проверяем, что изображение не привязана уже к другому товару
+        """
+        if len(images) < 1:
+            raise serializers.ValidationError(
+                "Необходимо сохранить хотя бы одно изображение."
+            )
+
+        for image in images:
+            if image.product is not None and (
+                not self.instance or image.product_id != self.instance.id
+            ):
+                raise serializers.ValidationError(
+                    f"Изображение с id={image.id} уже привязана к другому товару."
+                )
+        return images
+    
+    def validate_stocks_data(self, stocks_data):
+        """
+        При создании/обновлении проверяем, что остаток не привязан уже к другому товару
+        """
+        if len(stocks_data) < 1:
+            raise serializers.ValidationError("Необходимо указать кол-во оставшихся размеров товара в магазинах.")
+        return stocks_data
+
+    def validate(self, attrs):
+        product_card = attrs.get("product_card")
+        color_name = attrs.get("color_name")
+        if self.instance:
+            if product_card is None:
+                product_card = self.instance.product_card
+            if color_name is None:
+                color_name = self.instance.color_name
+        if product_card is not None and color_name:
+            qs = Product.objects.filter(
+                product_card=product_card, color_name=color_name
+            )
+            if self.instance:
+                qs = qs.exclude(pk=self.instance.pk)
+            if qs.exists():
+                raise serializers.ValidationError(
+                    {
+                        "color_name": "Товар с таким названием цвета уже есть у этой карточки."
+                    }
+                )
+        return attrs
+    
+    def create(self, validated_data):
+        stocks_data = validated_data.pop("stocks_data", [])
+        images = validated_data.pop("images", [])
+
+        with transaction.atomic():
+            product = Product.objects.create(**validated_data)
+
+            if images:
+                product.images.set(images)
+
+            stocks_to_create = []
+            for item in stocks_data:
+                data = {**item}
+                data.pop("product", None)
+                stocks_to_create.append(ProductStock(product=product, **data))
+            ProductStock.objects.bulk_create(stocks_to_create)
+        
+        return product
+    
+    def update(self, instance, validated_data):
+        stocks_data = validated_data.pop("stocks_data", None)
+        images = validated_data.pop("images", None)
+
+        with transaction.atomic():
+            for attr, value in validated_data.items():
+                setattr(instance, attr, value)
+            instance.save()
+
+            if images is not None:
+                instance.images.set(images)
+            
+            if stocks_data is not None:
+                instance.stocks.all().delete()
+                stocks_to_create = []
+                for item in stocks_data:
+                    data = {**item}
+                    data.pop("product", None)
+                    stocks_to_create.append(ProductStock(product=instance, **data))
+                ProductStock.objects.bulk_create(stocks_to_create)
+        
+        return instance

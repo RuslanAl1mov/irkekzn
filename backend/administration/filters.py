@@ -1,6 +1,6 @@
 from django_filters import rest_framework as filters
 from users.models import User
-from .models import Shop, ColorPalette
+from .models import Shop, ColorPalette, Product
 import logging
 
 logger = logging.getLogger(__name__)
@@ -40,3 +40,12 @@ class ColorPaletteListFilter(filters.FilterSet):
     class Meta:
         model = ColorPalette
         fields = ["is_active"]
+
+
+class ProductListFilter(filters.FilterSet):
+    product_card = filters.NumberFilter(field_name="product_card_id", label="Карточка товара")
+    is_active = filters.BooleanFilter(field_name="is_active", label="Активен")
+
+    class Meta:
+        model = Product
+        fields = ["product_card", "is_active"]
