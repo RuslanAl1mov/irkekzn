@@ -1,0 +1,175 @@
+.wrap {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+/* Как у стандартного Switch: 36×14, сдвиг 16px */
+.switcher {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 43px;
+  padding: 2px;
+  border: 1px solid var(--gray6);
+  border-radius: 999px;
+  background-color: var(--gray7);
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    border-color 0.3s,
+    opacity 0.3s;
+}
+
+/* .switcher:hover {
+  border-color: var(--blue3);
+}
+
+.switcher:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+} */
+
+/* .switcher.active {
+  background-color: var(--blue);
+  border-color: var(--blue);
+} */
+
+/* .switcher.active:hover,
+.switcher.active:focus-visible {
+  background-color: var(--blue2);
+  border-color: var(--blue2);
+} */
+
+.track {
+  position: relative;
+  width: 100%;
+  height: 16px;
+  display: flex;
+  align-items: center;
+}
+
+
+/* Прозрачный бегунок с обводкой — поверх серых иконок */
+.thumb {
+  position: relative;
+  z-index: 1;
+  width: 18px;
+  height: 15px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  box-shadow: none;
+  transition: transform 0.3s ease;
+}
+
+.thumb svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  transition: transform 3s ease;
+}
+
+/* При активном состоянии (темная тема) - слайдер справа */
+.active .thumb {
+  transform: translateX(19px);
+}
+
+/* Анимация иконок во время движения */
+/* Солнце уменьшается к центру во время движения вправо */
+.switcher .thumb svg {
+  transform: scale(1);
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* При клике/активации - иконка сжимается */
+.switcher:active .thumb svg {
+  transform: scale(0.5);
+}
+
+/* Когда слайдер активен (темная тема) - иконка луны появляется с увеличением */
+.active .thumb svg {
+  transform: scale(1);
+  animation: moonAppear 1s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+/* Когда слайдер не активен - иконка солнца появляется с увеличением */
+:not(.active) .thumb svg {
+  animation: sunAppear 1s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+@keyframes moonAppear {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes sunAppear {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Чтобы анимация не срабатывала при загрузке страницы */
+.thumb svg {
+  animation: none;
+}
+
+.switcher .thumb svg {
+  animation: none;
+}
+
+.active .thumb svg {
+  animation: moonAppear 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+:not(.active) .thumb svg {
+  animation: sunAppear 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+.iconSun {
+  fill: var(--orange);
+}
+
+.iconMoon {
+  fill: var(--black);
+}
+
+.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.disabled .switcher {
+  cursor: not-allowed;
+  border-color: var(--gray6);
+  background-color: var(--gray4);
+}
+
+.disabled .switcher:hover,
+.disabled .switcher:focus-visible,
+.disabled .switcher.active,
+.disabled .switcher.active:hover,
+.disabled .switcher.active:focus-visible {
+  border-color: var(--gray6);
+  background-color: var(--gray4);
+}

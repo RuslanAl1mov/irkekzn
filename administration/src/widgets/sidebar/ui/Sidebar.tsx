@@ -6,8 +6,9 @@ import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import { useLogout } from "@/features/auth/logout";
 import { useThemeState } from "@/app/providers/theme";
-import { Switch } from "@/shared/ui/switch";
+import { ThemeSwitch } from "@/shared/ui/theme-switch";
 import { useSidebarState } from "@/widgets/sidebar";
+import { useAuthStore } from "@/entities/user";
 
 import Logo from "@/assets/logo/logo.svg?react";
 import DashboardIcon from "@/assets/icons/dashboard.svg?react";
@@ -18,13 +19,17 @@ import UserImage from "@/assets/app/user.jpg";
 import ExitIcon from "@/assets/icons/exit.svg?react";
 import SettingsIcon from "@/assets/icons/settings.svg?react";
 import ShopsIcon from "@/assets/icons/house.svg?react";
-
+import CategoriesIcon from "@/assets/icons/layers.svg?react";
+import ProductCardsIcon from "@/assets/icons/product-card.svg?react";
+import ProductsIcon from "@/assets/icons/products.svg?react";
+import StockIcon from "@/assets/icons/notebook.svg?react";
 
 type GetLinkClass = {
   isActive: boolean;
 };
 
 export const Sidebar: React.FC = () => {
+  const { user } = useAuthStore();
   const { isOpen, toggleSidebar } = useSidebarState();
   const { theme, setTheme } = useThemeState();
   const [isHovered, setIsHovered] = useState(false);
@@ -74,6 +79,43 @@ export const Sidebar: React.FC = () => {
               </NavLink>
             </li>
 
+            {/* Товары и категории */}
+            <li>
+              <div className={cn(cls.menuListSectionTitleBock, isMenuWide && cls.menuListSectionTitleBock__visible)}>
+                <p className={cn(cls.menuListSectionTitle, isMenuWide && cls.menuListSectionTitle__visible)}>Товары и категории</p>
+              </div>
+            </li>
+            <li>
+              <NavLink to="/categories" className={getLinkClass}>
+                <CategoriesIcon className={cls.menuListIcon} />
+                <p className={cn(cls.menuListTitle, isMenuWide && cls.menuListTitle__visible)}>
+                  Категории
+                </p>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/product-cards" className={getLinkClass}>
+                <ProductCardsIcon className={cls.menuListIcon} />
+                <p className={cn(cls.menuListTitle, isMenuWide && cls.menuListTitle__visible)}>
+                  Карточки товаров
+                </p>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/products" className={getLinkClass}>
+                <ProductsIcon className={cls.menuListIcon} />
+                <p className={cn(cls.menuListTitle, isMenuWide && cls.menuListTitle__visible)}>
+                  Товары
+                </p>
+              </NavLink>
+            </li>
+
+            {/* Пользователи */}
+            <li>
+              <div className={cn(cls.menuListSectionTitleBock, isMenuWide && cls.menuListSectionTitleBock__visible)}>
+                <p className={cn(cls.menuListSectionTitle, isMenuWide && cls.menuListSectionTitle__visible)}>Пользователи</p>
+              </div>
+            </li>
             <li>
               <NavLink to="/clients" className={getLinkClass}>
                 <ClientsIcon className={cls.menuListIcon} />
@@ -92,6 +134,12 @@ export const Sidebar: React.FC = () => {
               </NavLink>
             </li>
 
+            {/* Бутики */}
+            <li>
+              <div className={cn(cls.menuListSectionTitleBock, isMenuWide && cls.menuListSectionTitleBock__visible)}>
+                <p className={cn(cls.menuListSectionTitle, isMenuWide && cls.menuListSectionTitle__visible)}>Управление и настройки</p>
+              </div>
+            </li>
             <li>
               <NavLink to="/shops" className={getLinkClass}>
                 <ShopsIcon className={cls.menuListIcon} />
@@ -100,7 +148,14 @@ export const Sidebar: React.FC = () => {
                 </p>
               </NavLink>
             </li>
-
+            <li>
+              <NavLink to="/products-stock" className={getLinkClass}>
+                <StockIcon className={cls.menuListIcon} />
+                <p className={cn(cls.menuListTitle, isMenuWide && cls.menuListTitle__visible)}>
+                  Складской учет
+                </p>
+              </NavLink>
+            </li>
             <li>
               <NavLink to="/settings?tab=general" className={getLinkClass}>
                 <SettingsIcon className={cls.menuListIcon} />
@@ -119,29 +174,28 @@ export const Sidebar: React.FC = () => {
             {isMenuWide && (
               <div className={cls.themeTextBlock}>
                 <p className={cls.themeTitle}>Тема</p>
-                <p className={cls.themeValue}>
-                  {isDarkTheme ? "Темная" : "Светлая"}
-                </p>
               </div>
             )}
 
-            <Switch
-              value={isDarkTheme}
-              setValue={(value) => setTheme(value ? "dark" : "light")}
+            <ThemeSwitch
+              dark={isDarkTheme}
+              onDarkChange={(nextDark) =>
+                setTheme(nextDark ? "dark" : "light")
+              }
               aria-label="Переключить тему"
             />
           </div>
         </div>
 
         <div className={cls.userBlock}>
-          <NavLink to="/profile">
-            <div className={cls.userInfoBlock}>
+        <NavLink to="/profile" className={cls.userInfoBlockLink}>
+          <div className={cls.userInfoBlock}>
               <img src={UserImage} alt="User photo" className={cls.userPhoto} />
               {isMenuWide && (
 
                 <div className={cls.userNameBlock}>
-                  <p className={cls.userName} title="Ruslan Alimov">Ruslan Alimov</p>
-                  <p className={cls.userEmail} title="ruslan.alimov@irkekzn.com">ruslan.alimov@.com</p>
+                  <p className={cls.userName} title={`${user?.first_name} ${user?.last_name}`}>{`${user?.first_name} ${user?.last_name}`}</p>
+                  <p className={cls.userEmail} title={user?.email}>{user?.email}</p>
                 </div>
               )}
             </div>

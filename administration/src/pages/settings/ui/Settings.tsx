@@ -1,40 +1,29 @@
-import { Title } from "@/widgets/title";
 import cls from "./Settings.module.css";
+
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+
+import { Title } from "@/widgets/title";
+import { TabButton, TabsBlock } from "@/shared/ui/tabs";
 import { ColorsTab } from "@/features/color";
 import { SizesTab } from "@/features/size";
-import { TabButton, TabsBlock } from "@/shared/ui/tabs";
 import { SettingsTab } from "@/features/settings";
 
-const SETTINGS_TABS = ["general", "sizes-table", "color-palette", "permissions"] as const;
-type SettingsTabId = (typeof SETTINGS_TABS)[number];
-
-const isSettingsTab = (value: string | null): value is SettingsTabId =>
-    Boolean(value && SETTINGS_TABS.includes(value as SettingsTabId));
 
 export const Settings = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const tabFromUrl = searchParams.get("tab");
-
-    const [activeTab, setActiveTab] = useState<SettingsTabId>(() => {
-        const fromWindow = new URLSearchParams(window.location.search).get("tab");
-        return isSettingsTab(fromWindow) ? fromWindow : "general";
-    });
+    const [activeTab, setActiveTab] = useState<string>();
 
     useEffect(() => {
-        if (isSettingsTab(tabFromUrl)) {
-            setActiveTab(tabFromUrl);
-        }
-    }, [tabFromUrl]);
+        const tabFromUrl = searchParams.get("tab");
+        if (!tabFromUrl) selectTab("general");
+        else selectTab(tabFromUrl);
+    }, []);
 
-    const selectTab = useCallback(
-        (tab: SettingsTabId) => {
-            setActiveTab(tab);
-            setSearchParams({ tab }, { replace: true });
-        },
-        [setSearchParams],
-    );
+    const selectTab = useCallback((tab: string) => {
+        setActiveTab(tab);
+        setSearchParams({ tab }, { replace: true });
+    }, [setSearchParams]);
 
     return (
         <section className={cls.section}>
@@ -43,8 +32,6 @@ export const Settings = () => {
                     title="Настройки системы"
                     subTitle="Управляйте настройками системы и ее функционалом"
                 />
-
-
             </div>
 
             <div className={cls.content}>

@@ -39,9 +39,9 @@ export const AppRouter = () => {
 				<Route path="shops/" element={
 					<RequireAuth>
 						<Shops />
-                    </RequireAuth>
-                } />
-
+					</RequireAuth>
+				} />
+			
 				<Route path="settings/" element={
 					<RequireAuth>
 						<Settings />
@@ -54,7 +54,31 @@ export const AppRouter = () => {
 					</RequireAuth>
 				} />
 
-            </Route>
-        </Routes>
-    );
+				<Route path="categories/" element={
+					<RequireAuth>
+						<div></div>
+					</RequireAuth>
+				} />
+
+				<Route path="product-cards/" element={
+					<RequireAuth>
+						<div></div>
+					</RequireAuth>
+				} />
+
+				<Route path="products/" element={
+					<RequireAuth>
+						<div></div>
+					</RequireAuth>
+				} />
+
+				<Route path="products-stock/" element={
+					<RequireAuth>
+						<div></div>
+					</RequireAuth>
+				} />
+
+			</Route>
+		</Routes>
+	);
 };
