@@ -30,7 +30,15 @@ class UserAdmin(BaseUserAdmin):
         (None, {"fields": ("email", "password")}),
         (
             _("Personal info"),
-            {"fields": ("first_name", "last_name", "phone_number", "username", "photo")},
+            {
+                "fields": (
+                    "first_name",
+                    "last_name",
+                    "phone_number",
+                    "username",
+                    "photo",
+                )
+            },
         ),
         (
             _("Permissions"),

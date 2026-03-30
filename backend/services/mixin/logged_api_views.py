@@ -19,7 +19,6 @@ class LoggedUpdateAPIView(UserLoggingMixin, generics.UpdateAPIView):
     pass
 
 
-
 class LoggedDestroyAPIView(UserLoggingMixin, generics.DestroyAPIView):
     """
     DestroyAPIView + логирование действия пользователя.

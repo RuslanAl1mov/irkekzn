@@ -5,7 +5,7 @@ from django.contrib.auth.models import BaseUserManager
 class UserManager(BaseUserManager):
     def get_by_natural_key(self, email, is_staff=True):
         return self.get(email=email, is_staff=is_staff)
-    
+
     def _create_user(self, email, password, **extra_fields):
         """
         Create and save a user with the given username, email, and password.

@@ -73,7 +73,9 @@ class UserLoggingMixin:
             if isinstance(field, ForeignKey):
                 try:
                     # Принудительно преобразуем verbose_name в строку
-                    return str(field.related_model._meta.get_field(field_name).verbose_name)
+                    return str(
+                        field.related_model._meta.get_field(field_name).verbose_name
+                    )
                 except FieldDoesNotExist:
                     continue
         return ""
@@ -126,7 +128,7 @@ class UserLoggingMixin:
         instance_class = instance.__class__
         new_values = []
         old_values = []
-        
+
         # Обработка CREATE (нет old_data)
         if old_data is None:
             # Для CREATE - логируем все новые значения
@@ -136,33 +138,39 @@ class UserLoggingMixin:
 
                 verbose_name = self._resolve_field_verbose_name(instance_class, key)
 
-                new_values.append({
-                    "field_name": key,
-                    "value": value,
-                    "verbose_name": verbose_name,
-                })
-        
+                new_values.append(
+                    {
+                        "field_name": key,
+                        "value": value,
+                        "verbose_name": verbose_name,
+                    }
+                )
+
         # Обработка UPDATE (есть и old_data и new_data)
         elif old_data and new_data:
             for key, value in new_data.items():
                 if key in self.SENSITIVE_FIELDS:
                     continue
-                    
+
                 if value != (old_value := old_data.get(key)):
                     verbose_name = self._resolve_field_verbose_name(instance_class, key)
 
-                    new_values.append({
-                        "field_name": key,
-                        "value": value,
-                        "verbose_name": verbose_name,
-                    })
-                    
-                    old_values.append({
-                        "field_name": key,
-                        "value": old_value,
-                        "verbose_name": verbose_name,
-                    })
-        
+                    new_values.append(
+                        {
+                            "field_name": key,
+                            "value": value,
+                            "verbose_name": verbose_name,
+                        }
+                    )
+
+                    old_values.append(
+                        {
+                            "field_name": key,
+                            "value": old_value,
+                            "verbose_name": verbose_name,
+                        }
+                    )
+
         # Обработка DELETE (есть только old_data, new_data пустой)
         elif old_data and not new_data:
             for key, value in old_data.items():
@@ -171,11 +179,13 @@ class UserLoggingMixin:
 
                 verbose_name = self._resolve_field_verbose_name(instance_class, key)
 
-                old_values.append({
-                    "field_name": key,
-                    "value": value,
-                    "verbose_name": verbose_name,
-                })
+                old_values.append(
+                    {
+                        "field_name": key,
+                        "value": value,
+                        "verbose_name": verbose_name,
+                    }
+                )
 
         # Для CREATE и DELETE не проверяем new_values
         # Для UPDATE проверяем, есть ли изменения
@@ -205,7 +215,7 @@ class UserLoggingMixin:
             )
         except Exception as e:
             logger.exception("Failed to write RequestLog: %s", e)
-        
+
     def perform_create(self, serializer):
         """
         Функция, отслеживающая создание объекта
@@ -247,7 +257,7 @@ class UserLoggingMixin:
         # Получаем данные объекта до удаления
         serializer = self.get_serializer(instance)
         old_data = serializer.data
-        
+
         # Логируем удаление
         self._log_action(
             instance=instance,
@@ -255,6 +265,6 @@ class UserLoggingMixin:
             new_data={},  # при удалении новых данных нет
             old_data=old_data,
         )
-        
+
         # Выполняем фактическое удаление
         instance.delete()
