@@ -283,6 +283,11 @@ class ProductCategorySerializer(DynamicFieldsModelSerializer):
         source="covers",
         required=True,
     )
+    
+    products_count = serializers.IntegerField(read_only=True)
+    active_products_count = serializers.IntegerField(read_only=True)
+    product_cards_count = serializers.IntegerField(read_only=True)
+    active_product_cards_count = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = ProductCategory
@@ -298,8 +303,20 @@ class ProductCategorySerializer(DynamicFieldsModelSerializer):
             "creator",
             "creator_id",
             "date_created",
+            "product_cards_count",
+            "active_product_cards_count",
+            "products_count",
+            "active_products_count",
         ]
-        read_only_fields = ["id", "date_created", "creator"]
+        read_only_fields = [
+            "id",
+            "date_created",
+            "creator",
+            "product_cards_count",
+            "products_count",
+            "active_products_count",
+            "active_product_cards_count",
+        ]
 
     def get_parent(self, obj):
         """
@@ -458,17 +475,17 @@ class ProductStockSerializer(DynamicFieldsModelSerializer):
     """
     Сериализатор для модели ProductStock
     """
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
+
         # Если сериализатор используется как child где product_id подставляется автоматически,
         # то делаем product_id необязательным
-        if self.context.get('is_product_id_known'):
-            self.fields['product_id'].required = False
-            self.fields['product_id'].allow_null = True
-            self.fields['product_id'].default = None
-    
+        if self.context.get("is_product_id_known"):
+            self.fields["product_id"].required = False
+            self.fields["product_id"].allow_null = True
+            self.fields["product_id"].default = None
+
     product = serializers.SerializerMethodField()
     product_id = serializers.PrimaryKeyRelatedField(
         queryset=Product.objects.all(),
@@ -483,7 +500,7 @@ class ProductStockSerializer(DynamicFieldsModelSerializer):
         write_only=True,
         source="size",
         required=True,
-    )   
+    )
     shop = ShopSerializer(read_only=True)
     shop_id = serializers.PrimaryKeyRelatedField(
         queryset=Shop.objects.filter(is_active=True),
@@ -505,7 +522,7 @@ class ProductStockSerializer(DynamicFieldsModelSerializer):
             "amount",
         ]
         read_only_fields = ["id", "size", "shop"]
-        
+
     def get_product(self, obj):
         return {
             "id": obj.product.id,
@@ -615,13 +632,15 @@ class ProductSerializer(DynamicFieldsModelSerializer):
         required=True,
     )
 
-    stocks = ProductStockSerializer(many=True, read_only=True, fields=["id", "size", "shop", "amount"])
+    stocks = ProductStockSerializer(
+        many=True, read_only=True, fields=["id", "size", "shop", "amount"]
+    )
     stocks_data = serializers.ListField(
         child=ProductStockSerializer(context={"is_product_id_known": True}),
         write_only=True,
         required=True,
     )
-    
+
     class Meta:
         model = Product
         fields = [
@@ -642,7 +661,7 @@ class ProductSerializer(DynamicFieldsModelSerializer):
             "stocks_data",
             "images",
             "images_ids",
-            "date_created", 
+            "date_created",
             "is_active",
             "creator",
             "creator_id",
@@ -682,13 +701,15 @@ class ProductSerializer(DynamicFieldsModelSerializer):
                     f"Изображение с id={image.id} уже привязана к другому товару."
                 )
         return images
-    
+
     def validate_stocks_data(self, stocks_data):
         """
         При создании/обновлении проверяем, что остаток не привязан уже к другому товару
         """
         if len(stocks_data) < 1:
-            raise serializers.ValidationError("Необходимо указать кол-во оставшихся размеров товара в магазинах.")
+            raise serializers.ValidationError(
+                "Необходимо указать кол-во оставшихся размеров товара в магазинах."
+            )
         return stocks_data
 
     def validate(self, attrs):
@@ -712,7 +733,7 @@ class ProductSerializer(DynamicFieldsModelSerializer):
                     }
                 )
         return attrs
-    
+
     def create(self, validated_data):
         stocks_data = validated_data.pop("stocks_data", [])
         images = validated_data.pop("images", [])
@@ -729,9 +750,9 @@ class ProductSerializer(DynamicFieldsModelSerializer):
                 data.pop("product", None)
                 stocks_to_create.append(ProductStock(product=product, **data))
             ProductStock.objects.bulk_create(stocks_to_create)
-        
+
         return product
-    
+
     def update(self, instance, validated_data):
         stocks_data = validated_data.pop("stocks_data", None)
         images = validated_data.pop("images", None)
@@ -743,7 +764,7 @@ class ProductSerializer(DynamicFieldsModelSerializer):
 
             if images is not None:
                 instance.images.set(images)
-            
+
             if stocks_data is not None:
                 instance.stocks.all().delete()
                 stocks_to_create = []
@@ -752,5 +773,5 @@ class ProductSerializer(DynamicFieldsModelSerializer):
                     data.pop("product", None)
                     stocks_to_create.append(ProductStock(product=instance, **data))
                 ProductStock.objects.bulk_create(stocks_to_create)
-        
+
         return instance

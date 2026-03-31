@@ -4,6 +4,7 @@ import type { ShopsListGetParams } from "@/entities/shop";
 import type { UsersListGetParams } from "@/entities/user";
 import type { UserGroupsListGetParams } from "@/entities/user-group";
 import type { UserPermissionsListGetParams } from "@/entities/user-permission";
+import type { ProductCategoriesListGetParams } from "@/entities/product-category";
 
 export const queryKeys = {
   checkAuth: () => ["auth", "me"] as const,
@@ -29,4 +30,6 @@ export const queryKeys = {
   sizes: (params?: SizesListGetParams | null) =>
     ["sizes", "list", params ?? null] as const,
   sizeDetail: (id: number | null) => ["sizes", "detail", id] as const,
+  productCategories: (params?: ProductCategoriesListGetParams | null) =>
+    ["product-categories", "list", params ?? null] as const,
 };

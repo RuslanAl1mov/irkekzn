@@ -1,6 +1,6 @@
 from django_filters import rest_framework as filters
 from users.models import User
-from .models import Shop, ColorPalette, Product
+from .models import Shop, ColorPalette, ProductCategory, Product
 import logging
 
 logger = logging.getLogger(__name__)
@@ -27,7 +27,9 @@ class UsersListFilter(filters.FilterSet):
 
 class ShopListFilter(filters.FilterSet):
     is_active = filters.BooleanFilter(field_name="is_active", label="Активен")
-    is_main_office = filters.BooleanFilter(field_name="is_main_office", label="Главный офис")
+    is_main_office = filters.BooleanFilter(
+        field_name="is_main_office", label="Главный офис"
+    )
 
     class Meta:
         model = Shop
@@ -42,8 +44,22 @@ class ColorPaletteListFilter(filters.FilterSet):
         fields = ["is_active"]
 
 
+class ProductCategoryListFilter(filters.FilterSet):
+    parent = filters.NumberFilter(field_name="parent", label="Родительская категория")
+    date_created = filters.DateFromToRangeFilter(
+        field_name="date_created", label="Дата создания"
+    )
+    is_active = filters.BooleanFilter(field_name="is_active", label="Активен")
+
+    class Meta:
+        model = ProductCategory
+        fields = ["parent", "date_created", "is_active"]
+
+
 class ProductListFilter(filters.FilterSet):
-    product_card = filters.NumberFilter(field_name="product_card_id", label="Карточка товара")
+    product_card = filters.NumberFilter(
+        field_name="product_card_id", label="Карточка товара"
+    )
     is_active = filters.BooleanFilter(field_name="is_active", label="Активен")
 
     class Meta:

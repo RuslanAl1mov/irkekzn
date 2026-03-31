@@ -1,0 +1,1 @@
+export { WideImagesGallery } from "./ui/WideImagesGallery";

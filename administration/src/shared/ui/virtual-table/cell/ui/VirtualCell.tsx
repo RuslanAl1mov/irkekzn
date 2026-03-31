@@ -19,7 +19,9 @@ type TextValue = string | string[] | null | undefined;
 
 type VirtualCellProps = {
   title?: TextValue;
+  titleWhiteSpace?: "normal" | "nowrap" | "pre" | "pre-wrap" | "pre-line";
   secTitle?: TextValue;
+  secTitleWhiteSpace?: "normal" | "nowrap" | "pre" | "pre-wrap" | "pre-line";
   img?: string | null;
   extraNum?: number;
   align?: "start" | "center" | "end";
@@ -34,6 +36,8 @@ type VirtualCellProps = {
 export const VirtualCell = ({
   title,
   secTitle,
+  titleWhiteSpace = "nowrap",
+  secTitleWhiteSpace = "nowrap",
   img,
   align = "start",
   status,
@@ -173,7 +177,7 @@ export const VirtualCell = ({
               {Array.isArray(title) ? (
                 <>
                   {title.map((value, index) => (
-                    <p className={cls.title} style={{ textAlign: align, color: textColor }}
+                    <p className={cls.title} style={{ textAlign: align, color: textColor, whiteSpace: titleWhiteSpace }}
                       key={index}>
                       {value}
                       {index < title.length - 1 && <br />}
@@ -181,7 +185,7 @@ export const VirtualCell = ({
                   ))}
                 </>
               ) : (
-                <p className={cls.title} style={{ textAlign: align }}>
+                <p className={cls.title} style={{ textAlign: align, whiteSpace: titleWhiteSpace }}>
                   {title}
                 </p>
               )}
@@ -204,7 +208,7 @@ export const VirtualCell = ({
               {Array.isArray(secTitle) ? (
                 <>
                   {secTitle.map((value, index) => (
-                    <p className={cls.secondaryTitle} style={{ textAlign: align }}
+                    <p className={cls.secondaryTitle} style={{ textAlign: align, whiteSpace: secTitleWhiteSpace }}
                       key={index}>
                       {value}
                       {index < secTitle.length - 1 && <br />}
@@ -212,7 +216,7 @@ export const VirtualCell = ({
                   ))}
                 </>
               ) : (
-                <p className={cls.secondaryTitle} style={{ textAlign: align }}>
+                <p className={cls.secondaryTitle} style={{ textAlign: align, whiteSpace: secTitleWhiteSpace }}>
                   {secTitle}
                 </p>
               )}

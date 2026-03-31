@@ -367,7 +367,7 @@ class ProductCard(models.Model):
     Модель для связи между категориями товаров и товарами
     """
 
-    categories = models.ManyToManyField(ProductCategory, verbose_name="Категории")
+    categories = models.ManyToManyField(ProductCategory, verbose_name="Категории", related_name="product_cards")
     is_all_products_same_name = models.BooleanField(
         default=True, verbose_name="Все товары имеют одинаковое название"
     )
@@ -437,7 +437,10 @@ class Product(models.Model):
                 )
 
     product_card = models.ForeignKey(
-        ProductCard, on_delete=models.PROTECT, verbose_name="Карточка товара"
+        ProductCard,
+        on_delete=models.PROTECT,
+        verbose_name="Карточка товара",
+        related_name="products",
     )
     article = models.CharField(max_length=250, verbose_name="Артикул", unique=True)
     name = models.CharField(max_length=250, verbose_name="Название")

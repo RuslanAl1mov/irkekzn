@@ -2,6 +2,7 @@ from rest_framework import generics, filters, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
+from django.db.models import Count, Q
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
 from django_filters.rest_framework import DjangoFilterBackend
@@ -36,6 +37,7 @@ from .filters import (
     UsersListFilter,
     ShopListFilter,
     ColorPaletteListFilter,
+    ProductCategoryListFilter,
     ProductListFilter,
 )
 from .models import (
@@ -612,9 +614,44 @@ class ProductCategoryListView(generics.ListAPIView):
     """
 
     permission_classes = [IsAuthenticated, IsEmployee, GetListPermissions]
-    queryset = ProductCategory.objects.all()
+    queryset = ProductCategory.objects.annotate(
+        product_cards_count=Count("product_cards", distinct=True),
+        active_product_cards_count=Count(
+            "product_cards",
+            filter=Q(product_cards__is_active=True),
+            distinct=True,
+        ),
+        products_count=Count("product_cards__products", distinct=True),
+        active_products_count=Count(
+            "product_cards__products",
+            filter=Q(product_cards__products__is_active=True),
+            distinct=True,
+        ),
+    )
     serializer_class = ProductCategorySerializer
     pagination_class = ProductCategoryListPagination
+
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+
+    filterset_class = ProductCategoryListFilter
+    search_fields = ["id", "name", "description", "parent__name"]
+    ordering_fields = [
+        "id",
+        "name",
+        "description",
+        "date_created",
+        "parent__name",
+        "product_cards_count",
+        "active_product_cards_count",
+        "products_count",
+        "active_products_count",
+        "is_active",
+    ]
+    ordering = ["-id"]
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())

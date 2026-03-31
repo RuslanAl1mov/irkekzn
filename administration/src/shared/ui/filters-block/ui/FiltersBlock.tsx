@@ -7,7 +7,7 @@ type FiltersBlockProps = {
     leftBlockChildren: React.ReactNode;
     leftBlockClassName?: string;
     rightBlockClassName?: string;
-    filtersObject: "client" | "employee" | "shop";
+    filtersObject: "client" | "employee" | "shop" | "product-category";
 }
 
 export const FiltersBlock: React.FC<FiltersBlockProps> = ({
@@ -22,8 +22,8 @@ export const FiltersBlock: React.FC<FiltersBlockProps> = ({
             </div>
 
             <div className={cn(cls.rightBlock, rightBlockClassName)}>
-                {["client", "employee", "shop"].includes(filtersObject) && <Search />}
-                {["client", "employee"].includes(filtersObject) && <DateFilter type="start" />}
+                {["client", "employee", "shop", "product-category"].includes(filtersObject) && <Search />}
+                {["client", "employee", "product-category"].includes(filtersObject) && <DateFilter type="start" />}
                 {["client", "employee"].includes(filtersObject) && <DateFilter type="archivation" />}
             </div>
 

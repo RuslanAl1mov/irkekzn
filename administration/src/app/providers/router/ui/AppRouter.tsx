@@ -8,6 +8,7 @@ import { Employees } from '@/pages/employees';
 import { Shops } from '@/pages/shops';
 import { Settings } from '@/pages/settings';
 import { Profile } from '@/pages/profile';
+import { ProductCategories } from '@/pages/product-categories';
 
 
 export const AppRouter = () => {
@@ -56,7 +57,7 @@ export const AppRouter = () => {
 
 				<Route path="categories/" element={
 					<RequireAuth>
-						<div></div>
+						<ProductCategories />
 					</RequireAuth>
 				} />
 
