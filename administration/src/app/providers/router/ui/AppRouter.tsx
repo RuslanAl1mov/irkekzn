@@ -9,6 +9,7 @@ import { Shops } from '@/pages/shops';
 import { Settings } from '@/pages/settings';
 import { Profile } from '@/pages/profile';
 import { ProductCategories } from '@/pages/product-categories';
+import { Products } from '@/pages/products';
 
 
 export const AppRouter = () => {
@@ -69,7 +70,7 @@ export const AppRouter = () => {
 
 				<Route path="products/" element={
 					<RequireAuth>
-						<div></div>
+						<Products />
 					</RequireAuth>
 				} />
 

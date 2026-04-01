@@ -283,7 +283,7 @@ class ProductCategorySerializer(DynamicFieldsModelSerializer):
         source="covers",
         required=True,
     )
-    
+
     products_count = serializers.IntegerField(read_only=True)
     active_products_count = serializers.IntegerField(read_only=True)
     product_cards_count = serializers.IntegerField(read_only=True)
@@ -593,12 +593,17 @@ class ProductImageSerializer(DynamicFieldsModelSerializer):
             raise serializers.ValidationError("Некорректное изображение.")
 
         ratio = width / height
-        target_ratio = 520 / 738
-        tolerance = 0.02  # можно 0.01, если нужна строже
+        target_ratio = 520 / 738  # ≈ 0.7046
+        tolerance_percent = 0.10  # 10%
 
-        if abs(ratio - target_ratio) > tolerance:
+        # Вычисляем допустимый диапазон
+        min_ratio = target_ratio * (1 - tolerance_percent)
+        max_ratio = target_ratio * (1 + tolerance_percent)
+
+        if not (min_ratio <= ratio <= max_ratio):
             raise serializers.ValidationError(
-                "Изображение должно быть в пропорции, близкой к 520×738."
+                f"Изображение должно быть в пропорции, близкой к 520×738. "
+                f"Допустимое отклонение: ±10% (от {min_ratio:.3f} до {max_ratio:.3f})"
             )
 
         value.seek(0)
@@ -640,6 +645,14 @@ class ProductSerializer(DynamicFieldsModelSerializer):
         write_only=True,
         required=True,
     )
+    
+    color = ColorPaletteSerializer(read_only=True)
+    color_id = serializers.PrimaryKeyRelatedField(
+        queryset=ColorPalette.objects.all(),
+        write_only=True,
+        source="color",
+        required=True,
+    )
 
     class Meta:
         model = Product
@@ -652,6 +665,7 @@ class ProductSerializer(DynamicFieldsModelSerializer):
             "color_name",
             "is_custom_color",
             "color",
+            "color_id",
             "description",
             "model_params",
             "material_and_care",
