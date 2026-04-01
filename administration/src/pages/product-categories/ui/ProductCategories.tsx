@@ -122,7 +122,7 @@ export const ProductCategories = () => {
             },
             {
                 name: "Обложки",
-                width: "260px",
+                width: "300px",
                 align: "center",
             },
 
@@ -184,9 +184,9 @@ export const ProductCategories = () => {
                         <WideImagesGallery images={productCategory.covers} />
                     </VirtualCell>,
                     <VirtualCell
-                        title={productCategory.description}
+                        secTitle={productCategory.description}
                         isCopible
-                        titleWhiteSpace="normal"
+                        secTitleWhiteSpace="normal"
                         align="center"
                     />,
                     <VirtualCell
@@ -248,7 +248,7 @@ export const ProductCategories = () => {
                             data={rows}
                             ordering={ordering}
                             setOrdering={debouncedSetOrdering}
-                            row_height={200}
+                            row_height={125}
                             isError={isError}
                             error={error}
                             isLoading={isFetchingNextPage}

@@ -17,6 +17,10 @@
   overflow-y: auto;
 }
 
+.titlesBlock::-webkit-scrollbar {
+  width: 4px;
+}
+
 .titleBlock {
   display: flex;
   flex-direction: column;

@@ -1,8 +1,9 @@
 .wrapper {
     display: grid;
-    grid-template-rows: 2fr 1fr;
+    grid-template-columns: 60px 0.4fr;
     gap: 5px;
     height: 100%;
+    width: 100%;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     overflow: hidden;
@@ -20,16 +21,23 @@
 .mainImage {
     border-radius: 5px;
     height: auto;
+    aspect-ratio: 16 / 9;
     object-fit: cover;
 }
 
 .galleryBlock {
+    height: 100%;
     display: flex;
+    flex-direction: column;
     gap: 5px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding-bottom: 2px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 2px;
     box-sizing: border-box;
+}
+
+.galleryBlock::-webkit-scrollbar {
+    display: none;
 }
 
 .galleryItem {
