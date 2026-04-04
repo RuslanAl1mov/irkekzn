@@ -2,7 +2,7 @@ from rest_framework import generics, filters, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Sum
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
 from django_filters.rest_framework import DjangoFilterBackend
@@ -959,7 +959,15 @@ class ProductStockListView(generics.ListAPIView):
     ]
     filterset_class = ProductStockListFilter
     search_fields = ["product__name", "product__article", "shop__name", "size__russian", "size__international"]
-    ordering_fields = ["product__name", "product__article", "shop__name", "size__russian", "size__international"]
+    ordering_fields = [
+        "product__name",
+        "product__article",
+        "product__is_active",
+        "shop__name",
+        "size__russian",
+        "size__international",
+        "amount",
+    ]
     ordering = ["-product__id"]
 
     def get_queryset(self):
@@ -970,3 +978,20 @@ class ProductStockListView(generics.ListAPIView):
         if self.request.query_params.get("category"):
             return qs.distinct()
         return qs
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        agg = queryset.aggregate(
+            total_amount=Sum("amount"),
+            unique_products=Count("product_id", distinct=True),
+        )
+        request.product_stock_stats = {
+            "total_amount": agg["total_amount"] or 0,
+            "unique_products": agg["unique_products"] or 0,
+        }
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)

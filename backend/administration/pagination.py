@@ -141,4 +141,16 @@ class ProductListPagination(DefaultPagination):
 
 
 class ProductStockListPagination(DefaultPagination):
-    pass
+    def get_paginated_response(self, data):
+        stats = getattr(self.request, "product_stock_stats", {})
+        return Response(
+            {
+                "pages": self.page.paginator.num_pages,
+                "count": self.page.paginator.count,
+                "total_amount": stats.get("total_amount", 0),
+                "unique_products": stats.get("unique_products", 0),
+                "next": self.get_next_link(),
+                "previous": self.get_previous_link(),
+                "result": data,
+            }
+        )

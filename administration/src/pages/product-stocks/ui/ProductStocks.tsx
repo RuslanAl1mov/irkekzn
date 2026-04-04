@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import type { AxiosError } from "axios";
 import { queryKeys } from "@/shared/lib/react-query/queryKeys";
 import type { ProductStocksListGetParams } from "@/entities/product-stock";
-import { formatNumber } from "@/shared/lib/formater";
+import { formatNumber, toApiDate } from "@/shared/lib/formater";
 import { getProductStocks } from "@/entities/product-stock";
 import type { IProductStock } from "@/entities/product-stock/model/type";
 import { VirtualTable, type HeaderCell } from "@/shared/ui/virtual-table/table";
@@ -25,6 +25,9 @@ export const ProductStocks = () => {
     const [ordering, setOrdering] = useState<string[]>([]);
 
     const searchTerm = useFiltersStore((s) => s.searchTerm);
+    const [product_created_after, product_created_before] = useFiltersStore(
+        (s) => s.startDateRange,
+    );
     const productFilter = useFiltersStore((s) => s.productFilter);
     const productCategoryFilter = useFiltersStore((s) => s.productCategoryFilter);
     const sizeFilter = useFiltersStore((s) => s.sizeFilter);
@@ -46,13 +49,28 @@ export const ProductStocks = () => {
         const p: ProductStocksListGetParams = {
             ...(searchTerm?.trim() ? { search: searchTerm.trim() } : {}),
             ...(ordering.length ? { ordering } : {}),
+            ...(product_created_after
+                ? { product_date_created_after: toApiDate(product_created_after) }
+                : {}),
+            ...(product_created_before
+                ? { product_date_created_before: toApiDate(product_created_before) }
+                : {}),
             ...(productFilter.length ? { product: productFilter } : {}),
             ...(productCategoryFilter.length ? { category: productCategoryFilter } : {}),
             ...(sizeFilter.length ? { size: sizeFilter } : {}),
             ...(shopFilter.length ? { shop: shopFilter } : {}),
         };
         return { params: p };
-    }, [ordering, searchTerm, productFilter, productCategoryFilter, sizeFilter, shopFilter]);
+    }, [
+        ordering,
+        searchTerm,
+        product_created_after,
+        product_created_before,
+        productFilter,
+        productCategoryFilter,
+        sizeFilter,
+        shopFilter,
+    ]);
 
     const {
         data: productStocks,
@@ -87,7 +105,10 @@ export const ProductStocks = () => {
         }
     }, [isError, error]);
 
-    const totalStocks = productStocks?.pages?.[0]?.count ?? 0;
+    const firstPage = productStocks?.pages?.[0];
+    const totalStocks = firstPage?.count ?? 0;
+    const totalAmount = firstPage?.total_amount ?? 0;
+    const uniqueProducts = firstPage?.unique_products ?? 0;
 
     const flatList = useMemo<IProductStock[]>(() => {
         if (!productStocks?.pages) return [];
@@ -96,6 +117,12 @@ export const ProductStocks = () => {
 
     const headers = useMemo<HeaderCell[]>(
         () => [
+            {
+                name: "",
+                width: "50px",
+                ordering: "product__is_active",
+                align: "center",
+            },
             {
                 name: "Товар",
                 width: "0.45fr",
@@ -119,13 +146,14 @@ export const ProductStocks = () => {
             },
             {
                 name: "Бутик",
-                width: "0.35fr",
+                width: "0.3fr",
                 ordering: "shop__name",
                 align: "center",
             },
             {
                 name: "Количество",
                 width: "0.25fr",
+                ordering: "amount",
                 align: "center",
             },
         ],
@@ -146,6 +174,10 @@ export const ProductStocks = () => {
                     keys: { productStocks: [stock] },
                 },
                 data: [
+                    <VirtualCell
+                        align="center"
+                        status={product.is_active ? "active" : "archived"}
+                    />,
                     <VirtualCell
                         title={product.name}
                         secTitle={`Арт: ${product.article}`}
@@ -177,13 +209,20 @@ export const ProductStocks = () => {
                         secTitle={`rus: ${stock.size.russian} / eur: ${stock.size.european}`}
                         align="center"
                     />,
-                    <VirtualCell title={stock.shop.name} align="center" />,
+                    <VirtualCell
+                        title={stock.shop.name}
+                        secTitle={`(${stock.shop.city}) ${stock.shop.address}`}
+                        secTitleWhiteSpace="normal"
+                        align="center"
+                    />,
                     <VirtualCell title={`${formatNumber(stock.amount)} шт.`} align="center" />,
                 ],
             } satisfies RowItem;
             return row;
         });
     }, [flatList]);
+
+    const loadedRows = flatList.length;
 
     return (
         <section className={cls.section}>
@@ -203,7 +242,11 @@ export const ProductStocks = () => {
                     filtersObject="product-stock"
                     leftBlockChildren={
                         <div className={cls.summaryBlock}>
-                            <p className={cls.summaryText}>Всего записей: {totalStocks}</p>
+                            <p className={cls.summaryText}>Всего: {formatNumber(totalStocks)}</p>
+                            <p className={cls.summaryText}>|</p>
+                            <p className={cls.summaryText}>Уникальных товаров: {formatNumber(uniqueProducts)} шт.</p>
+                            <p className={cls.summaryText}>|</p>
+                            <p className={cls.summaryText}>Кол-во на складе: {formatNumber(totalAmount)} шт.</p>
                         </div>
                     }
                 />

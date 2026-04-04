@@ -62,12 +62,15 @@
 .summaryBlock {
     width: 100%;
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
 }
 
 .summaryText {
     font: var(--body-1);
     color: var(--gray4);
+    line-height: 1.45;
+    margin: 0;
 }
 
 .loaderErrorBlock {

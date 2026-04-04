@@ -94,7 +94,18 @@ class ProductStockListFilter(filters.FilterSet):
         lookup_expr="in",
         label="Категория",
     )
+    product_date_created = filters.DateFromToRangeFilter(
+        field_name="product__date_created",
+        label="Дата создания товара",
+    )
 
     class Meta:
         model = ProductStock
-        fields = ["product", "product_card", "size", "shop", "category"]
+        fields = [
+            "product",
+            "product_card",
+            "size",
+            "shop",
+            "category",
+            "product_date_created",
+        ]

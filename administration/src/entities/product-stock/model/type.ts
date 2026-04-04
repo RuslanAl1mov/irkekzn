@@ -24,6 +24,8 @@ export interface IProductStockResponse<T> {
 export interface IProductStocksListResponse {
   pages: number;
   count: number;
+  total_amount: number;
+  unique_products: number;
   next: string | null;
   previous: string | null;
   result: IProductStock[];

@@ -16,6 +16,9 @@ export type ProductStocksListGetParams = {
   search?: string;
   ordering?: string[];
   page?: number;
+  /** django-filter DateFromToRangeFilter: product__date_created */
+  product_date_created_after?: string;
+  product_date_created_before?: string;
 };
 
 function paramsToQuery(
