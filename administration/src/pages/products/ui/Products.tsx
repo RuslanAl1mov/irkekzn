@@ -28,6 +28,7 @@ export const Products = () => {
     // Глобавльные фильтры
     const searchTerm = useFiltersStore((s) => s.searchTerm);
     const [start_date_after, start_date_before] = useFiltersStore((s) => s.startDateRange);
+    const productCategoryFilter = useFiltersStore((s) => s.productCategoryFilter);
 
     // Дебаунс сортировки
     const orderingDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -49,6 +50,9 @@ export const Products = () => {
             ...(ordering.length ? { ordering } : {}),
             ...(start_date_after ? { date_created_after: toApiDate(start_date_after) } : {}),
             ...(start_date_before ? { date_created_before: toApiDate(start_date_before) } : {}),
+            ...(productCategoryFilter.length
+                ? { category: productCategoryFilter }
+                : {}),
         };
         return { params: p };
     }, [
@@ -56,6 +60,7 @@ export const Products = () => {
         searchTerm,
         start_date_after,
         start_date_before,
+        productCategoryFilter,
     ]);
 
     // запрос с пагинацией

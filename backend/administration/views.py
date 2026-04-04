@@ -864,6 +864,12 @@ class ProductListView(generics.ListAPIView):
     def get_queryset(self):
         return Product.objects.select_related("product_card", "creator").all()
 
+    def filter_queryset(self, queryset):
+        qs = super().filter_queryset(queryset)
+        if self.request.query_params.get("category"):
+            return qs.distinct()
+        return qs
+
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         request.stats = {

@@ -131,7 +131,7 @@ export const SizeFilter: React.FC<Props> = ({
 
   return (
     <Filter
-      label={label ?? "Размеры"}
+      label={label ?? "Размер"}
       data={items}
       selected={selectedIds}
       onChange={onIdsChange}

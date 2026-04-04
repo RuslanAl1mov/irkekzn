@@ -139,7 +139,7 @@ export const ProductCategoryFilter: React.FC<Props> = ({
 
   return (
     <Filter
-      label={label ?? "Категории"}
+      label={label ?? "Категория"}
       data={items}
       selected={selectedIds}
       onChange={onIdsChange}

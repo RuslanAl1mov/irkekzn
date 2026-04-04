@@ -31,8 +31,8 @@ export const FiltersBlock: React.FC<FiltersBlockProps> = ({
             <div className={cn(cls.rightBlock, rightBlockClassName)}>
                 {["client", "employee", "shop", "product-category", "product", "product-stock"].includes(filtersObject) && <Search />}
                 {["client", "employee", "product-category", "product"].includes(filtersObject) && <DateFilter type="start" />}
-                {["product-category", "product-stock"].includes(filtersObject) && <ProductCategoryFilter />}
-                {["product-stock"].includes(filtersObject) && < SizeFilter />}
+                {["product-category", "product-stock", "product"].includes(filtersObject) && (<ProductCategoryFilter />)}
+                {["product-stock"].includes(filtersObject) && <SizeFilter />}
                 {["product-stock"].includes(filtersObject) && <ShopFilter />}
                 {["product-stock"].includes(filtersObject) && <ProductFilter />}
                 

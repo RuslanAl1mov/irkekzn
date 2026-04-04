@@ -72,11 +72,16 @@ class ProductListFilter(filters.FilterSet):
     product_card = NumberInFilter(
         field_name="product_card_id", lookup_expr="in", label="Карточка товара"
     )
+    category = NumberInFilter(
+        field_name="product_card__categories",
+        lookup_expr="in",
+        label="Категория",
+    )
     is_active = filters.BooleanFilter(field_name="is_active", label="Активен")
 
     class Meta:
         model = Product
-        fields = ["product_card", "is_active"]
+        fields = ["product_card", "category", "is_active"]
 
 
 class ProductStockListFilter(filters.FilterSet):

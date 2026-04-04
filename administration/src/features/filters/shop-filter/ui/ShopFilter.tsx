@@ -140,7 +140,7 @@ export const ShopFilter: React.FC<Props> = ({
 
   return (
     <Filter
-      label={label ?? "Бутики"}
+      label={label ?? "Бутик"}
       data={items}
       selected={selectedIds}
       onChange={onIdsChange}

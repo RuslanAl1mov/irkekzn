@@ -125,7 +125,7 @@ export const ProductFilter: React.FC<Props> = ({
 
   return (
     <Filter
-      label={label ?? "Товары"}
+      label={label ?? "Товар"}
       data={items}
       selected={selectedIds}
       onChange={onIdsChange}

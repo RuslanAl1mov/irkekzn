@@ -367,7 +367,9 @@ class ProductCard(models.Model):
     Модель для связи между категориями товаров и товарами
     """
 
-    categories = models.ManyToManyField(ProductCategory, verbose_name="Категории", related_name="product_cards")
+    categories = models.ManyToManyField(
+        ProductCategory, verbose_name="Категории", related_name="product_cards"
+    )
     is_all_products_same_name = models.BooleanField(
         default=True, verbose_name="Все товары имеют одинаковое название"
     )
