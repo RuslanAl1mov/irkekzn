@@ -6,6 +6,8 @@ import type { UserGroupsListGetParams } from "@/entities/user-group";
 import type { UserPermissionsListGetParams } from "@/entities/user-permission";
 import type { ProductCategoriesListGetParams } from "@/entities/product-category";
 import type { ProductsListGetParams } from "@/entities/product";
+import type { ProductStocksListGetParams } from "@/entities/product-stock";
+import type { ProductCardsListGetParams } from "@/entities/product-card";
 
 export const queryKeys = {
   checkAuth: () => ["auth", "me"] as const,
@@ -35,4 +37,8 @@ export const queryKeys = {
     ["product-categories", "list", params ?? null] as const,
   products: (params?: ProductsListGetParams | null) =>
     ["products", "list", params ?? null] as const,
+  productStocks: (params?: ProductStocksListGetParams | null) =>
+    ["product-stocks", "list", params ?? null] as const,
+  productCards: (params?: ProductCardsListGetParams | null) =>
+    ["product-cards", "list", params ?? null] as const,
 };

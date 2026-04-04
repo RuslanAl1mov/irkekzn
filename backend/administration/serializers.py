@@ -645,7 +645,7 @@ class ProductSerializer(DynamicFieldsModelSerializer):
         write_only=True,
         required=True,
     )
-    
+
     color = ColorPaletteSerializer(read_only=True)
     color_id = serializers.PrimaryKeyRelatedField(
         queryset=ColorPalette.objects.all(),
@@ -789,3 +789,24 @@ class ProductSerializer(DynamicFieldsModelSerializer):
                 ProductStock.objects.bulk_create(stocks_to_create)
 
         return instance
+
+
+class ProductStockSerializer(DynamicFieldsModelSerializer):
+    """
+    Сериализатор для модели ProductStock
+    """
+
+    product = ProductSerializer(read_only=True)
+    size = SizeSerializer(read_only=True)
+    shop = ShopSerializer(read_only=True)
+
+    class Meta:
+        model = ProductStock
+        fields = [
+            "id",
+            "product",
+            "size",
+            "shop",
+            "amount",
+        ]
+        read_only_fields = ["id", "product", "size", "shop"]

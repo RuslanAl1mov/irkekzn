@@ -32,6 +32,7 @@ from .pagination import (
     ProductCategoryListPagination,
     ProductCardListPagination,
     ProductListPagination,
+    ProductStockListPagination,
 )
 from .filters import (
     UsersListFilter,
@@ -39,6 +40,7 @@ from .filters import (
     ColorPaletteListFilter,
     ProductCategoryListFilter,
     ProductListFilter,
+    ProductStockListFilter
 )
 from .models import (
     Shop,
@@ -50,6 +52,7 @@ from .models import (
     ProductCard,
     Product,
     ProductImage,
+    ProductStock
 )
 from .serializers import (
     ShopSerializer,
@@ -62,6 +65,7 @@ from .serializers import (
     ProductImageSerializer,
     ProductCardSerializer,
     ProductSerializer,
+    ProductStockSerializer,
 )
 
 User = get_user_model()
@@ -730,9 +734,17 @@ class ProductCardListView(generics.ListAPIView):
     """
 
     permission_classes = [IsAuthenticated, IsEmployee, GetListPermissions]
-    queryset = ProductCard.objects.all()
+    queryset = ProductCard.objects.all().distinct()
     serializer_class = ProductCardSerializer
     pagination_class = ProductCardListPagination
+
+    filter_backends = [
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+    search_fields = ["categories__name"]
+    ordering_fields = ["id", "date_created", "is_active"]
+    ordering = ["-id"]
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
@@ -920,3 +932,35 @@ class ProductDeleteView(LoggedDestroyAPIView):
 
     def get_queryset(self):
         return Product.objects.select_related("product_card", "creator").all()
+
+
+# Учет остатков товара
+class ProductStockListView(generics.ListAPIView):
+    """
+    api: api/v1/administration/product-stocks/
+    Представление для:
+    - GET: список всех остатков товара в магазинах
+    """
+
+    permission_classes = [IsAuthenticated, IsEmployee, GetListPermissions]
+    serializer_class = ProductStockSerializer
+    pagination_class = ProductStockListPagination
+
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+    filterset_class = ProductStockListFilter
+    search_fields = ["product__name", "product__article", "shop__name", "size__russian", "size__international"]
+    ordering_fields = ["product__name", "product__article", "shop__name", "size__russian", "size__international"]
+    ordering = ["-product__id"]
+
+    def get_queryset(self):
+        return ProductStock.objects.select_related("product", "size", "shop").all()
+
+    def filter_queryset(self, queryset):
+        qs = super().filter_queryset(queryset)
+        if self.request.query_params.get("category"):
+            return qs.distinct()
+        return qs

@@ -138,3 +138,7 @@ class ProductListPagination(DefaultPagination):
                 "result": data,
             }
         )
+
+
+class ProductStockListPagination(DefaultPagination):
+    pass

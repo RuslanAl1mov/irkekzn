@@ -13,7 +13,6 @@ import SearchIcon from "@/assets/icons/search.svg?react";
 import NothingFoundImg from "@/assets/app/404.png";
 import ErrorImg from "@/assets/app/500.png";
 import UserImage from "@/assets/app/user.jpg";
-import { useI18n } from "@/shared/lib/i18n/hooks";
 import { useClickOutside } from "@/shared/lib/react";
 import { Button } from "@/shared/ui";
 import { Loader } from "@/widgets/loader";
@@ -70,8 +69,7 @@ export const Filter: React.FC<FilterProps> = ({
   error,
 }) => {
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const { t } = useI18n();
-  const labelText = label ?? t("filter.common.label");
+  const labelText = label ?? "Фильтр";
 
   // локальное открытие/закрытие поповера
   const [isOpen, setIsOpen] = useState(false);
@@ -141,7 +139,7 @@ export const Filter: React.FC<FilterProps> = ({
         aria-controls="filter-popover"
         disabled={disabled}
       >
-        <span className={cls.triggerLabel}>{labelText}</span>
+        <p className={cls.triggerLabel}>{labelText}</p>
         {selected.length > 0 && (
           <span className={cls.counterBadge}>{selected.length}</span>
         )}
@@ -162,7 +160,7 @@ export const Filter: React.FC<FilterProps> = ({
               <SearchIcon className={cls.searchIcon} />
               <input
                 className={cls.searchInput}
-                placeholder={t("filter.common.search.placeholder")}
+                placeholder="Поиск"
                 value={search}
                 onChange={(e) => onSearchChange?.(e.target.value)}
               />
@@ -175,7 +173,7 @@ export const Filter: React.FC<FilterProps> = ({
               <div className={cls.messageBlock}>
                 <Loader
                   size={28}
-                  color="var(--border-accent)"
+                  color="var(--blue)"
                   strokeWidth={5}
                 />
               </div>
@@ -185,7 +183,7 @@ export const Filter: React.FC<FilterProps> = ({
             {hasError && (
               <div className={cls.messageBlock}>
                 <img
-                  alt={t("accessibility.images.error")}
+                  alt="Ошибка"
                   className={cls.messageImg}
                   src={ErrorImg}
                 />
@@ -195,7 +193,7 @@ export const Filter: React.FC<FilterProps> = ({
                   </p>
                 ) : (
                   <p className={cls.messageText}>
-                    {t("filter.common.unexpectedError")}
+                    Произошла ошибка
                   </p>
                 )}
               </div>
@@ -205,12 +203,12 @@ export const Filter: React.FC<FilterProps> = ({
             {!hasError && !isLoading && list.length === 0 && (
               <div className={cls.messageBlock}>
                 <img
-                  alt={t("accessibility.images.nothingFound")}
+                  alt="Ничего не найдено"
                   className={cls.messageImg}
                   src={NothingFoundImg}
                 />
                 <p className={cls.messageText}>
-                  {t("filter.common.nothingFound")}
+                  Ничего не найдено
                 </p>
               </div>
             )}
@@ -297,17 +295,16 @@ export const Filter: React.FC<FilterProps> = ({
                 <div className={cls.actions}>
                   <div className={cls.actionsRow}>
                     <Button onClick={handleApply} disabled={disabled}>
-                      {t("filter.common.apply")}
+                      Применить
                     </Button>
 
                     {isCleareble && (
                       <Button
-                        className={cls.resetBtn}
                         variant="gray"
                         onClick={handleReset}
                         disabled={disabled}
                       >
-                        {t("filter.common.reset")}
+                        Сбросить
                       </Button>
                     )}
                   </div>

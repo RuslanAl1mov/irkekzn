@@ -10,6 +10,11 @@ const DEFAULTS: FiltersState = {
   archivation: null,
   searchTerm: "",
 
+  productFilter: [],
+  productCategoryFilter: [],
+  sizeFilter: [],
+  shopFilter: [],
+
   // UI состояния попапов
   isStartDateOpen: false,
   isArchivationDateOpen: false,
@@ -29,6 +34,11 @@ export const useFiltersStore = create<Store>()(
       setArchivation: (v) => set({ archivation: v }),
       setSearchTerm: (value) => set({ searchTerm: value }),
 
+      setProductFilter: (productFilter) => set({ productFilter }),
+      setProductCategoryFilter: (productCategoryFilter) => set({ productCategoryFilter }),
+      setSizeFilter: (sizeFilter) => set({ sizeFilter }),
+      setShopFilter: (shopFilter) => set({ shopFilter }),
+
       // UI
       setIsStartDateOpen: (v) => set({ isStartDateOpen: v }),
       setIsArchivationDateOpen: (v) => set({ isArchivationDateOpen: v }),
@@ -44,7 +54,12 @@ export const useFiltersStore = create<Store>()(
         archivationDateRange: s.archivationDateRange,
         archivation: s.archivation,
         searchTerm: s.searchTerm,
+
+        productFilter: s.productFilter,
+        productCategoryFilter: s.productCategoryFilter,
+        sizeFilter: s.sizeFilter,
+        shopFilter: s.shopFilter,
       }),
-    }
-  )
+    },
+  ),
 );

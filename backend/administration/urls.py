@@ -51,6 +51,8 @@ from .views import (
     ProductCreateView,
     ProductUpdateView,
     ProductDeleteView,
+    # Учет остатков товара
+    ProductStockListView
 )
 
 
@@ -110,6 +112,9 @@ urlpatterns = [
     path("products/create/", ProductCreateView.as_view(), name="products-create"),
     path("products/<int:pk>/update/", ProductUpdateView.as_view(), name="products-update"),
     path("products/<int:pk>/delete/", ProductDeleteView.as_view(), name="products-delete"),
+    
+    # Учет остатков товара
+    path("product-stocks/", ProductStockListView.as_view(), name="product-stocks-list"),
 ]
 
 if settings.DEBUG:

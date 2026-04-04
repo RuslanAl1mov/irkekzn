@@ -10,6 +10,7 @@ import { Settings } from '@/pages/settings';
 import { Profile } from '@/pages/profile';
 import { ProductCategories } from '@/pages/product-categories';
 import { Products } from '@/pages/products';
+import { ProductStocks } from '@/pages/product-stocks';
 
 
 export const AppRouter = () => {
@@ -76,7 +77,7 @@ export const AppRouter = () => {
 
 				<Route path="products-stock/" element={
 					<RequireAuth>
-						<div></div>
+						<ProductStocks />
 					</RequireAuth>
 				} />
 
